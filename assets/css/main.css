@@ -113,19 +113,3 @@ footer {
   background: #3b82f6;
   color: white;
 }
-
-.user-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-left: 15px;
-}
-
-#userEmail {
-  font-size: 0.9rem;
-  opacity: 0.85;
-  background-color: rgba(255,255,255,0.05);
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.1);
-}
