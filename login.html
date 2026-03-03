@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | StreamLab</title>
+</head>
+<body>
+
+  <h2>Acceso a StreamLab</h2>
+
+  <input type="email" id="email" placeholder="Correo">
+  <input type="password" id="password" placeholder="Contraseña">
+
+  <button id="loginBtn">Ingresar</button>
+  <button id="registerBtn">Registrarse</button>
+
+  <script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+    import { 
+      getAuth, 
+      signInWithEmailAndPassword, 
+      createUserWithEmailAndPassword 
+    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDlv_qH1Kx6-yjHI723_PAnpfo0Hq8SoXo",
+      authDomain: "streamlab-b9122.firebaseapp.com",
+      projectId: "streamlab-b9122",
+      storageBucket: "streamlab-b9122.firebasestorage.app",
+      messagingSenderId: "789036572548",
+      appId: "1:789036572548:web:ffc80d1e7f3e395cbd47d1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const loginBtn = document.getElementById("loginBtn");
+    const registerBtn = document.getElementById("registerBtn");
+
+    loginBtn.addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          window.location.href = "modulos/streamlab/";
+        })
+        .catch(error => alert(error.message));
+    });
+
+    registerBtn.addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => alert("Usuario creado correctamente"))
+        .catch(error => alert(error.message));
+    });
+
+  </script>
+
+</body>
+</html>
