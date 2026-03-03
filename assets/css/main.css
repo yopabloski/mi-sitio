@@ -53,19 +53,24 @@ footer {
   height: auto;       /* mantiene proporción */
   margin-bottom: 15px;
 }
+
+/* ===== LOGIN ===== */
+
 .login-container {
   background-color: #1e293b;
   padding: 40px;
   border-radius: 12px;
-  width: 320px;
-  margin: 100px auto;
+  width: 340px;
+  margin: 120px auto;
   display: flex;
   flex-direction: column;
   gap: 15px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
 .login-container h2 {
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .login-container input {
@@ -74,6 +79,21 @@ footer {
   border: none;
   outline: none;
   font-size: 14px;
+}
+
+.btn-primary {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #2563eb;
 }
 
 .btn-secondary {
