@@ -93,8 +93,11 @@
   <!-- Protección con Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } 
-  from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+  import { 
+    getAuth, 
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDlv_qH1Kx6-yjHI723_PAnpfo0Hq8SoXo",
@@ -107,6 +110,14 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  logoutBtn?.addEventListener("click", () => {
+    signOut(auth).then(() => {
+      window.location.href = "../../login.html";
+    });
+  });
 
   onAuthStateChanged(auth, (user) => {
     if (!user) {
