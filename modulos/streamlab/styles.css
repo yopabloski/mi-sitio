@@ -289,3 +289,13 @@ p { margin: .35rem 0 0; }
   min-height: 32px; /* asegura espacio para 2 líneas aprox */
   overflow: hidden;
 }
+
+.btn.danger {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+}
+
+.btn.danger:hover {
+  background-color: #dc2626;
+}
