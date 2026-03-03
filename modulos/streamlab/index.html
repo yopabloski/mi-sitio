@@ -1,1 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Movie Planner — Parrilla por Drag & Drop</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Movie Planner</h1>
+      <p class="muted">Arrastra películas a la parrilla y mira métricas en tiempo real.</p>
+    </div>
 
+    <div class="controls">
+      <input id="searchInput" type="search" placeholder="Buscar (título)..." />
+      <select id="genreSelect">
+        <option value="">Todos los géneros</option>
+      </select>
+      <button id="clearScheduleBtn" class="btn danger" type="button">Vaciar parrilla</button>
+      <button id="exportBtn" class="btn" type="button">Exportar resultados</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- Biblioteca -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Biblioteca</h2>
+        <div class="pill" id="libraryCountPill">0 películas</div>
+      </div>
+      <div id="library" class="grid" aria-label="Biblioteca de películas"></div>
+    </section>
+
+    <!-- Parrilla -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Parrilla</h2>
+        <div class="pill" id="scheduleCountPill">0 seleccionadas</div>
+      </div>
+
+      <div id="scheduleDropzone" class="dropzone" aria-label="Parrilla (zona de drop)">
+        <p class="muted">Suelta aquí tus películas (Drag & Drop)</p>
+        <div id="schedule" class="schedule"></div>
+      </div>
+
+      <div class="metrics">
+        <h3>Métricas</h3>
+        <div class="metrics-grid">
+          <div class="metric">
+            <div class="metric-label">Minutos totales</div>
+            <div class="metric-value" id="totalMinutes">0</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Rating promedio</div>
+            <div class="metric-value" id="avgRating">0.00</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Costo total (proxy)</div>
+            <div class="metric-value" id="totalCost">$0</div>
+            <div class="metric-help muted">Suma de “budget” (producción) como aproximación</div>
+          </div>
+        </div>
+
+        <div class="two-cols">
+          <div>
+            <h4>Géneros en la selección</h4>
+            <div id="selectedGenres" class="listbox muted">—</div>
+          </div>
+          <div>
+            <h4>Géneros en toda la app</h4>
+            <div id="allGenres" class="listbox muted">—</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer muted">
+    Tip: reordena dentro de la parrilla arrastrando las tarjetas.
+  </footer>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+
+<!-- html2canvas (convierte DOM a imagen) -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<!-- Panel oculto: se renderiza aquí la grilla para exportar -->
+<div id="exportCanvas" class="export-root" aria-hidden="true">
+  <div class="export-header">
+    <div class="export-title">Parrilla de películas</div>
+    <div class="export-metrics">
+      <div><span class="k">Minutos totales:</span> <span id="exTotalMinutes">0</span></div>
+      <div><span class="k">Rating promedio:</span> <span id="exAvgRating">0.00</span></div>
+      <div><span class="k">Costo total:</span> <span id="exTotalCost">$0</span></div>
+    </div>
+  </div>
+
+  <div id="exportGrid" class="export-grid"></div>
+</div>
+
+</body>
+</html>
