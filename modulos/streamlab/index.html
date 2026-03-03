@@ -20,14 +20,17 @@
     </div>
 
     <div class="controls">
-      <input id="searchInput" type="search" placeholder="Buscar (título)..." />
-      <select id="genreSelect">
-        <option value="">Todos los géneros</option>
-      </select>
-      <button id="clearScheduleBtn" class="btn danger" type="button">Vaciar parrilla</button>
-      <button id="exportBtn" class="btn" type="button">Exportar resultados</button>
-      <button id="logoutBtn" class="btn danger">Cerrar sesión</button>
-    </div>
+  <input id="searchInput" type="search" placeholder="Buscar (título)..." />
+  <select id="genreSelect">
+    <option value="">Todos los géneros</option>
+  </select>
+  <button id="clearScheduleBtn" class="btn danger" type="button">Vaciar parrilla</button>
+  <button id="exportBtn" class="btn" type="button">Exportar resultados</button>
+
+  <span id="userEmail" class="muted"></span>
+
+  <button id="logoutBtn" class="btn danger">Cerrar sesión</button>
+</div>
   </header>
 
   <main class="layout">
@@ -121,10 +124,15 @@
 
   onAuthStateChanged(auth, (user) => {
     if (!user) {
-      window.location.href = "../../login.html";
-    } else {
-      document.body.style.visibility = "visible";
-    }
+  window.location.href = "../../login.html";
+} else {
+  const userEmailSpan = document.getElementById("userEmail");
+  if (userEmailSpan) {
+    userEmailSpan.textContent = user.email;
+  }
+
+  document.body.style.visibility = "visible";
+}
   });
 </script>
 
