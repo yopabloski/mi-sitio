@@ -49,7 +49,7 @@ footer {
 }
 
 .logo {
-  width: 90px;        /* tamaño visible */
+  width: 120px;        /* tamaño visible */
   height: auto;       /* mantiene proporción */
   margin-bottom: 15px;
 }
