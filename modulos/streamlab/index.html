@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>StreaMix — Parrilla por Drag & Drop</title>
+  <title>StreaMix — Programación por Drag & Drop</title>
   <link rel="stylesheet" href="./styles.css" />
 
   <style>
@@ -16,7 +16,7 @@
   <header class="topbar">
     <div>
       <h1>StreaMix</h1>
-      <p class="muted">Arrastra películas a la parrilla y mira métricas en tiempo real.</p>
+      <p class="muted">Arrastra películas a la programación y mira métricas en tiempo real.</p>
     </div>
 
     <div class="controls">
@@ -24,7 +24,7 @@
   <select id="genreSelect">
     <option value="">Todos los géneros</option>
   </select>
-  <button id="clearScheduleBtn" class="btn danger" type="button">Vaciar parrilla</button>
+  <button id="clearScheduleBtn" class="btn danger" type="button">Vaciar programación</button>
   <button id="exportBtn" class="btn" type="button">Exportar resultados</button>
 
   <span id="userEmail" class="muted"></span>
@@ -43,14 +43,14 @@
       <div id="library" class="grid" aria-label="Biblioteca de películas"></div>
     </section>
 
-    <!-- Parrilla -->
+    <!-- Programación -->
     <section class="panel">
       <div class="panel-header">
-        <h2>Parrilla</h2>
+        <h2>Programación</h2>
         <div class="pill" id="scheduleCountPill">0 seleccionadas</div>
       </div>
 
-      <div id="scheduleDropzone" class="dropzone" aria-label="Parrilla (zona de drop)">
+      <div id="scheduleDropzone" class="dropzone" aria-label="Programación (zona de drop)">
         <p class="muted">Suelta aquí tus películas (Drag & Drop)</p>
         <div id="schedule" class="schedule"></div>
       </div>
@@ -87,7 +87,7 @@
   </main>
 
   <footer class="footer muted">
-    Tip: reordena dentro de la parrilla arrastrando las tarjetas.
+    Tip: reordena dentro de la programación arrastrando las tarjetas.
   </footer>
 
    <!-- Tu contenido HTML del módulo -->
@@ -145,7 +145,7 @@
 <!-- Panel oculto: se renderiza aquí la grilla para exportar -->
 <div id="exportCanvas" class="export-root" aria-hidden="true">
   <div class="export-header">
-    <div class="export-title">Parrilla de películas</div>
+    <div class="export-title">Programación de películas StreaMix</div>
     <div class="export-metrics">
       <div><span class="k">Minutos totales:</span> <span id="exTotalMinutes">0</span></div>
       <div><span class="k">Rating promedio:</span> <span id="exAvgRating">0.00</span></div>
