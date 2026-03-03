@@ -113,3 +113,9 @@ footer {
   background: #3b82f6;
   color: white;
 }
+#userEmail {
+  margin-left: 15px;
+  margin-right: 10px;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
