@@ -48,6 +48,29 @@ async function preloadImages(urls) {
   );
 }
 
+async function saveExportRecord(user, selectedMovies, totals) {
+  try {
+    const { getFirestore, collection, addDoc, serverTimestamp } =
+      await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js");
+
+    const db = getFirestore();
+
+    await addDoc(collection(db, "exports"), {
+      userEmail: user.email,
+      userUid: user.uid,
+      timestamp: serverTimestamp(),
+      totalMinutes: totals.totalMinutes,
+      totalCost: totals.totalCost,
+      avgRating: totals.avgRating,
+      movieIds: selectedMovies.map(m => m.id),
+      movieCount: selectedMovies.length
+    });
+
+  } catch (error) {
+    console.error("Error guardando registro:", error);
+  }
+}
+  
 function buildExportDom(selectedMovies, totals) {
   // Encabezado
   document.getElementById("exTotalMinutes").textContent = String(totals.totalMinutes);
@@ -95,6 +118,7 @@ async function exportScheduleAsImage() {
 
   // Renderiza el DOM de exportación
   const totals = computeTotalsFromSelection(selectedMovies);
+  const user = window.firebaseUser;
   buildExportDom(selectedMovies, totals);
 
   // Precarga posters (ayuda a evitar imagen en blanco en el render)
@@ -112,6 +136,10 @@ async function exportScheduleAsImage() {
     imageTimeout: 15000,
   });
 
+if (user) {
+  await saveExportRecord(user, selectedMovies, totals);
+}
+  
   // Descarga
   const dataUrl = canvas.toDataURL("image/png");
   const a = document.createElement("a");
