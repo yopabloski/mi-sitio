@@ -50,10 +50,15 @@ async function preloadImages(urls) {
 
 async function saveExportRecord(user, selectedMovies, totals) {
   try {
-    const { getFirestore, collection, addDoc, serverTimestamp } =
-      await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js");
+    const db = window.db;
 
-    const db = getFirestore();
+    if (!db) {
+      console.error("Firestore no inicializado.");
+      return;
+    }
+
+    const { collection, addDoc, serverTimestamp } =
+      await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js");
 
     await addDoc(collection(db, "exports"), {
       userEmail: user.email,
@@ -65,6 +70,8 @@ async function saveExportRecord(user, selectedMovies, totals) {
       movieIds: selectedMovies.map(m => m.id),
       movieCount: selectedMovies.length
     });
+
+    console.log("Registro guardado en Firestore");
 
   } catch (error) {
     console.error("Error guardando registro:", error);
