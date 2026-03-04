@@ -149,6 +149,17 @@ async function exportScheduleAsImage() {
       el.addEventListener("dragstart", onDragStartFromLibrary);
       el.addEventListener("dragend", onDragEnd);
     }
+    // Bind botones Agregar
+library.querySelectorAll("[data-add-id]").forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    const id = e.currentTarget.getAttribute("data-add-id");
+
+    if (!state.schedule.includes(id)) {
+      state.schedule.push(id);
+      renderSchedule();
+    }
+  });
+});
   }
 
   function renderSchedule() {
@@ -221,22 +232,27 @@ async function exportScheduleAsImage() {
 
   /*** Templates ***/
   function libraryCardHtml(m) {
-    return `
-      <article class="card" draggable="true" data-movie-id="${escapeAttr(m.id)}" title="Arrastra a la parrilla">
-        <img class="poster" crossorigin="anonymous" src="${escapeAttr(m.posterUrl)}" alt="Poster ${escapeAttr(m.title)}" loading="lazy" />        <div>
-          <div class="card-title">${escapeHtml(m.title)} <span class="muted">(${m.year})</span></div>
-          <div class="card-meta">
-            <span class="tag accent">${m.minutes} min</span>
-            <span class="tag ok">★ ${Number(m.imdbRating).toFixed(1)}</span>
-            <span class="tag">${formatUSD(m.costUSD)}</span>
-          </div>
-          <div class="card-meta">
-            ${(m.genres || []).slice(0, 4).map(g => `<span class="tag">${escapeHtml(g)}</span>`).join("")}
-          </div>
+  return `
+    <article class="card" draggable="true" data-movie-id="${escapeAttr(m.id)}" title="Arrastra a la parrilla">
+      <img class="poster" crossorigin="anonymous" src="${escapeAttr(m.posterUrl)}" alt="Poster ${escapeAttr(m.title)}" loading="lazy" />
+      <div>
+        <div class="card-title">${escapeHtml(m.title)} <span class="muted">(${m.year})</span></div>
+        <div class="card-meta">
+          <span class="tag accent">${m.minutes} min</span>
+          <span class="tag ok">★ ${Number(m.imdbRating).toFixed(1)}</span>
+          <span class="tag">${formatUSD(m.costUSD)}</span>
         </div>
-      </article>
-    `;
-  }
+        <div class="card-meta">
+          ${(m.genres || []).slice(0, 4).map(g => `<span class="tag">${escapeHtml(g)}</span>`).join("")}
+        </div>
+
+        <button class="btn add-btn" type="button" data-add-id="${escapeAttr(m.id)}">
+          Agregar
+        </button>
+      </div>
+    </article>
+  `;
+}
 
   function scheduleRowHtml(m, idx) {
     return `
