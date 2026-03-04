@@ -349,27 +349,3 @@ h1,h2,h3,h4 { margin: 0; }
   overflow: hidden;
 }
 
-.btn.danger {
-  background-color: #ef4444;
-  color: white;
-  border: none;
-}
-
-.btn.danger:hover {
-  background-color: #dc2626;
-}
-.user-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-left: 15px;
-}
-
-#userEmail {
-  font-size: 0.85rem;
-  opacity: 0.7;
-  background-color: rgba(255,255,255,0.05);
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.08);
-}
