@@ -357,6 +357,7 @@ function libraryCardHtml(m) {
     $("#clearScheduleBtn").addEventListener("click", () => {
       state.schedule = [];
       renderSchedule();
+      renderLibrary();
     });
 
     const dz = $("#scheduleDropzone");
