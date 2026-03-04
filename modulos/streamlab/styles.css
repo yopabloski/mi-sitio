@@ -380,3 +380,14 @@ h1,h2,h3,h4 { margin: 0; }
 .add-btn:hover {
   background: rgba(106,167,255,.25);
 }
+
+.add-btn.disabled {
+  background: rgba(56,217,150,.15);
+  border-color: rgba(56,217,150,.4);
+  color: var(--ok);
+  cursor: default;
+}
+
+.add-btn.disabled:hover {
+  background: rgba(56,217,150,.15);
+}
