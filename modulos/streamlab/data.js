@@ -182,7 +182,7 @@ window.MOVIES = [
     genres: ["Drama"], // Crime eliminado
     imdbRating: 9.2,
     costUSD: 6_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/1/1c/Godfather_ver1.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BNGEwYjgwOGQtYjg5ZS00Njc1LTk2ZGEtM2QwZWQ2NjdhZTE5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "frozen",
