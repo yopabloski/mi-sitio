@@ -132,7 +132,7 @@ window.MOVIES = [
     genres: ["Action", "Drama"], // Historical eliminado
     imdbRating: 8.5,
     costUSD: 103_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/8/8d/Gladiator_ver1.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BYWQ4YmNjYjEtOWE1Zi00Y2U4LWI4NTAtMTU0MjkxNWQ1ZmJiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "jurassic_park",
@@ -152,7 +152,7 @@ window.MOVIES = [
     genres: ["Fantasy", "Adventure", "Drama"],
     imdbRating: 8.8,
     costUSD: 93_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/8/87/Ringstrilogyposter.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BNzIxMDQ2YTctNDY4MC00ZTRhLTk4ODQtMTVlOWY4NTdiYmMwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "harry_potter_sorcerer",
@@ -162,7 +162,7 @@ window.MOVIES = [
     genres: ["Fantasy", "Adventure"],
     imdbRating: 7.6,
     costUSD: 125_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/d/d7/Harry_Potter_and_the_Philosopher%27s_Stone_poster.jpg"
+    posterUrl: "https://www.originalfilmart.com/cdn/shop/files/harry_potter_and_the_sorcerers_stone_2001_original_film_art_5000x.webp?v=1684872812"
   },
   {
     id: "the_matrix",
@@ -172,7 +172,7 @@ window.MOVIES = [
     genres: ["Sci-Fi", "Action"],
     imdbRating: 8.7,
     costUSD: 63_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Matrix_Poster.jpg"
+    posterUrl: "https://www.originalfilmart.com/cdn/shop/products/the_matrix_1999_bus_stop_original_film_art_5000x.jpg?v=1593131403"
   },
   {
     id: "the_godfather",
@@ -202,7 +202,7 @@ window.MOVIES = [
     genres: ["Action", "Adventure", "Sci-Fi"],
     imdbRating: 7.3,
     costUSD: 200_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/0/0c/Black_Panther_film_poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BMTg1MTY2MjYzNV5BMl5BanBnXkFtZTgwMTc4NTMwNDI@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "oppenheimer",
@@ -252,7 +252,7 @@ window.MOVIES = [
     genres: ["Animation", "Action"],
     imdbRating: 8.0,
     costUSD: 92_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/e/ec/The_Incredibles_%282004%29.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BMTY5OTU0OTc2NV5BMl5BanBnXkFtZTcwMzU4MDcyMQ@@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "shrek",
@@ -302,7 +302,7 @@ window.MOVIES = [
     genres: ["Action", "Comedy"], // Superhero eliminado
     imdbRating: 8.0,
     costUSD: 58_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/4/46/Deadpool_poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BNzY3ZWU5NGQtOTViNC00ZWVmLTliNjAtNzViNzlkZWQ4YzQ4XkEyXkFqcGc@._V1_.jpg"
   },
   {
     id: "dune_2021",
@@ -342,7 +342,7 @@ window.MOVIES = [
     genres: ["Animation", "Fantasy"],
     imdbRating: 8.4,
     costUSD: 175_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/9/91/Coco_%282017_film%29_poster.jpg"
+    posterUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSM17YJATdJiHD-Xp-ac6y8RwaI-O6RyiGzaA&s"
   },
   {
     id: "the_social_network",
@@ -352,7 +352,7 @@ window.MOVIES = [
     genres: ["Drama"], // Biography eliminado
     imdbRating: 7.8,
     costUSD: 40_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/7/7a/Social_network_film_poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BMjlkNTE5ZTUtNGEwNy00MGVhLThmZjMtZjU1NDE5Zjk1NDZkXkEyXkFqcGc@._V1_.jpg"
   },
   {
     id: "skyfall",
@@ -392,7 +392,7 @@ window.MOVIES = [
     genres: ["Animation", "Drama"],
     imdbRating: 8.1,
     costUSD: 175_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/f/f7/Inside_Out_%282015_film%29_poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BOTgxMDQwMDk0OF5BMl5BanBnXkFtZTgwNjU5OTg2NDE@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "no_time_to_die",
@@ -402,7 +402,7 @@ window.MOVIES = [
     genres: ["Action", "Thriller"],
     imdbRating: 7.3,
     costUSD: 250_000,
-    posterUrl: "https://i.redd.it/4a8rd5658g161.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BZGZiOGZhZDQtZmRkNy00ZmUzLTliMGEtZGU0NjExOGMxZDVkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "pulp_fiction",
@@ -412,7 +412,7 @@ window.MOVIES = [
     genres: ["Drama"], // Crime eliminado
     imdbRating: 8.9,
     costUSD: 8_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/8/82/Pulp_Fiction_cover.jpg"
+    posterUrl: "https://static.posters.cz/image/1300/1288.jpg"
   },
   {
     id: "fight_club",
@@ -472,7 +472,7 @@ window.MOVIES = [
     genres: ["Drama"], // Historical eliminado
     imdbRating: 8.3,
     costUSD: 72_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/5/55/Braveheart_imp.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BNGMxZDBhNGQtYTZlNi00N2UzLWI4NDEtNmUzNWM2NTdmZDA0XkEyXkFqcGc@._V1_.jpg"
   },
   {
     id: "the_silence_of_the_lambs",
@@ -502,7 +502,7 @@ window.MOVIES = [
     genres: ["Action", "Sci-Fi"],
     imdbRating: 8.6,
     costUSD: 102_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/8/85/Terminator2poster.jpg"
+    posterUrl: "https://i.ebayimg.com/images/g/nPUAAOSwvx1bt3yD/s-l1200.jpg"
   },
   {
     id: "goodfellas",
@@ -532,7 +532,7 @@ window.MOVIES = [
     genres: ["Action", "Adventure", "Sci-Fi"],
     imdbRating: 8.0,
     costUSD: 220_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/f/f9/TheAvengers2012Poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BNGE0YTVjNzUtNzJjOS00NGNlLTgxMzctZTY4YTE1Y2Y1ZTU4XkEyXkFqcGc@._V1_.jpg"
   },
   {
     id: "iron_man",
@@ -542,7 +542,7 @@ window.MOVIES = [
     genres: ["Action", "Sci-Fi"],
     imdbRating: 7.9,
     costUSD: 140_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/0/00/Iron_Man_poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BMTczNTI2ODUwOF5BMl5BanBnXkFtZTcwMTU0NTIzMw@@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "moana",
@@ -582,7 +582,7 @@ window.MOVIES = [
     genres: ["Action", "Adventure", "Thriller"],
     imdbRating: 7.7,
     costUSD: 178_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/b/b5/Mission_Impossible_Fallout_poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BZmUwZTg2YmMtMmZjOS00ZDYwLWI2ZDgtZDcyY2ZmMWMwZDdlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "blade_runner_2049",
@@ -592,7 +592,7 @@ window.MOVIES = [
     genres: ["Sci-Fi", "Drama"],
     imdbRating: 8.0,
     costUSD: 150_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/2/27/Blade_Runner_2049_logo.png"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_.jpg"
   },
   {
     id: "get_out",
@@ -632,7 +632,7 @@ window.MOVIES = [
     genres: ["Drama"],
     imdbRating: 8.3,
     costUSD: 15_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/3/3d/American_Beauty_poster.jpg"
+    posterUrl: "https://www.originalfilmart.com/cdn/shop/products/american_beauty_1999_original_film_art_a_7c79b7ad-678e-48f1-ba68-efc314945690_600x.jpg?v=1562541235"
   },
   {
     id: "cast_away",
@@ -642,7 +642,7 @@ window.MOVIES = [
     genres: ["Adventure", "Drama"],
     imdbRating: 7.8,
     costUSD: 90_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/a/a7/Cast_Away_film_poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BOGNjNDI5ZGQtZjRjMy00NzQyLWFiYzQtYjcwNjM3ZDYwNThhXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "the_truman_show",
@@ -652,7 +652,7 @@ window.MOVIES = [
     genres: ["Drama", "Sci-Fi"],
     imdbRating: 8.2,
     costUSD: 60_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/c/c3/Truman_Show.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BNzA3ZjZlNzYtMTdjMy00NjMzLTk5ZGYtMTkyYzNiOGM1YmM3XkEyXkFqcGc@._V1_.jpg"
   },
   {
     id: "casino_royale",
@@ -662,7 +662,7 @@ window.MOVIES = [
     genres: ["Action", "Adventure"],
     imdbRating: 8.0,
     costUSD: 150_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/1/14/Casino_Royale_poster.jpg"
+    posterUrl: "https://www.originalfilmart.com/cdn/shop/products/casino_royale_2006_advance_original_film_art_5000x.jpg?v=1592955843"
   },
   {
     id: "how_to_train_your_dragon",
@@ -692,7 +692,7 @@ window.MOVIES = [
     genres: ["Animation", "Comedy"],
     imdbRating: 6.9,
     costUSD: 75_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/9/9a/Madagascar_%282005_film%29_poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BYjk4OGFmZmYtYWE4NC00MzM4LTkwZTItODdhMjk3NTZjMmI5XkEyXkFqcGc@._V1_.jpg"
   },
   {
     id: "the_wolf_of_wall_street",
@@ -702,7 +702,7 @@ window.MOVIES = [
     genres: ["Drama"], // Biography, Crime eliminados
     imdbRating: 8.2,
     costUSD: 100_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/1/1f/The_Wolf_of_Wall_Street_%282013%29.png"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BMjIxMjgxNTk0MF5BMl5BanBnXkFtZTgwNjIyOTg2MDE@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "the_revenant",
@@ -722,7 +722,7 @@ window.MOVIES = [
     genres: ["Drama", "Fantasy"],
     imdbRating: 7.5,
     costUSD: 60_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/a/a2/Interview_with_the_Vampire_poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BYzJlN2NiZDQtZmI4NC00ZWFiLWFmMTUtMWM4ODVlOGFlODY1XkEyXkFqcGc@._V1_.jpg"
   },
   {
     id: "the_greatest_showman",
@@ -742,7 +742,7 @@ window.MOVIES = [
     genres: ["Fantasy", "Adventure"],
     imdbRating: 6.9,
     costUSD: 183_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/5/5f/Aladdin_%282019_film%29.png"
+    posterUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe8PWTumPvlbWl5wIvMANwLZT8paZpkpfk5g&s"
   },
   {
     id: "kung_fu_panda",
@@ -792,7 +792,7 @@ window.MOVIES = [
     genres: ["Thriller"], // Horror eliminado
     imdbRating: 7.5,
     costUSD: 20_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/1/1f/Conjuring_poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BMTM3NjA1NDMyMV5BMl5BanBnXkFtZTcwMDQzNDMzOQ@@._V1_.jpg"
   },
   {
     id: "jaws",
@@ -802,7 +802,7 @@ window.MOVIES = [
     genres: ["Thriller", "Adventure"],
     imdbRating: 8.1,
     costUSD: 9_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/e/ed/Jaws_poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BYjViNDQzNmUtYzkxZi00NTk5LTljMmItYjJlZmZkODIxNjU1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "notting_hill",
@@ -812,7 +812,7 @@ window.MOVIES = [
     genres: ["Romance", "Comedy"],
     imdbRating: 7.2,
     costUSD: 42_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/1/1b/NottingHillRobertsGrant.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BZjY3YWI5OTMtYTdlNy00ZTZiLWEwYjItN2M1MGVkMDM4ZDExXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "crazy_rich_asians",
@@ -822,7 +822,7 @@ window.MOVIES = [
     genres: ["Romance", "Comedy"],
     imdbRating: 6.9,
     costUSD: 30_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/7/7a/Crazy_Rich_Asians_poster.png"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BMTYxNDMyOTAxN15BMl5BanBnXkFtZTgwMDg1ODYzNTM@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "love_actually",
@@ -872,7 +872,7 @@ window.MOVIES = [
     genres: ["Romance", "Fantasy", "Drama"],
     imdbRating: 7.8,
     costUSD: 12_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/3/3f/About_Time_Poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BMTA1ODUzMDA3NzFeQTJeQWpwZ15BbWU3MDgxMTYxNTk@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "the_mask",
@@ -882,7 +882,7 @@ window.MOVIES = [
     genres: ["Comedy", "Fantasy"],
     imdbRating: 6.9,
     costUSD: 23_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/0/0a/The_Mask_poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BNGNmNjI0ZmMtMzI5MC00ZjUyLWFlZDEtYjUyMGZlN2E3N2E2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "mamma_mia",
@@ -892,7 +892,7 @@ window.MOVIES = [
     genres: ["Romance", "Comedy"], // Musical eliminado
     imdbRating: 6.5,
     costUSD: 52_000,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/2/22/Mamma_Mia%21_The_Movie_Poster.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BMTA2MDU0MjM0MzReQTJeQWpwZ15BbWU3MDYwNzgwNzE@._V1_FMjpg_UX1000_.jpg"
   },
   {
     id: "the_shape_of_water",
@@ -902,6 +902,6 @@ window.MOVIES = [
     genres: ["Fantasy", "Romance", "Drama"],
     imdbRating: 7.3,
     costUSD: 19_500,
-    posterUrl: "https://upload.wikimedia.org/wikipedia/en/3/37/The_Shape_of_Water_%282017_film%29.png"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BOGFlMTM2MTgtZDdlMy00ZDZlLWFjOTUtZDMzMGEwNmNiMWY0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
   }
 ];
