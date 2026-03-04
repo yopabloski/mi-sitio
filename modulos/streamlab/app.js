@@ -468,7 +468,6 @@ function libraryCardHtml(m) {
   function init() {
     renderGenreSelect();
     bindEvents();
-    loadActivities();
     renderLibrary();
     renderSchedule();
     renderMetrics();
