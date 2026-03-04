@@ -102,7 +102,7 @@ async function loadActivities() {
 
       const option = document.createElement("option");
       option.value = doc.id;
-      option.textContent = data.name;
+      option.textContent = data.nombre;
       select.appendChild(option);
     });
 
