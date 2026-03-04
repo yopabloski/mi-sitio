@@ -474,4 +474,5 @@ function libraryCardHtml(m) {
   }
 
   init();
+  window.loadActivities = loadActivities;
 })();
