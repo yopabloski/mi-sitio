@@ -175,6 +175,10 @@ h1,h2,h3,h4 { margin: 0; }
   gap: 10px;
   padding: 10px;
 }
+.card {
+  position: relative;
+}
+
 .card:active { cursor: grabbing; }
 .card.dragging { opacity: .55; }
 
