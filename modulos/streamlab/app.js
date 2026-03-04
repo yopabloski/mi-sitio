@@ -157,6 +157,7 @@ library.querySelectorAll("[data-add-id]").forEach(btn => {
     if (!state.schedule.includes(id)) {
       state.schedule.push(id);
       renderSchedule();
+      renderLibrary(); // <-- clave
     }
   });
 });
@@ -185,6 +186,7 @@ library.querySelectorAll("[data-add-id]").forEach(btn => {
         const id = e.currentTarget.getAttribute("data-remove-id");
         state.schedule = state.schedule.filter(x => x !== id);
         renderSchedule();
+        renderLibrary();
       });
     });
 
@@ -231,7 +233,9 @@ library.querySelectorAll("[data-add-id]").forEach(btn => {
   }
 
   /*** Templates ***/
-  function libraryCardHtml(m) {
+function libraryCardHtml(m) {
+  const isAdded = state.schedule.includes(m.id);
+
   return `
     <article class="card" draggable="true" data-movie-id="${escapeAttr(m.id)}" title="Arrastra a la parrilla">
       <img class="poster" crossorigin="anonymous" src="${escapeAttr(m.posterUrl)}" alt="Poster ${escapeAttr(m.title)}" loading="lazy" />
@@ -246,9 +250,14 @@ library.querySelectorAll("[data-add-id]").forEach(btn => {
           ${(m.genres || []).slice(0, 4).map(g => `<span class="tag">${escapeHtml(g)}</span>`).join("")}
         </div>
 
-        <button class="add-btn" type="button" data-add-id="${escapeAttr(m.id)}" aria-label="Agregar">
-  +
-</button>
+        <button 
+          class="add-btn ${isAdded ? "disabled" : ""}" 
+          type="button" 
+          data-add-id="${escapeAttr(m.id)}"
+          ${isAdded ? "disabled" : ""}
+          aria-label="Agregar">
+          ${isAdded ? "✓" : "+"}
+        </button>
       </div>
     </article>
   `;
