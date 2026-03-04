@@ -130,7 +130,9 @@ from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
     if (!user) {
   window.location.href = "../../login.html";
 } else {
-  const userEmailSpan = document.getElementById("userEmail");
+  
+      window.firebaseUser = user;
+      const userEmailSpan = document.getElementById("userEmail");
   if (userEmailSpan) {
     userEmailSpan.textContent = user.email;
   }
