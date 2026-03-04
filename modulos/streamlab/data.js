@@ -412,7 +412,7 @@ window.MOVIES = [
     genres: ["Drama"], // Crime eliminado
     imdbRating: 8.9,
     costUSD: 8_000,
-    posterUrl: "https://static.posters.cz/image/1300/1288.jpg"
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BYTViYTE3ZGQtNDBlMC00ZTAyLTkyODMtZGRiZDg0MjA2YThkXkEyXkFqcGc@._V1_.jpg"
   },
   {
     id: "fight_club",
