@@ -246,9 +246,9 @@ library.querySelectorAll("[data-add-id]").forEach(btn => {
           ${(m.genres || []).slice(0, 4).map(g => `<span class="tag">${escapeHtml(g)}</span>`).join("")}
         </div>
 
-        <button class="btn add-btn" type="button" data-add-id="${escapeAttr(m.id)}">
-          Agregar
-        </button>
+        <button class="add-btn" type="button" data-add-id="${escapeAttr(m.id)}" aria-label="Agregar">
+  +
+</button>
       </div>
     </article>
   `;
