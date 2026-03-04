@@ -117,6 +117,7 @@ from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  window.db = db;
 
   const logoutBtn = document.getElementById("logoutBtn");
 
