@@ -7,6 +7,8 @@
     schedule: [] // array de ids en orden
   };
 
+  let currentActivity = null;
+
   /*** Helpers ***/
   const $ = (sel) => document.querySelector(sel);
 
@@ -48,7 +50,7 @@ async function preloadImages(urls) {
   );
 }
 
-async function saveExportRecord(user, selectedMovies, totals) {
+async function saveExportRecord(user, selectedMovies, totals, activityId) {
   try {
     const db = window.db;
 
@@ -60,16 +62,17 @@ async function saveExportRecord(user, selectedMovies, totals) {
     const { collection, addDoc, serverTimestamp } =
       await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js");
 
-    await addDoc(collection(db, "exports"), {
-      userEmail: user.email,
-      userUid: user.uid,
-      timestamp: serverTimestamp(),
-      totalMinutes: totals.totalMinutes,
-      totalCost: totals.totalCost,
-      avgRating: totals.avgRating,
-      movieIds: selectedMovies.map(m => m.id),
-      movieCount: selectedMovies.length
-    });
+await addDoc(collection(db, "exports"), {
+  userEmail: user.email,
+  userUid: user.uid,
+  activityId: activityId,
+  timestamp: serverTimestamp(),
+  totalMinutes: totals.totalMinutes,
+  totalCost: totals.totalCost,
+  avgRating: totals.avgRating,
+  movieIds: selectedMovies.map(m => m.id),
+  movieCount: selectedMovies.length
+});
 
     console.log("Registro guardado en Firestore");
 
@@ -77,6 +80,39 @@ async function saveExportRecord(user, selectedMovies, totals) {
     console.error("Error guardando registro:", error);
   }
 }
+
+async function loadActivities() {
+  try {
+    const db = window.db;
+    if (!db) {
+      console.error("Firestore no inicializado.");
+      return;
+    }
+
+    const { collection, getDocs } =
+      await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js");
+
+    const snapshot = await getDocs(collection(db, "activities"));
+
+    const select = document.getElementById("activitySelect");
+    if (!select) return;
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+
+      const option = document.createElement("option");
+      option.value = doc.id;
+      option.textContent = data.name;
+      select.appendChild(option);
+    });
+
+    console.log("Actividades cargadas");
+
+  } catch (error) {
+    console.error("Error cargando actividades:", error);
+  }
+}
+
   
 function buildExportDom(selectedMovies, totals) {
   // Encabezado
@@ -143,8 +179,8 @@ async function exportScheduleAsImage() {
     imageTimeout: 15000,
   });
 
-if (user) {
-  await saveExportRecord(user, selectedMovies, totals);
+if (user && currentActivity) {
+  await saveExportRecord(user, selectedMovies, totals, currentActivity);
 }
   
   // Descarga
@@ -400,6 +436,14 @@ function libraryCardHtml(m) {
     dz.addEventListener("dragleave", onDropzoneDragLeave);
     dz.addEventListener("drop", onDropzoneDrop);
     document.getElementById("exportBtn").addEventListener("click", exportScheduleAsImage);
+  
+    const activitySelect = document.getElementById("activitySelect");
+
+    activitySelect?.addEventListener("change", (e) => {
+    currentActivity = e.target.value || null;
+    console.log("Actividad seleccionada:", currentActivity);
+});
+  
   }
 
   /*** Safe utils ***/
@@ -424,6 +468,7 @@ function libraryCardHtml(m) {
   function init() {
     renderGenreSelect();
     bindEvents();
+    loadActivities();
     renderLibrary();
     renderSchedule();
     renderMetrics();
