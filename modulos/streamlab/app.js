@@ -308,7 +308,7 @@ function libraryCardHtml(m) {
   const isAdded = state.schedule.includes(m.id);
 
   return `
-    <article class="card" draggable="true" data-movie-id="${escapeAttr(m.id)}" title="Arrastra a la parrilla">
+    <article class="card ${isAdded ? "selected-card" : ""}" draggable="true" data-movie-id="${escapeAttr(m.id)}" title="Arrastra a la parrilla">
       <img class="poster" crossorigin="anonymous" src="${escapeAttr(m.posterUrl)}" alt="Poster ${escapeAttr(m.title)}" loading="lazy" />
       <div>
         <div class="card-title">${escapeHtml(m.title)} <span class="muted">(${m.year})</span></div>
