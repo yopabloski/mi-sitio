@@ -461,3 +461,23 @@ h1,h2,h3,h4 { margin: 0; }
   letter-spacing: .5px;
   text-transform: uppercase;
 }
+/* ============================= */
+/* INPUTS UNIVERSALES */
+/* ============================= */
+
+input,
+select {
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--stroke);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 10px;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: rgba(106,167,255,.55);
+  box-shadow: 0 0 0 2px rgba(106,167,255,.15);
+}
