@@ -523,3 +523,23 @@ select:focus {
   letter-spacing: .5px;
   text-transform: uppercase;
 }
+/* ============================= */
+/* BRAND SOLO LOGO */
+/* ============================= */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.brand-logo {
+  height: 46px;
+  width: auto;
+  object-fit: contain;
+}
+
+.brand-subtitle {
+  font-size: 13px;
+  max-width: 340px;
+}
