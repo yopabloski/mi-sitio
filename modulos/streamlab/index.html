@@ -15,44 +15,43 @@
 <body>
   <header class="topbar">
 
-  <!-- 1. Marca -->
-  <div class="topbar-brand">
+  <!-- Marca -->
+  <div class="brand">
     <h1>StreaMix</h1>
-    <p class="muted">Optimización aplicada a plataformas de streaming</p>
+    <p class="muted">Arrastra películas a la programación y mira métricas en tiempo real.</p>
   </div>
 
-  <!-- 2. Selección de actividad -->
-  <div class="topbar-activity">
-    <label for="activitySelect" class="topbar-label">Actividad</label>
-    <select id="activitySelect">
+  <!-- Actividad -->
+  <div class="control-group">
+    <label class="muted small">Actividad</label>
+    <select id="activitySelect" class="input">
       <option value="">Seleccionar actividad</option>
     </select>
   </div>
 
-  <!-- 3. Filtros y acciones -->
-  <div class="topbar-actions">
-    <div class="filters">
-      <input id="searchInput" type="search" placeholder="Buscar título..." />
+  <!-- Filtros -->
+  <div class="control-group horizontal">
+    <input id="searchInput" type="search" placeholder="Buscar título..." class="input" />
 
-      <select id="genreSelect">
-        <option value="">Todos los géneros</option>
-      </select>
-    </div>
-
-    <div class="actions">
-      <button id="clearScheduleBtn" class="btn danger" type="button">
-        Vaciar
-      </button>
-
-      <button id="exportBtn" class="btn" type="button">
-        Exportar
-      </button>
-    </div>
+    <select id="genreSelect" class="input">
+      <option value="">Todos los géneros</option>
+    </select>
   </div>
 
-  <!-- 4. Usuario -->
-  <div class="topbar-user">
-    <span id="userEmail" class="muted"></span>
+  <!-- Acciones -->
+  <div class="actions">
+    <button id="clearScheduleBtn" class="btn danger" type="button">
+      Vaciar
+    </button>
+
+    <button id="exportBtn" class="btn" type="button">
+      Exportar
+    </button>
+  </div>
+
+  <!-- Usuario -->
+  <div class="user-area">
+    <span id="userEmail" class="user-badge"></span>
     <button id="logoutBtn" class="btn danger">
       Cerrar sesión
     </button>
