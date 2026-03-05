@@ -14,37 +14,51 @@
 </head>
 <body>
   <header class="topbar">
-    <div>
-      <h1>StreaMix</h1>
-      <p class="muted">Arrastra películas a la programación y mira métricas en tiempo real.</p>
+
+  <!-- 1. Marca -->
+  <div class="topbar-brand">
+    <h1>StreaMix</h1>
+    <p class="muted">Optimización aplicada a plataformas de streaming</p>
+  </div>
+
+  <!-- 2. Selección de actividad -->
+  <div class="topbar-activity">
+    <label for="activitySelect" class="topbar-label">Actividad</label>
+    <select id="activitySelect">
+      <option value="">Seleccionar actividad</option>
+    </select>
+  </div>
+
+  <!-- 3. Filtros y acciones -->
+  <div class="topbar-actions">
+    <div class="filters">
+      <input id="searchInput" type="search" placeholder="Buscar título..." />
+
+      <select id="genreSelect">
+        <option value="">Todos los géneros</option>
+      </select>
     </div>
 
-    <div class="controls">
-  <input id="searchInput" type="search" placeholder="Buscar (título)..." />
+    <div class="actions">
+      <button id="clearScheduleBtn" class="btn danger" type="button">
+        Vaciar
+      </button>
 
-  <select id="genreSelect">
-    <option value="">Todos los géneros</option>
-  </select>
+      <button id="exportBtn" class="btn" type="button">
+        Exportar
+      </button>
+    </div>
+  </div>
 
-  <select id="activitySelect">
-    <option value="">Seleccionar actividad</option>
-  </select>
+  <!-- 4. Usuario -->
+  <div class="topbar-user">
+    <span id="userEmail" class="muted"></span>
+    <button id="logoutBtn" class="btn danger">
+      Cerrar sesión
+    </button>
+  </div>
 
-  <button id="clearScheduleBtn" class="btn danger" type="button">
-    Vaciar programación
-  </button>
-
-  <button id="exportBtn" class="btn" type="button">
-    Exportar resultados
-  </button>
-
-  <span id="userEmail" class="muted"></span>
-
-  <button id="logoutBtn" class="btn danger">
-    Cerrar sesión
-  </button>
-</div>
-  </header>
+</header>
 
   <main class="layout">
     <!-- Biblioteca -->
