@@ -395,6 +395,7 @@ function libraryCardHtml(m) {
     if (!state.schedule.includes(payload.id)) {
       state.schedule.push(payload.id);
       renderSchedule();
+      renderLibrary();
     }
   }
 
