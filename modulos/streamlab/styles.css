@@ -542,3 +542,19 @@ select:focus {
   font-size: 13px;
   max-width: 340px;
 }
+/* ============================= */
+/* CARD SELECCIONADA EN LIBRARY */
+/* ============================= */
+
+.selected-card {
+  border-color: rgba(56,217,150,.6);
+  background: linear-gradient(
+    180deg,
+    rgba(56,217,150,.08),
+    rgba(10,16,30,.55)
+  );
+}
+
+.selected-card:hover {
+  border-color: rgba(56,217,150,.9);
+}
