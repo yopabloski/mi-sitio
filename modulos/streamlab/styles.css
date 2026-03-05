@@ -391,3 +391,55 @@ h1,h2,h3,h4 { margin: 0; }
 .add-btn.disabled:hover {
   background: rgba(56,217,150,.15);
 }
+/* ============================= */
+/* NUEVO HEADER ESTRUCTURADO */
+/* ============================= */
+
+.topbar {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--stroke);
+  display: grid;
+  grid-template-columns: auto 240px 1fr auto;
+  gap: 24px;
+  align-items: center;
+}
+
+.topbar-brand h1 {
+  font-size: 20px;
+}
+
+.topbar-activity {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.topbar-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.topbar-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
