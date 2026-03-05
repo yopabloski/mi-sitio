@@ -481,3 +481,45 @@ select:focus {
   border-color: rgba(106,167,255,.55);
   box-shadow: 0 0 0 2px rgba(106,167,255,.15);
 }
+/* ============================= */
+/* HEADER REFINADO */
+/* ============================= */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--stroke);
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.control-group.horizontal {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+.user-area {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.small {
+  font-size: 11px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
