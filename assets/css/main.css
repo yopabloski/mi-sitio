@@ -18,11 +18,11 @@ body {
 }
 
 /* ============================= */
-/* HERO (HOME) */
+/* HERO */
 /* ============================= */
 
 .hero {
-  padding: 100px 20px;
+  padding: 80px 20px;
   text-align: center;
   background: radial-gradient(900px 500px at 10% 0%, rgba(106,167,255,.18), transparent 60%),
               radial-gradient(700px 450px at 90% 10%, rgba(56,217,150,.14), transparent 55%),
@@ -30,18 +30,18 @@ body {
 }
 
 .hero h1 {
-  font-size: 3rem;
-  margin-bottom: 20px;
+  font-size: 2.6rem;
+  margin-bottom: 10px;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .hero p {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   opacity: 0.75;
   max-width: 500px;
-  margin: 0 auto 20px auto;
+  margin: 0 auto;
 }
 
 .hero-content {
@@ -50,12 +50,30 @@ body {
 }
 
 .hero-content > * {
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
+/* ============================= */
+/* INFO SUPERIOR */
+/* ============================= */
+
+.info-top {
+  max-width: 900px;
+  margin: 60px auto 20px auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.info-top h2 {
+  margin-bottom: 10px;
+}
+
+.info-top p {
+  opacity: 0.75;
+}
 
 /* ============================= */
-/* BOTONES GLOBALES */
+/* BOTONES */
 /* ============================= */
 
 .btn-primary,
@@ -86,6 +104,98 @@ body {
 
 .btn-secondary:hover {
   background: rgba(106,167,255,.12);
+}
+
+/* ============================= */
+/* PLATFORM */
+/* ============================= */
+
+.platform {
+  max-width: 1200px;
+  margin: 60px auto 80px auto;
+  padding: 0 20px;
+}
+
+.platform-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.platform-header h2 {
+  margin-bottom: 10px;
+}
+
+.platform-header p {
+  opacity: 0.7;
+}
+
+/* GRID DE APPS */
+
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+/* CARD BASE */
+
+.app-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 24px;
+  text-align: center;
+  transition: 0.25s ease;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* LOGO */
+
+.app-logo {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 15px;
+  object-fit: contain;
+}
+
+/* PLACEHOLDER */
+
+.app-logo.placeholder {
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+}
+
+/* APP ACTIVA */
+
+.app-card.active {
+  cursor: pointer;
+}
+
+.app-card.active:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: rgba(106,167,255,.6);
+  background: rgba(106,167,255,.08);
+}
+
+/* APP BLOQUEADA */
+
+.app-card.locked {
+  opacity: 0.35;
+  filter: blur(1.5px);
+}
+
+/* BADGE */
+
+.badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255,255,255,0.1);
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 999px;
 }
 
 /* ============================= */
@@ -139,35 +249,7 @@ footer {
 /* ============================= */
 
 .logo {
-  width: 120px;
+  width: 110px;
   height: auto;
-  margin-bottom: 15px;
-}
-
-/* ============================= */
-/* SECCIÓN INFO */
-/* ============================= */
-
-.info {
-  max-width: 900px;
-  margin: 80px auto;
-  padding: 30px 30px;
-  
-  background: rgba(255,255,255,0.03);
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.06);
-}
-
-/* Título centrado */
-.info h2 {
-  font-size: 1.8rem;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-/* Texto alineado a la izquierda (mejor lectura) */
-.info p {
-  line-height: 1.6;
-  opacity: 0.8;
-  text-align: left;
+  margin-bottom: 10px;
 }
