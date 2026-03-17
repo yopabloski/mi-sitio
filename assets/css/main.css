@@ -128,3 +128,8 @@ footer {
   height: auto;
   margin-bottom: 15px;
 }
+
+.hero-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
