@@ -2,25 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>StreamLab | Plataforma de Decisiones</title>
+  <title>Plataforma de Decisiones</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
 
-  <header class="hero">
-  <div class="hero-content">
-
-    <img src="assets/img/logo.png" alt="StreamLab Logo" class="logo">
-
-    <h1>StreamLab</h1>
-    <p>Ingeniería en el mundo del streaming</p>
-    <a href="modulos/streamlab/" class="btn-primary">Entrar</a>
-
-  </div>
-</header>
-
-  <section class="info">
+  <!-- INFO SUPERIOR -->
+  <section class="info-top">
     <h2>¿Qué es esta plataforma?</h2>
     <p>
       Espacio interactivo para experimentar con modelos de optimización,
@@ -28,6 +17,53 @@
     </p>
   </section>
 
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-content">
+      <img src="assets/img/logo.png" alt="Logo" class="logo">
+      <h1>Plataforma de Decisiones</h1>
+      <p>Explora aplicaciones interactivas para aprender haciendo</p>
+    </div>
+  </header>
+
+  <!-- APPS -->
+  <section class="platform">
+
+    <div class="platform-header">
+      <h2>Aplicaciones</h2>
+      <p>Selecciona una experiencia para comenzar</p>
+    </div>
+
+    <div class="apps-grid">
+
+      <!-- STREAMLAB (ACTIVA) -->
+      <a href="modulos/streamlab/" class="app-card active">
+        <img src="assets/img/logo.png" class="app-logo">
+        <h3>StreamLab</h3>
+        <p>Optimización y toma de decisiones bajo restricciones</p>
+      </a>
+
+      <!-- SIMULAB (BLOQUEADA) -->
+      <div class="app-card locked">
+        <div class="app-logo placeholder"></div>
+        <h3>SimuLab</h3>
+        <p>Simulación de escenarios complejos</p>
+        <span class="badge">Próximamente</span>
+      </div>
+
+      <!-- DATALAB (BLOQUEADA) -->
+      <div class="app-card locked">
+        <div class="app-logo placeholder"></div>
+        <h3>DataLab</h3>
+        <p>Analítica y exploración de datos</p>
+        <span class="badge">Próximamente</span>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
   <footer>
     <p>© 2026 Plataforma desarrollada por Pablo González Brevis</p>
   </footer>
