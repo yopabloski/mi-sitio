@@ -144,3 +144,15 @@ footer {
   margin-bottom: 15px;
 }
 
+/* ============================= */
+/* INFO */
+/* ============================= */
+.info {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 40px 30px;
+  text-align: center;
+  background: rgba(255,255,255,0.03);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
