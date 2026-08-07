@@ -34,6 +34,12 @@ El panel docente incluye un editor visual de locaciones. Las coordenadas se guar
 
 La bitácora administrativa escucha en tiempo real todos los intentos de la actividad seleccionada. Cada entrega nace con `validated: false`; el leaderboard sólo utiliza resultados validados de la ronda y métrica actualmente activas. El docente puede validar, retirar la validación o eliminar una entrega. La exportación `.xlsx` incluye sesión, equipo, ruta, métrica, valor objetivo, ronda, fecha y estado de validación.
 
+Las selecciones del panel docente funcionan como un borrador: cambiar ronda, objetivo o localidades no altera la experiencia de los estudiantes hasta pulsar **Guardar configuración**. Cada entrega registra además `durationMs`, medido desde que el equipo abre por primera vez esa configuración en el navegador. El ranking ordena primero por el menor valor objetivo y utiliza el menor tiempo como desempate. La sesión Google del docente se restaura automáticamente después de recargar la página.
+
+La bitácora mantiene la escucha en vivo de Firestore y añade una comprobación automática cada 10 segundos y el botón **Actualizar ahora**, ambos sin recargar la página. Las nuevas entregas guardan `activityCode` y `configurationName` para que la actividad y la configuración sean identificables directamente en Firestore y en las exportaciones.
+
+Cada problema se identifica mediante `configurationKey`, construido con la ronda, la métrica objetivo y el conjunto exacto de localidades activas. Las entregas guardan además `activeNodeIds` y `nodeCount`. El leaderboard, la comparación con el óptimo y la vista activa de la bitácora sólo comparan entregas con la misma clave; cambiar de ronda, métrica o localidades crea una configuración distinta sin borrar el historial anterior. Los registros antiguos sin esta información permanecen disponibles únicamente en la vista de historial completo.
+
 ## Fichas imprimibles
 
 El panel docente ofrece una ficha de estudiante y una pauta docente en A4 horizontal. Ambas se construyen desde la selección actualmente visible, aunque todavía no se haya guardado, e incluyen escenario, métrica, unidad, matriz y leyenda de acrónimos. La ficha deja espacios para equipo, integrantes, ruta y resultado; la pauta incorpora la ruta y el valor óptimos. `print.html`, `print.js` y `print.css` conforman una vista independiente preparada para imprimir o guardar como PDF en una sola página.

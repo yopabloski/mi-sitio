@@ -50,8 +50,26 @@ service cloud.firestore {
         allow create: if request.auth != null
           && request.resource.data.teamId is string
           && request.resource.data.score is number
+          && request.resource.data.durationMs is number
+          && request.resource.data.durationMs >= 0
           && request.resource.data.validated == false
           && request.resource.data.route is list
+          && request.resource.data.activeNodeIds is list
+          && request.resource.data.configurationKey is string
+          && request.resource.data.configurationName is string
+          && request.resource.data.activityCode is string
+          && request.resource.data.configurationKey ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.configurationKey
+          && request.resource.data.activeNodeIds ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.activeNodeIds
+          && request.resource.data.nodeCount ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.activeNodeIds.size()
           && request.resource.data.round ==
              get(
                /databases/$(database)/documents/experiences/$(experienceId)
