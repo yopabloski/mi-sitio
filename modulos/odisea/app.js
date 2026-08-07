@@ -1,4 +1,4 @@
-import{store,enabled}from'./firebase.js?v=10';
+import{store,enabled}from'./firebase.js?v=11';
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="map.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="map-background.css?v=8">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="map-tweaks.css">');
