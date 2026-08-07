@@ -29,7 +29,7 @@ service cloud.firestore {
       allow write: if isOdysseyAdmin();
 
       match /teams/{teamId} {
-        allow read: if request.auth != null;
+        allow read: if isOdysseyAdmin();
 
         allow create, update: if request.auth != null
           && (
@@ -44,7 +44,8 @@ service cloud.firestore {
       }
 
       match /attempts/{attemptId} {
-        allow read: if request.auth != null;
+        allow read: if isOdysseyAdmin()
+                    || resource.data.validated == true;
 
         allow create: if request.auth != null
           && request.resource.data.teamId is string
