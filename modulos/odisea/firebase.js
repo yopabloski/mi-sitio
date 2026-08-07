@@ -24,8 +24,25 @@ if(enabled){
   save:(code,team,p)=>Promise.all([addDoc(collection(db,'experiences',normalizeCode(code),'attempts'),{...p,teamId:team.id,teamName:team.name,validated:false,createdAt:serverTimestamp()}),setDoc(doc(db,'experiences',normalizeCode(code),'teams',team.id),{name:team.name,uid:team.uid,updatedAt:serverTimestamp()},{merge:true})]),
   watchExp:(code,cb)=>onSnapshot(doc(db,'experiences',normalizeCode(code)),s=>cb(s.exists()?{id:s.id,...s.data()}:null)),
   watchBoard:(code,cb)=>onSnapshot(query(collection(db,'experiences',normalizeCode(code),'attempts'),where('validated','==',true)),s=>cb(s.docs.map(d=>({id:d.id,...d.data()})))),
-  watchAttempts:(code,cb,onError=()=>{})=>onSnapshot(query(collection(db,'experiences',normalizeCode(code),'attempts'),orderBy('createdAt','desc')),s=>cb(s.docs.map(d=>({id:d.id,...d.data()})),onError),
-  async listAttempts(code){const s=await getDocs(query(collection(db,'experiences',normalizeCode(code),'attempts'),orderBy('createdAt','desc')));return s.docs.map(d=>({id:d.id,...d.data()}))},
+  watchAttempts:(code,cb,onError=()=>{})=>{
+   const attemptsQuery=query(
+    collection(db,'experiences',normalizeCode(code),'attempts'),
+    orderBy('createdAt','desc')
+   );
+   return onSnapshot(
+    attemptsQuery,
+    snapshot=>cb(snapshot.docs.map(item=>({id:item.id,...item.data()}))),
+    onError
+   );
+  },
+  async listAttempts(code){
+   const attemptsQuery=query(
+    collection(db,'experiences',normalizeCode(code),'attempts'),
+    orderBy('createdAt','desc')
+   );
+   const snapshot=await getDocs(attemptsQuery);
+   return snapshot.docs.map(item=>({id:item.id,...item.data()}));
+  },
   validateAttempt:(code,id,validated)=>setDoc(doc(db,'experiences',normalizeCode(code),'attempts',id),{validated,validatedAt:validated?serverTimestamp():null},{merge:true}),
   async deleteAttempt(code,id){const exp=normalizeCode(code),ref=doc(db,'experiences',exp,'attempts',id),snap=await getDoc(ref),removed=snap.data();await deleteDoc(ref);if(removed?.teamId){const rest=await getDocs(query(collection(db,'experiences',exp,'attempts'),where('teamId','==',removed.teamId))),scores=rest.docs.map(d=>d.data()).filter(x=>Number.isFinite(x.score)),best=scores.sort((a,b)=>a.score-b.score)[0];await setDoc(doc(db,'experiences',exp,'teams',removed.teamId),{lastScore:best?.score??null,lastMetric:best?.metric??null,lastRound:best?.round??null,updatedAt:serverTimestamp()},{merge:true})}},
   control:(code,p)=>setDoc(doc(db,'experiences',normalizeCode(code)),{...p,code:String(code).trim(),updatedAt:serverTimestamp()},{merge:true})
