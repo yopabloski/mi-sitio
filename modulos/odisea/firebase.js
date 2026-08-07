@@ -1,5 +1,12 @@
 // Pegue aquí la configuración web de Firebase. Vacía = modo demo local.
-export const firebaseConfig={apiKey:'',authDomain:'',projectId:'',storageBucket:'',messagingSenderId:'',appId:''};
+export const firebaseConfig = {
+  apiKey: "AIzaSyDlv_qH1Kx6-yjHI723_PAnpfo0Hq8SoXo",
+  authDomain: "streamlab-b9122.firebaseapp.com",
+  projectId: "streamlab-b9122",
+  storageBucket: "streamlab-b9122.firebasestorage.app",
+  messagingSenderId: "789036572548",
+  appId: "1:789036572548:web:5848484e9374a06ebd47d1"
+};
 export const enabled=Boolean(firebaseConfig.apiKey&&firebaseConfig.projectId);
 export const normalizeCode=value=>String(value||'').trim().toLowerCase().replace(/[^a-z0-9áéíóúñ-]+/gi,'-');
 const bus=new EventTarget(),localKey=code=>`odisea:experience:${normalizeCode(code)}`;

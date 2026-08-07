@@ -1,4 +1,4 @@
-import{store,enabled,normalizeCode}from'./firebase.js?v=6';
+import{store,enabled,normalizeCode}from'./firebase.js?v=7';
 document.head.insertAdjacentHTML('beforeend','<style>.admin-auth{margin:-20px 0 28px;background:var(--ink);color:white;border:0;padding:12px 18px;text-transform:uppercase;letter-spacing:.08em}</style>');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="validation.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="round-objective.css?v=8">');
