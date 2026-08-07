@@ -1,0 +1,9 @@
+{
+  "name": "odisea-optima",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Módulo educativo de optimización de rutas para Firebase Hosting",
+  "dependencies": {
+    "javascript-lp-solver": "1.0.3"
+  }
+}
