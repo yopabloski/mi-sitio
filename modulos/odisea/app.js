@@ -8,7 +8,7 @@ document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="route
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="pending-drag.css">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="round-objective.css?v=8">');
 document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="leaderboard-timing.css?v=1">');
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="epic-game.css?v=9">');
+document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="student.css?v=1">');
 const D=window.ODYSSEY_DATA,$=s=>document.querySelector(s);
 let team,experienceCode='',nodeCount=10,activeNodeIds=[],nodePositions={},roundNo=1,metric='distance',route=['troy','ithaca'],active=false,attempts=[],selectedPlaceId=null;
 const validMetric=value=>D.metrics[value]?value:'distance';

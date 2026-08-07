@@ -6,6 +6,7 @@
   --od-umber:#3c220f;--od-copper:#d05032;--od-ivory:#eee8dc;--od-focus:#f0a374;
   --od-ui:'Inter',sans-serif;--od-display:'Cinzel',serif;--od-data:'IBM Plex Mono',monospace;
 }
+.odyssey-site [hidden]{display:none!important}
 
 .skip-link{position:fixed;top:8px;left:8px;z-index:1000;padding:10px 14px;color:var(--od-abyss);background:var(--od-ivory);font:600 14px/1 var(--od-ui);transform:translateY(-160%)}
 .skip-link:focus{transform:translateY(0)}
