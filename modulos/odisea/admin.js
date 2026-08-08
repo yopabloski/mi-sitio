@@ -1,7 +1,4 @@
 import{store,enabled,normalizeCode}from'./firebase.js?v=11';
-document.head.insertAdjacentHTML('beforeend','<style>.admin-auth{margin:-20px 0 28px;background:var(--ink);color:white;border:0;padding:12px 18px;text-transform:uppercase;letter-spacing:.08em}</style>');
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="validation.css">');
-document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="round-objective.css?v=8">');
 const $=s=>document.querySelector(s),D=window.ODYSSEY_DATA;const defaultIds=()=>['troy','ithaca',...D.places.filter(p=>!p.required).sort((a,b)=>a.order-b.order).slice(0,8).map(p=>p.id)];let code=$('#activityCode').value,active=false,round=1,objectiveMetric='distance',activeNodeIds=defaultIds(),nodeCount=activeNodeIds.length,nodePositions={},attempts=[],optimalResult=null,optimalTimer=0,optimalWorker=null,stopWatch=()=>{},stopAttempts=()=>{},refreshTimer=0,draftDirty=false,publishedConfigurationKey='';
 const validMetric=value=>D.metrics[value]?value:'distance';
 const locationPresets={all:D.places.map(p=>p.id),simple:['troy','ithaca','lotophagi','lamos','cimmerians','cyclopes'],medium:['troy','ithaca','lotophagi','lamos','cimmerians','cyclopes','sirens','thrinacia','aeaea'],nolan:['troy','ithaca','cyclopes','lamos','aeaea','cimmerians','sirens','scylla','charybdis','thrinacia','ogygia'],clear:['troy','ithaca']};
