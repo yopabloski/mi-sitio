@@ -1,1 +1,72 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ficha A4 · Odisea Óptima</title><link rel="stylesheet" href="print.css?v=1"></head><body><div class="print-toolbar"><button id="printButton">Imprimir / Guardar PDF</button><button id="closeButton">Cerrar</button></div><main id="sheet" class="sheet"><header><div class="sheet-brand"><i>Ω</i><div><small>ODISEA ÓPTIMA</small><h1 id="sheetTitle">Ficha de navegación</h1></div></div><div class="sheet-meta"><span>Actividad<strong id="activityName"></strong></span><span>Ronda<strong id="roundName"></strong></span><span>Objetivo<strong id="metricName"></strong></span></div></header><section class="brief"><p id="roundStory"></p><div class="student-fields"><span>Equipo: <i></i></span><span>Integrantes: <i></i></span></div></section><section class="matrix-section"><div class="matrix-title"><h2>Matriz de navegación</h2><p>Filas: origen ↓ &nbsp; Columnas: destino → &nbsp; <b>×</b> ruta prohibida</p></div><div id="printMatrix"></div></section><section class="sheet-bottom"><div class="legend"><h2>Leyenda</h2><div id="placeLegend"></div></div><div class="answer student-answer"><h2>Respuesta del equipo</h2><p>Ruta propuesta</p><div class="write-line"></div><p>Valor de la función objetivo</p><div class="short-line"></div></div><div class="answer teacher-answer" hidden><h2>Pauta docente</h2><p>Ruta óptima</p><strong id="teacherRoute"></strong><p>Valor óptimo</p><b id="teacherValue"></b><small id="teacherMethod"></small></div></section><footer><span>Configuración generada desde el panel docente</span><span id="generatedDate"></span></footer></main><div id="printError" class="print-error" hidden></div><script src="data.js?v=8"></script><script src="print.js?v=1"></script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Material A4 · La Odisea</title>
+  <link rel="stylesheet" href="print.css?v=2">
+</head>
+<body>
+  <div class="print-toolbar">
+    <button id="printButton">Imprimir / Guardar PDF</button>
+    <button id="closeButton">Cerrar</button>
+  </div>
+
+  <main id="sheet" class="sheet">
+    <header class="sheet-header">
+      <div class="sheet-brand">
+        <img src="assets/brand/logo-isotipo-master.svg" alt="">
+        <div>
+          <small>LA ODISEA · REGRESO A ÍTACA</small>
+          <h1 id="sheetTitle">Ficha de navegación</h1>
+        </div>
+      </div>
+      <div class="document-mark"><span>Material de navegación</span><b>A4 · Horizontal</b></div>
+    </header>
+
+    <section class="sheet-meta" aria-label="Configuración de la actividad">
+      <span>Actividad<strong id="activityName"></strong></span>
+      <span>Escenario<strong id="roundName"></strong></span>
+      <span>Objetivo<strong id="metricName"></strong></span>
+      <span class="student-only">Equipo<strong class="write-field"></strong></span>
+      <span class="student-only">Integrantes<strong class="write-field"></strong></span>
+    </section>
+
+    <section class="brief">
+      <div><small>Contexto de navegación</small><p id="roundStory"></p></div>
+      <p class="instruction student-only"><b>Misión.</b> Construyan una ruta desde Troya hasta Ítaca que visite cada localidad una sola vez. Registren abajo la secuencia y el valor obtenido.</p>
+      <p class="instruction teacher-only"><b>Referencia.</b> La solución presentada corresponde al óptimo exacto de esta configuración.</p>
+    </section>
+
+    <section class="matrix-section">
+      <div class="matrix-title">
+        <div><small>Datos del escenario</small><h2>Matriz de navegación</h2></div>
+        <p>Filas: origen ↓ &nbsp; Columnas: destino → &nbsp; <b>×</b> ruta prohibida</p>
+      </div>
+      <div id="printMatrix"></div>
+    </section>
+
+    <section class="sheet-bottom">
+      <div class="legend">
+        <small>Clave de localidades</small><h2>Leyenda</h2>
+        <div id="placeLegend"></div>
+      </div>
+      <div class="answer student-answer">
+        <small>Entrega del equipo</small><h2>Solución propuesta</h2>
+        <p>Ruta</p><div class="write-line"></div>
+        <p>Valor de la función objetivo</p><div class="short-line"></div>
+      </div>
+      <div class="answer teacher-answer" hidden>
+        <small>Uso docente</small><h2>Solución óptima</h2>
+        <p>Ruta óptima</p><strong id="teacherRoute"></strong>
+        <div class="optimal-summary"><span>Valor óptimo</span><b id="teacherValue"></b></div>
+        <em id="teacherMethod"></em>
+      </div>
+    </section>
+
+    <footer><span>La Odisea · Optimización de ruta con origen y destino definidos</span><span id="generatedDate"></span></footer>
+  </main>
+  <div id="printError" class="print-error" hidden></div>
+  <script src="data.js?v=8"></script><script src="print.js?v=1"></script>
+</body>
+</html>
