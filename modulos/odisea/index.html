@@ -6,13 +6,17 @@
   <meta name="theme-color" content="#0B171B">
   <title>La Odisea: Optimizando el Regreso a Ítaca</title>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="branding.css?v=2">
+  <link rel="stylesheet" href="branding.css?v=3">
 </head>
 <body class="odyssey-site">
   <a class="skip-link" href="#login">Saltar al acceso</a>
   <header class="site-header">
     <a class="brand" href="./" aria-label="La Odisea — Regreso a Ítaca, inicio">
-      <img src="assets/brand/logo-lockup-horizontal.svg" width="1100" height="330" alt="La Odisea — Regreso a Ítaca">
+      <img class="brand-mark" src="assets/brand/logo-isotipo-header.svg" width="1063" height="1063" alt="" aria-hidden="true">
+      <span class="brand-copy" aria-hidden="true">
+        <strong>La Odisea</strong>
+        <small>Regreso a Ítaca</small>
+      </span>
     </a>
     <div id="roundTabs"></div><div id="teamBadge"></div>
   </header>
@@ -40,8 +44,8 @@
     <p class="entry-credit">Mapa adaptado de <a href="https://www.worldhistory.org/image/15906/map-of-odysseus-10-year-journey-home/" target="_blank" rel="noopener noreferrer">World History Encyclopedia</a> · <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 4.0</a></p>
   </main>
   <main id="game" hidden>
-    <section class="story"><small id="roundLabel"></small><h1 id="roundTitle"></h1><p id="roundStory"></p></section><div class="workspace"><section><div class="metric metric-assigned"><span>Objetivo asignado por el docente</span><strong id="metricAssigned">Distancia</strong><small id="metricUnit">millas náuticas</small></div><div class="map-panel"><div class="map-head"><div><p class="overline">Mar Mediterráneo</p><h2>El viaje decidido</h2></div><p>Los números sobre la ruta corresponden al objetivo de la ronda activa.</p></div><div id="map" class="map"></div></div><div class="chart"><div><p class="overline">Carta de navegación</p><h2>Trazad vuestro rumbo</h2></div><div id="route" class="route"></div><div id="available" class="available"></div></div><div class="matrix-panel"><div class="matrix-head"><div><p class="overline">Información para decidir</p><h2 id="matrixTitle">Matriz de viaje</h2></div><p><b>Filas:</b> origen &nbsp; <b>Columnas:</b> destino</p></div><div id="matrix" class="matrix-wrap"></div></div><div class="actions"><button id="submit">Registrar decisión</button><span id="routeInfo"></span></div></section><aside><div class="result"><span>Resultado de la ruta</span><strong id="total"></strong><div id="legs"></div></div><div class="leader"><p class="overline">En vivo · misma ronda y objetivo</p><h2>Bitácora de flotas</h2><div id="leaderboard"></div></div></aside></div>
+    <section class="story"><small id="roundLabel"></small><h1 id="roundTitle"></h1><p id="roundStory"></p></section><div class="workspace"><section><div class="metric metric-assigned"><span>Objetivo asignado por el docente</span><strong id="metricAssigned">Distancia</strong><small id="metricUnit">millas náuticas</small></div><div class="map-panel"><div class="map-head"><div><p class="overline">Mar Mediterráneo</p><h2>El viaje decidido</h2></div><p>Los números muestran el orden actual de la ruta; los puntos sin número siguen pendientes.</p></div><div id="map" class="map"></div></div><div class="chart"><div><p class="overline">Carta de navegación</p><h2>Trazad vuestro rumbo</h2></div><div id="route" class="route"></div><div id="available" class="available"></div></div><div class="matrix-panel"><div class="matrix-head"><div><p class="overline">Información para decidir</p><h2 id="matrixTitle">Matriz de viaje</h2></div><p><b>Filas:</b> origen &nbsp; <b>Columnas:</b> destino</p></div><div id="matrix" class="matrix-wrap"></div></div><div class="actions"><button id="submit">Registrar decisión</button><span id="routeInfo"></span></div></section><aside><div class="result"><span>Resultado de la ruta</span><strong id="total"></strong><div id="legs"></div></div><div class="leader"><p class="overline">En vivo · misma ronda y objetivo</p><h2>Bitácora de flotas</h2><div id="leaderboard"></div></div></aside></div>
   </main>
-  <script src="data.js?v=9"></script><script type="module" src="app.js?v=16"></script>
+  <script src="data.js?v=9"></script><script type="module" src="app.js?v=20"></script>
 </body>
 </html>

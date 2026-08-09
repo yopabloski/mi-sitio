@@ -11,8 +11,11 @@
 .skip-link{position:fixed;top:8px;left:8px;z-index:1000;padding:10px 14px;color:var(--od-abyss);background:var(--od-ivory);font:600 14px/1 var(--od-ui);transform:translateY(-160%)}
 .skip-link:focus{transform:translateY(0)}
 .site-header{position:relative;z-index:20;display:flex;align-items:center;min-height:80px;height:auto;padding:12px clamp(20px,4vw,64px);color:var(--od-ivory);background:var(--od-midnight);border-bottom:1px solid rgb(196 186 166/.28)}
-.site-header .brand{display:block;flex:0 0 auto;width:clamp(190px,20vw,248px);min-height:44px;padding:4px 0}
-.site-header .brand img{display:block;width:100%;height:auto}
+.site-header .brand{display:flex;align-items:center;flex:0 0 auto;gap:13px;width:auto;min-height:48px;padding:2px 0;color:var(--od-ivory);text-decoration:none}
+.site-header .brand-mark{display:block;width:48px;height:48px;flex:0 0 48px;object-fit:contain}
+.site-header .brand-copy{display:grid;gap:6px;min-width:0;padding-left:13px;border-left:1px solid rgb(208 80 50/.62)}
+.site-header .brand-copy strong{color:var(--od-ivory);font:500 16px/1 var(--od-display);letter-spacing:.22em;text-transform:uppercase;white-space:nowrap}
+.site-header .brand-copy small{color:var(--od-copper);font:500 8px/1 var(--od-data);letter-spacing:.28em;text-transform:uppercase;white-space:nowrap}
 #roundLabel{display:none}.story{grid-template-columns:1fr 1fr}
 body.odyssey-site:has(#login:not([hidden])){min-height:100dvh;color:var(--od-ivory);background:var(--od-abyss);font-family:var(--od-ui)}
 
@@ -44,11 +47,11 @@ main.expedition-entry::after{content:'';position:absolute;inset:0;z-index:-1;bac
 .entry-credit{position:absolute;right:clamp(24px,4vw,64px);bottom:18px;left:clamp(24px,4vw,64px);margin:0;color:#aaa99f;font:400 10px/1.5 var(--od-data);text-align:right}.entry-credit a{color:#cfcbc0}
 
 @media(max-width:900px){.story{grid-template-columns:1fr}main.expedition-entry{grid-template-columns:1fr;align-content:center;gap:54px;padding-top:64px}.entry-copy{max-width:680px}.entry-panel{width:min(100%,560px);justify-self:start}}
-@media(max-width:600px){.site-header{min-height:68px;padding:10px 20px}.site-header .brand{width:180px}main.expedition-entry{min-height:calc(100dvh - 68px);gap:44px;padding:48px 20px 82px}main.expedition-entry::before{background-position:42% center;opacity:.22}.entry-copy h1{margin-top:14px}.entry-lead{font-size:16px}.entry-rule{margin:24px 0 20px}.entry-panel{padding:38px 22px 28px;box-shadow:0 18px 44px rgb(0 0 0/.3)}.entry-badge{left:22px}.entry-credit{text-align:left}}
+@media(max-width:600px){.site-header{min-height:68px;padding:8px 16px}.site-header .brand{gap:9px}.site-header .brand-mark{width:42px;height:42px;flex-basis:42px}.site-header .brand-copy{gap:5px;padding-left:9px}.site-header .brand-copy strong{font-size:13px;letter-spacing:.17em}.site-header .brand-copy small{font-size:7px;letter-spacing:.2em}main.expedition-entry{min-height:calc(100dvh - 68px);gap:44px;padding:48px 20px 82px}main.expedition-entry::before{background-position:42% center;opacity:.22}.entry-copy h1{margin-top:14px}.entry-lead{font-size:16px}.entry-rule{margin:24px 0 20px}.entry-panel{padding:38px 22px 28px;box-shadow:0 18px 44px rgb(0 0 0/.3)}.entry-badge{left:22px}.entry-credit{text-align:left}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
 
 /* Aislamiento de la portada frente a reglas históricas cargadas por el tablero. */
-.site-header{height:80px;box-sizing:border-box}.site-header .brand{width:190px}
+.site-header{height:80px;box-sizing:border-box}
 main.expedition-entry::before{inset:0;width:auto;height:auto;mix-blend-mode:normal}
 main.expedition-entry::after{inset:0;width:auto;height:auto;aspect-ratio:auto;border-radius:0;filter:none}
 main.expedition-entry .entry-copy h1{font:500 clamp(42px,4.2vw,60px)/1.08 var(--od-display);color:var(--od-ivory);text-shadow:none}
@@ -62,4 +65,4 @@ main.expedition-entry #loginForm button{display:flex;width:100%;min-height:52px;
 main.expedition-entry #loginForm button:hover{color:#fff;background:#5a2c16;border-color:var(--od-focus);transform:none;box-shadow:none}
 main.expedition-entry #loginForm button:active{background:#2f1b0e;transform:none}
 main.expedition-entry .entry-credit{width:auto;max-width:none;margin:0;text-align:right}
-@media(max-width:600px){.site-header{height:68px}.site-header .brand{width:166px}main.expedition-entry .entry-copy h1{font-size:clamp(36px,11vw,48px)}}
+@media(max-width:600px){.site-header{height:68px}main.expedition-entry .entry-copy h1{font-size:clamp(36px,11vw,48px)}}
