@@ -1,6 +1,34 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MusicFest · Estudiante</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"></head><body>
-<div class="grain"></div><section id="join" class="join-view"><div class="join-brand"><img src="assets/brand/vector/musicfest-logo-d-noche-vector.svg" alt="MusicFest"><p>EL FESTIVAL ES TU MODELO</p></div><form id="joinForm"><label>Código de partida<input id="code" value="DEMO" maxlength="10" required></label><label>Nombre del equipo<input id="team" placeholder="Ej. Los Optimizadores" required></label><button>Entrar al festival <span>↗</span></button><p id="joinError" class="join-error" role="alert"></p><a href="admin.html">Abrir panel docente</a></form></section>
-<main id="game" hidden><header class="app-top"><img src="assets/brand/musicfest-mark-primary.svg" alt="MusicFest"><div><small id="sessionLabel">PARTIDA</small><b id="teamLabel"></b></div><div class="sync"><i></i><span id="syncText">Sincronizado</span></div></header>
+<div class="grain"></div><section id="join" class="join-view">
+<div class="join-panel">
+<div class="join-inner">
+<div class="join-lockup">
+<img class="join-logo" src="assets/brand/vector/musicfest-logo-b-festival-vector.svg" alt="">
+<div><b>MusicFest</b><p class="join-kicker">Juego de optimización</p></div>
+</div>
+<h1 class="join-title">Arma el lineup.<br>Optimiza el impacto.</h1>
+<p class="join-lead">Tres días. Un solo pool. La popularidad más alta gana.</p>
+<div class="join-roles" id="joinRoles">
+<button type="button" class="join-role is-student" id="roleStudent">Soy estudiante<span aria-hidden="true">→</span></button>
+<a class="join-role is-teacher" href="admin.html">Soy docente<span aria-hidden="true">→</span></a>
+</div>
+<form id="joinForm" class="join-form" hidden>
+<label>Código de partida<input id="code" value="DEMO" maxlength="10" required autocomplete="off"></label>
+<label>Nombre del equipo<input id="team" placeholder="Ej. Los Optimizadores" required autocomplete="off"></label>
+<button class="join-role is-student">Entrar al festival<span aria-hidden="true">↗</span></button>
+<p id="joinError" class="join-error" role="alert"></p>
+<button type="button" class="join-back" id="roleBack">← Elegir otro rol</button>
+</form>
+<ul class="join-facts">
+<li><b>1</b>Un solo pool de artistas</li>
+<li><b>$</b>Presupuesto limitado</li>
+<li><b>◷</b>Tiempo limitado</li>
+</ul>
+</div>
+</div>
+<div class="join-art" role="img" aria-label="Credenciales de festival sobre un escenario nocturno, con la ruta de los tres días"></div>
+</section>
+<main id="game" hidden><header class="app-top"><img class="app-mark" src="assets/brand/vector/musicfest-logo-b-festival-vector.svg" alt="MusicFest"><div><small id="sessionLabel">PARTIDA</small><b id="teamLabel"></b></div><div class="sync"><i></i><span id="syncText">Sincronizado</span></div></header>
 <section class="game-head"><div><p id="roundLabel">RONDA 1/3</p><h1 id="dayTitle">Viernes</h1></div><div class="session-state"><small>ESTADO</small><b id="sessionState">Lobby</b></div></section>
 <div id="waiting" class="waiting"><b>El escenario todavía está cerrado.</b><p>Tu equipo ya está dentro. La experiencia comenzará cuando el docente inicie la partida.</p></div>
 <section id="workspace" class="workspace" hidden><aside class="brief"><p class="kicker">TU BRIEF</p><h2>Hazlo posible.<br>Hazlo popular.</h2><div id="constraints"></div><div class="score"><span>POPULARIDAD</span><b id="score">00</b></div><button id="submit" disabled>Enviar lineup</button><p id="submitHint"></p></aside>
