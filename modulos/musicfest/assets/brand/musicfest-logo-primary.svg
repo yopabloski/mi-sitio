@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 132" role="img" aria-labelledby="title desc">
+  <title id="title">MusicFest</title>
+  <desc id="desc">Monograma MF con micrófono integrado y destello azul</desc>
+  <g transform="translate(4 6)">
+    <path fill="#171710" d="M0 0h24l28 28L80 0h24v112H74V43L52 65 30 43v69H0z"/>
+    <path fill="#FF4D22" d="M104 0h82v27h-51v18h43v26h-43v41h-31z"/>
+    <g transform="translate(78 35)">
+      <path fill="#F2EFDF" d="M0 17C0 7.6 7.6 0 17 0s17 7.6 17 17v28c0 9.4-7.6 17-17 17S0 54.4 0 45z"/>
+      <path fill="#171710" d="M7 18h20v4H7zm0 8h20v4H7zm0 8h20v4H7zm7 8h6v9h-6z"/>
+      <path fill="none" stroke="#F2EFDF" stroke-width="6" stroke-linecap="round" d="M-7 39v7c0 13.3 10.7 24 24 24s24-10.7 24-24v-7M17 70v12M7 82h20"/>
+    </g>
+    <path fill="#4CA5FF" d="M194 73c0-11 6-17 17-17-11 0-17-6-17-17 0 11-6 17-17 17 11 0 17 6 17 17z"/>
+  </g>
+  <text x="232" y="91" fill="#171710" font-family="Arial Narrow, Helvetica Neue, sans-serif" font-size="76" font-weight="900" letter-spacing="-3">MUSICFEST</text>
+</svg>

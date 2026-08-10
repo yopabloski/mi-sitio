@@ -1,0 +1,304 @@
+rules_version = '2';
+
+// ============================================================================
+// Proyecto Streamlab (streamlab-b9122)
+// Este archivo es ÚNICO por proyecto: contiene MovieBlend, La Odisea y MusicFest.
+// Desplegarlo con sólo una sección BORRARÍA las reglas de los otros módulos.
+// Base: firestore.rules de La Odisea (sin modificaciones en sus secciones).
+// ============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ------------------------------------------------------------------
+    // Helpers compartidos
+    // ------------------------------------------------------------------
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Docentes autorizados para administrar La Odisea.
+    function isOdysseyAdmin() {
+      return request.auth != null
+        && request.auth.uid in [
+          'TVmbMyACnKZ8RxqcnBSncsz3umx2'
+        ];
+    }
+
+    // Docentes autorizados para administrar MusicFest.
+    // A diferencia de La Odisea, la lista NO está incrustada en el cliente:
+    // vive en musicfestAdmins/{uid} y sólo se escribe con Admin SDK o consola.
+    function isMusicFestAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/musicfestAdmins/$(request.auth.uid));
+    }
+
+    // ==================================================================
+    // MovieBlend (existente)
+    // ==================================================================
+    match /exports/{docId} {
+      allow create: if request.auth != null;
+      allow read: if false;
+    }
+
+    match /activities/{docId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // ==================================================================
+    // La Odisea (existente)
+    // ==================================================================
+    match /experiences/{experienceId} {
+      allow read: if true;
+      allow write: if isOdysseyAdmin();
+
+      match /teams/{teamId} {
+        allow read: if isOdysseyAdmin();
+
+        allow create, update: if request.auth != null
+          && (
+            (
+              request.resource.data.uid == request.auth.uid
+              && get(
+                /databases/$(database)/documents/experiences/$(experienceId)
+              ).data.active == true
+            )
+            || isOdysseyAdmin()
+          );
+      }
+
+      match /attempts/{attemptId} {
+        allow read: if isOdysseyAdmin()
+                    || resource.data.validated == true;
+
+        allow create: if request.auth != null
+          && request.resource.data.teamId is string
+          && request.resource.data.score is number
+          && request.resource.data.durationMs is number
+          && request.resource.data.durationMs >= 0
+          && request.resource.data.validated == false
+          && request.resource.data.route is list
+          && request.resource.data.activeNodeIds is list
+          && request.resource.data.configurationKey is string
+          && request.resource.data.configurationName is string
+          && request.resource.data.activityCode is string
+          && request.resource.data.configurationKey ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.configurationKey
+          && request.resource.data.activeNodeIds ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.activeNodeIds
+          && request.resource.data.nodeCount ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.activeNodeIds.size()
+          && request.resource.data.round ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.round
+          && request.resource.data.metric ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.objectiveMetric
+          && request.resource.data.route.size() ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.activeNodeIds.size()
+          && request.resource.data.route.toSet().size() ==
+             request.resource.data.route.size()
+          && request.resource.data.route[0] == 'troy'
+          && request.resource.data.route[
+               request.resource.data.route.size() - 1
+             ] == 'ithaca'
+          && get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.active == true;
+
+        allow update, delete: if isOdysseyAdmin();
+      }
+    }
+
+    // ==================================================================
+    // MusicFest
+    // ==================================================================
+
+    // Padrón docente. Sólo lectura para el propio cliente (para decidir si
+    // muestra el panel). Se escribe con `npm run admin:grant` o desde consola.
+    match /musicfestAdmins/{uid} {
+      allow get: if signedIn() && request.auth.uid == uid;
+      allow list: if isMusicFestAdmin();
+      allow write: if false;
+    }
+
+    // Índice público CÓDIGO -> actividad. Permite que el estudiante resuelva
+    // el código de partida sin poder listar todas las actividades.
+    match /musicfestCodes/{code} {
+      allow read: if true;
+      allow write: if isMusicFestAdmin();
+    }
+
+    match /musicfestActivities/{activityId} {
+
+      function activity() {
+        return get(/databases/$(database)/documents/musicfestActivities/$(activityId)).data;
+      }
+
+      function team(teamId) {
+        return get(/databases/$(database)/documents/musicfestActivities/$(activityId)/teams/$(teamId)).data;
+      }
+
+      function isTeamMember(teamId) {
+        return signedIn()
+          && exists(/databases/$(database)/documents/musicfestActivities/$(activityId)/teams/$(teamId))
+          && request.auth.uid in team(teamId).memberUids;
+      }
+
+      function activityRunning() {
+        return activity().state == 'active' || activity().state == 'paused';
+      }
+
+      // Campos que un estudiante jamás puede tocar en la actividad.
+      // (Se deja explícito aunque la escritura completa ya sea sólo docente.)
+      function teacherOnlyActivityWrite() {
+        return isMusicFestAdmin();
+      }
+
+      // Lectura pública del documento: el estudiante necesita reglas del día,
+      // estado y pool antes de autenticarse. No hay datos personales aquí.
+      // Listar todas las actividades, en cambio, es cosa del docente.
+      allow get: if true;
+      allow list: if isMusicFestAdmin();
+      allow create: if isMusicFestAdmin()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.code is string
+        && request.resource.data.revision is int
+        && request.resource.data.days is list;
+      allow update: if teacherOnlyActivityWrite();
+      allow delete: if isMusicFestAdmin() && resource.data.ownerUid == request.auth.uid;
+
+      // --------------------------------------------------------------
+      // Pool de artistas curado por el docente
+      // --------------------------------------------------------------
+      match /artists/{artistId} {
+        allow read: if true;
+        allow write: if isMusicFestAdmin();
+      }
+
+      // --------------------------------------------------------------
+      // Bitácora: sólo el docente escribe y nadie edita el pasado
+      // --------------------------------------------------------------
+      match /events/{eventId} {
+        allow read: if isMusicFestAdmin();
+        allow create: if isMusicFestAdmin()
+          && request.resource.data.actorUid == request.auth.uid;
+        allow update, delete: if false;
+      }
+
+      // --------------------------------------------------------------
+      // Equipos
+      // --------------------------------------------------------------
+      match /teams/{teamId} {
+        // El estudiante consulta su propio equipo por id al entrar; sólo el
+        // docente puede recorrer la lista completa de equipos conectados.
+        allow get: if true;
+        allow list: if isMusicFestAdmin();
+
+        // Un equipo nuevo nace reclamado por quien lo crea.
+        allow create: if signedIn()
+          && request.resource.data.name is string
+          && request.resource.data.name.size() > 0
+          && request.resource.data.memberUids.hasOnly([request.auth.uid])
+          && request.resource.data.memberUids.size() == 1
+          && activity().state != 'closed';
+
+        allow update: if isMusicFestAdmin()
+          // Miembro existente: puede refrescar presencia, nunca la membresía.
+          || (
+            isTeamMember(teamId)
+            && request.resource.data.memberUids == resource.data.memberUids
+            && request.resource.data.name == resource.data.name
+          )
+          // Segundo dispositivo del mismo equipo, sólo si la actividad lo permite.
+          || (
+            signedIn()
+            && activity().teamJoinPolicy == 'open'
+            && activity().state != 'closed'
+            && request.resource.data.name == resource.data.name
+            && request.resource.data.memberUids == resource.data.memberUids.concat([request.auth.uid])
+          );
+
+        allow delete: if isMusicFestAdmin();
+
+        // Borrador por revisión: reabrir crea una revisión nueva y conserva
+        // intacta la anterior.
+        match /drafts/{revision} {
+          allow read: if isMusicFestAdmin() || isTeamMember(teamId);
+
+          allow create, update: if isMusicFestAdmin()
+            || (
+              isTeamMember(teamId)
+              && activityRunning()
+              && request.resource.data.selections is map
+              && request.resource.data.statuses is map
+              && request.resource.data.revision == activity().revision
+              && revision == string(activity().revision)
+            );
+
+          allow delete: if isMusicFestAdmin();
+        }
+      }
+
+      // --------------------------------------------------------------
+      // Entregas: inmutables para el estudiante, validadas por el docente
+      // --------------------------------------------------------------
+      match /submissions/{submissionId} {
+        // Lectura abierta a propósito: el Design Book pide que los equipos
+        // comparen su solución con la de los demás y con el óptimo. Si en algún
+        // curso no quieres esa transparencia, reemplaza esta línea por
+        //   allow read: if isMusicFestAdmin() || resource.data.validationStatus == 'validated';
+        // y haz que el cliente consulte siempre con where('validationStatus','==','validated').
+        allow read: if true;
+
+        allow create: if signedIn()
+          && isTeamMember(request.resource.data.teamId)
+          && activity().state == 'active'
+          // La entrega pertenece a la revisión vigente del día activo.
+          && request.resource.data.revision == activity().revision
+          && request.resource.data.dayIndex is int
+          && request.resource.data.dayIndex >= 0
+          && request.resource.data.dayIndex < activity().days.size()
+          && request.resource.data.dayId == activity().days[request.resource.data.dayIndex].id
+          && (
+            activity().mode == 'simultaneous'
+            || request.resource.data.dayIndex == activity().activeDayIndex
+          )
+          // Estructura del lineup verificada por el servidor.
+          && request.resource.data.selections is list
+          && request.resource.data.selections.size()
+             == activity().days[request.resource.data.dayIndex].artistCount
+          && request.resource.data.selections.toSet().size()
+             == request.resource.data.selections.size()
+          && request.resource.data.selections.toSet()
+               .difference(activity().activeArtistIds.toSet()).size() == 0
+          // El estudiante nunca declara su propio veredicto.
+          && request.resource.data.validationStatus == 'pending'
+          && request.resource.data.validatedAt == null
+          && request.resource.data.validatedBy == null
+          && request.resource.data.submittedBy == request.auth.uid;
+
+        // Una entrega no se reescribe: sólo el docente cambia su veredicto.
+        allow update: if isMusicFestAdmin()
+          && request.resource.data.selections == resource.data.selections
+          && request.resource.data.teamId == resource.data.teamId
+          && request.resource.data.dayId == resource.data.dayId
+          && request.resource.data.revision == resource.data.revision
+          && request.resource.data.submittedAt == resource.data.submittedAt;
+
+        allow delete: if isMusicFestAdmin();
+      }
+    }
+  }
+}

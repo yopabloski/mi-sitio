@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Docentes autorizados para administrar La Odisea.
+    function isOdysseyAdmin() {
+      return request.auth != null
+        && request.auth.uid in [
+          'TVmbMyACnKZ8RxqcnBSncsz3umx2'
+        ];
+    }
+    // MovieBlend: exportaciones.
+    match /exports/{docId} {
+      allow create: if request.auth != null;
+      allow read: if false;
+    }
+    // MovieBlend: actividades.
+    match /activities/{docId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+    // La Odisea: experiencias.
+    match /experiences/{experienceId} {
+      allow read: if true;
+      allow write: if isOdysseyAdmin();
+      match /teams/{teamId} {
+        allow read: if isOdysseyAdmin();
+        allow create, update: if request.auth != null
+          && (
+            (
+              request.resource.data.uid == request.auth.uid
+              && get(
+                /databases/$(database)/documents/experiences/$(experienceId)
+              ).data.active == true
+            )
+            || isOdysseyAdmin()
+          );
+      }
+      match /attempts/{attemptId} {
+        allow read: if isOdysseyAdmin()
+                    || resource.data.validated == true;
+        allow create: if request.auth != null
+          && request.resource.data.teamId is string
+          && request.resource.data.score is number
+          && request.resource.data.durationMs is number
+          && request.resource.data.durationMs >= 0
+          && request.resource.data.validated == false
+          && request.resource.data.route is list
+          && request.resource.data.activeNodeIds is list
+          && request.resource.data.configurationKey is string
+          && request.resource.data.configurationName is string
+          && request.resource.data.activityCode is string
+          && request.resource.data.configurationKey ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.configurationKey
+          && request.resource.data.activeNodeIds ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.activeNodeIds
+          && request.resource.data.nodeCount ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.activeNodeIds.size()
+          && request.resource.data.round ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.round
+          && request.resource.data.metric ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.objectiveMetric
+          && request.resource.data.route.size() ==
+             get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.activeNodeIds.size()
+          && request.resource.data.route.toSet().size() ==
+             request.resource.data.route.size()
+          && request.resource.data.route[0] == 'troy'
+          && request.resource.data.route[
+               request.resource.data.route.size() - 1
+             ] == 'ithaca'
+          && get(
+               /databases/$(database)/documents/experiences/$(experienceId)
+             ).data.active == true;
+        allow update, delete: if isOdysseyAdmin();
+      }
+    }
+  }
+}

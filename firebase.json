@@ -1,0 +1,22 @@
+{
+  "_comentario": [
+    "El sitio se publica en GitHub Pages (yopabloski.github.io/mi-sitio), no en Firebase Hosting.",
+    "Por eso este archivo NO declara 'hosting': evita que un `firebase deploy` accidental",
+    "publique una copia paralela del sitio.",
+    "Tampoco declara 'storage': desde el 3 de febrero de 2026 Cloud Storage for Firebase",
+    "exige plan Blaze, y este proyecto está en Spark. Las carátulas de MusicFest se sirven",
+    "como archivos estáticos del repositorio. Ver modulos/musicfest/docs/CARATULAS.md.",
+    "Firebase se usa aquí sólo como Firestore + Authentication.",
+    "Las reglas de Firestore son ÚNICAS por proyecto: cubren MovieBlend, La Odisea y MusicFest."
+  ],
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "emulators": {
+    "auth": { "port": 9099 },
+    "firestore": { "port": 8080 },
+    "ui": { "enabled": true, "port": 4000 },
+    "singleProjectMode": true
+  }
+}

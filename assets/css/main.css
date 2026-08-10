@@ -161,6 +161,15 @@ body {
   box-shadow: 0 14px 30px rgba(0,0,0,0.34), 0 0 0 5px rgba(208,80,50,0.08);
 }
 
+.musicfest-app-icon {
+  width: 128px;
+  height: 128px;
+  border: 1px solid rgba(255,77,34,0.5);
+  border-radius: 28px;
+  object-fit: contain;
+  box-shadow: 0 14px 30px rgba(0,0,0,0.34), 0 0 0 5px rgba(255,77,34,0.08);
+}
+
 /* PLACEHOLDER */
 
 .app-logo.placeholder {

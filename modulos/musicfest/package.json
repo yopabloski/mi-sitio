@@ -1,0 +1,32 @@
+{
+  "name": "musicfest",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "MusicFest · dinámica de optimización para aula. Módulo de la Plataforma de Decisiones.",
+  "scripts": {
+    "serve": "cd ../.. && python3 -m http.server ${PORT:-5173}",
+    "doctor": "node scripts/doctor.mjs",
+    "emulators": "cd ../.. && firebase emulators:start --import=./.emulator-data --export-on-exit=./.emulator-data",
+    "test": "npm run test:domain && npm run test:smoke",
+    "test:domain": "node --test 'tests/domain/*.test.mjs'",
+    "test:smoke": "node --test 'tests/integration/local-boot.test.mjs'",
+    "test:rules": "cd ../.. && firebase emulators:exec --only firestore \"node --test 'modulos/musicfest/tests/rules/*.test.mjs'\"",
+    "test:integration": "cd ../.. && firebase emulators:exec --only firestore,auth \"node --test 'modulos/musicfest/tests/integration/activity-flow.test.mjs'\"",
+    "import:activity": "node scripts/import-activity.mjs",
+    "admin:grant": "node scripts/grant-admin.mjs",
+    "sync:covers": "node scripts/sync-artist-covers.mjs",
+    "deploy:rules": "cd ../.. && firebase deploy --only firestore:rules,firestore:indexes",
+    "covers:download": "node scripts/download-covers.mjs"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^3.0.4",
+    "firebase": "^10.14.1",
+    "firebase-admin": "^12.7.0",
+    "firebase-tools": "^15.0.0",
+    "jsdom": "^25.0.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

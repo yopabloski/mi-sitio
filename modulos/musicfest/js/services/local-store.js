@@ -1,0 +1,10 @@
+import{defaultSession}from'../domain/game.js';
+const sessionKey=code=>`musicfest:session:${String(code).trim().toUpperCase()}`,teamKey=(code,team)=>`musicfest:draft:${String(code).trim().toUpperCase()}:${team}`;
+export const loadSession=code=>JSON.parse(localStorage.getItem(sessionKey(code))||'null');
+export function ensureSession(code='DEMO'){let x=loadSession(code);if(!x){x=defaultSession();x.code=String(code).trim().toUpperCase()||'DEMO';saveSession(x)}return x}
+export function saveSession(session){session.updatedAt=new Date().toISOString();localStorage.setItem(sessionKey(session.code),JSON.stringify(session));dispatchEvent(new CustomEvent('musicfest-session',{detail:session}));return session}
+export const loadDraft=(code,team)=>JSON.parse(localStorage.getItem(teamKey(code,team))||'null')||{team,selections:{friday:[],saturday:[],sunday:[]},statuses:{friday:'editable',saturday:'editable',sunday:'editable'},revision:1};
+export function saveDraft(code,draft){draft.updatedAt=new Date().toISOString();localStorage.setItem(teamKey(code,draft.team),JSON.stringify(draft));dispatchEvent(new CustomEvent('musicfest-draft',{detail:{code:String(code).trim().toUpperCase(),draft}}));return draft}
+export function listDrafts(code){const prefix=`musicfest:draft:${String(code).trim().toUpperCase()}:`;return Object.keys(localStorage).filter(k=>k.startsWith(prefix)).map(k=>JSON.parse(localStorage.getItem(k))).filter(Boolean)}
+export function setSubmissionStatus(code,team,dayId,status){const draft=loadDraft(code,team);if(!draft.submissions?.[dayId])return null;draft.submissions[dayId].validationStatus=status;draft.submissions[dayId].validatedAt=status==='validated'?new Date().toISOString():null;if(status==='returned')draft.statuses[dayId]='needs_revalidation';return saveDraft(code,draft)}
+export function watchSession(code,cb){const onCustom=e=>e.detail.code===code&&cb(e.detail),onStorage=e=>e.key===sessionKey(code)&&cb(loadSession(code));addEventListener('musicfest-session',onCustom);addEventListener('storage',onStorage);return()=>{removeEventListener('musicfest-session',onCustom);removeEventListener('storage',onStorage)}}

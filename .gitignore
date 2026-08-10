@@ -1,2 +1,14 @@
 .DS_Store
 **/.DS_Store
+node_modules/
+.env
+.env.local
+.secrets/
+.firebaserc
+.firebase/
+.emulator-data/
+firebase-debug.log
+firestore-debug.log
+storage-debug.log
+ui-debug.log
+*.log

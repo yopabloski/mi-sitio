@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 132" role="img" aria-labelledby="title">
+  <title id="title">MusicFest, versión monocromática</title>
+  <g transform="translate(4 6)" fill="#171710">
+    <path d="M0 0h24l28 28L80 0h24v112H74V43L52 65 30 43v69H0zM104 0h82v27h-51v18h43v26h-43v41h-31z"/>
+    <g transform="translate(78 35)"><path fill="#fff" d="M0 17C0 7.6 7.6 0 17 0s17 7.6 17 17v28c0 9.4-7.6 17-17 17S0 54.4 0 45z"/><path d="M7 18h20v4H7zm0 8h20v4H7zm0 8h20v4H7zm7 8h6v9h-6z"/><path fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" d="M-7 39v7c0 13.3 10.7 24 24 24s24-10.7 24-24v-7M17 70v12M7 82h20"/></g>
+  </g>
+  <text x="232" y="91" fill="#171710" font-family="Arial Narrow, Helvetica Neue, sans-serif" font-size="76" font-weight="900" letter-spacing="-3">MUSICFEST</text>
+</svg>
