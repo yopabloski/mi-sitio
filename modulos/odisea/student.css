@@ -38,12 +38,12 @@ body.odyssey-site:has(#game:not([hidden]))::before{content:'';position:fixed;ins
 #game .student-node.pending{width:7px;height:7px;background:var(--od-ivory);border:1px dashed var(--od-midnight);box-shadow:0 0 0 1px rgb(238 232 220/.58)}
 #game .student-node.selected{width:17px;height:17px;font-size:7px;font-weight:500}
 #game .student-node.forbidden-endpoint{z-index:5;color:#fff;background:#6f2528;border-color:#fff;box-shadow:0 0 0 2px rgb(111 37 40/.42)}
-#game .route-halo.closed-halo{stroke:#f4e7dc;stroke-width:.82;opacity:.8}
-#game .route-path.closed-path{stroke:#6f2528;stroke-width:.48;stroke-dasharray:.78 .5;filter:drop-shadow(0 0 .28px #321012)}
-#game .map marker.blocked-arrow path{fill:#6f2528}
+#game .route-halo.closed-halo{stroke:#eadbd1;stroke-width:.42;opacity:.7}
+#game .route-path.closed-path{stroke:#873238;stroke-width:.22;stroke-dasharray:.65 .48;filter:drop-shadow(0 0 .18px #321012)}
 #game .student-node.is-linked{z-index:7;transform:translate(-50%,-50%) scale(1.3);box-shadow:0 0 0 4px var(--od-focus)}
-#game .route-halo{stroke-width:.72;opacity:.72}
-#game .route-path{stroke:var(--od-copper);stroke-width:.34;stroke-dasharray:.88 .76;filter:drop-shadow(0 .15px .22px rgb(5 9 7/.55))}
+#game .route-halo{stroke-width:.34;opacity:.5;transition:opacity 160ms ease}
+#game .route-path{stroke:var(--od-copper);stroke-width:.16;stroke-dasharray:.62 .58;filter:drop-shadow(0 .1px .14px rgb(5 9 7/.48));transition:opacity 160ms ease,stroke-width 160ms ease}
+#game [data-route-from].route-dimmed{opacity:.13}#game .route-path.route-emphasis{stroke-width:.24;opacity:1}#game .route-halo.route-emphasis{opacity:.82}
 
 #game .result,#game .leader{position:relative;margin:0 0 18px;padding:24px;overflow:hidden;color:var(--od-ivory);background:rgb(31 43 46/.88);border:1px solid var(--od-slate);box-shadow:none}
 #game .result{border-top:2px solid var(--od-copper)}#game .leader{border-top:2px solid var(--od-sand)}
