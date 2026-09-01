@@ -3,7 +3,7 @@
 // que lo que se guarda sea siempre la forma normalizada.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DOMINIO, normalizarCorreo, correoVacio, validarCorreo } from '../../js/domain/correo.js';
+import { DOMINIO, normalizarCorreo, correoVacio, validarCorreo, validarCorreos } from '../../js/domain/correo.js';
 
 test('el campo en blanco es válido y no produce correo', () => {
   for (const vacio of ['', '   ', '\t\n', null, undefined]) {
@@ -63,4 +63,49 @@ test('validar no depende del entorno: mismo texto, mismo resultado', () => {
   const a = validarCorreo('Ana@udd.cl');
   const b = validarCorreo('ana@UDD.cl');
   assert.deepEqual(a, b);
+});
+
+// --- La pareja -------------------------------------------------------------
+// Trabajan de a dos, pero es habitual que sólo uno se siente al computador y
+// que alguno trabaje solo. Ninguno de los dos campos puede obligar.
+
+test('los dos campos en blanco siguen siendo válidos y no dejan correos', () => {
+  const r = validarCorreos(['', '   ']);
+  assert.equal(r.ok, true);
+  assert.deepEqual(r.correos, []);
+  assert.equal(r.indice, null);
+});
+
+test('sin argumentos tampoco falla', () => {
+  assert.deepEqual(validarCorreos(), { ok: true, correos: [], error: null, indice: null });
+});
+
+test('uno solo es válido, esté en el campo que esté', () => {
+  assert.deepEqual(validarCorreos(['ana@udd.cl', '']).correos, ['ana@udd.cl']);
+  assert.deepEqual(validarCorreos(['', 'ana@udd.cl']).correos, ['ana@udd.cl']);
+});
+
+test('la pareja completa conserva el orden: primero quien opera', () => {
+  const r = validarCorreos([' Ana@UDD.cl ', 'beto@udd.cl']);
+  assert.equal(r.ok, true);
+  assert.deepEqual(r.correos, ['ana@udd.cl', 'beto@udd.cl'], 'normalizados y en orden de campo');
+});
+
+test('el mismo correo dos veces se rechaza y señala el segundo campo', () => {
+  const r = validarCorreos(['ana@udd.cl', 'ANA@udd.cl']);
+  assert.equal(r.ok, false);
+  assert.equal(r.indice, 1, 'el campo a corregir es el segundo, no el primero');
+  assert.deepEqual(r.correos, []);
+  assert.match(r.error, /solo o sola/, 'el mensaje explica qué hacer si trabaja sin pareja');
+});
+
+test('un correo inválido señala su propio campo', () => {
+  assert.equal(validarCorreos(['ana@gmail.com', 'beto@udd.cl']).indice, 0);
+  assert.equal(validarCorreos(['ana@udd.cl', 'beto@gmail.com']).indice, 1);
+});
+
+test('si algo falla no se devuelve ningún correo a medias', () => {
+  for (const par of [['ana@udd.cl', 'beto@gmail.com'], ['ana@gmail.com', 'beto@udd.cl'], ['ana@udd.cl', 'ana@udd.cl']]) {
+    assert.deepEqual(validarCorreos(par).correos, [], JSON.stringify(par));
+  }
 });

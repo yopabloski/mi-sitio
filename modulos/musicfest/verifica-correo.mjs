@@ -31,7 +31,7 @@ function boot() {
 
 const load = name => import(new URL(name, MODULE_DIR).href + `?t=${Date.now()}${Math.random()}`);
 
-async function entrar({ equipo, correo }) {
+async function entrar({ equipo, correo = '', pareja = '' }) {
   const ctx = boot();
   const { $, window } = ctx;
   await load('js/student.js');
@@ -40,26 +40,29 @@ async function entrar({ equipo, correo }) {
   $('#code').value = 'DEMO';
   $('#team').value = equipo;
   $('#email').value = correo;
+  $('#email2').value = pareja;
   $('#joinForm').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
   await new Promise(r => setTimeout(r, 40));
   return ctx;
 }
 
-// 0. El campo existe, es opcional y está bien rotulado.
+// 0. Los dos campos existen, ambos son opcionales y están bien rotulados.
 {
   const { $, cerrar } = boot();
-  const campo = $('#email');
-  assert.ok(campo, 'debe existir #email');
-  assert.equal(campo.hasAttribute('required'), false, 'el campo es opcional');
-  assert.equal(campo.placeholder, 'nombre@udd.cl');
-  const label = campo.closest('label');
-  assert.ok(label.textContent.includes('Correo UDD'), 'el rótulo nombra el correo');
-  assert.ok(label.querySelector('small').textContent.includes('opcional'));
-  // Orden visual: código, equipo, correo, botón.
+  for (const id of ['email', 'email2']) {
+    const campo = $('#' + id);
+    assert.ok(campo, 'debe existir #' + id);
+    assert.equal(campo.hasAttribute('required'), false, id + ' es opcional');
+    assert.equal(campo.placeholder, 'nombre@udd.cl');
+    assert.ok(campo.closest('label').querySelector('small').textContent.includes('opcional'), id);
+  }
+  assert.match($('#email').closest('label').textContent, /Tu correo/, 'el primero es de quien opera');
+  assert.match($('#email2').closest('label').textContent, /pareja/, 'el segundo es de la pareja');
+  // Orden visual: código, equipo, tu correo, correo de la pareja, botón.
   const orden = [...$('#joinForm').children].map(n => n.querySelector('input')?.id || n.tagName);
-  assert.deepEqual(orden.slice(0, 4), ['code', 'team', 'email', 'BUTTON'], JSON.stringify(orden));
+  assert.deepEqual(orden.slice(0, 5), ['code', 'team', 'email', 'email2', 'BUTTON'], JSON.stringify(orden));
   cerrar();
-  console.log('✓ el campo existe, es opcional y va después del equipo');
+  console.log('✓ los dos campos existen, son opcionales y van después del equipo');
 }
 
 // 1. En blanco: entra igual, sin error y sin recordar correo.
@@ -68,20 +71,54 @@ async function entrar({ equipo, correo }) {
   assert.equal($('#joinError').textContent, '', 'en blanco no debe dar error');
   assert.equal($('#join').hidden, true, 'debe entrar a la partida');
   assert.equal($('#teamLabel').textContent, 'Sin Correo');
-  assert.equal(JSON.parse(window.sessionStorage.getItem('musicfest:last')).email, null);
+  assert.deepEqual(JSON.parse(window.sessionStorage.getItem('musicfest:last')).emails, []);
   cerrar();
-  console.log('✓ campo en blanco: entra igual y no guarda correo');
+  console.log('✓ ambos campos en blanco: entra igual y no guarda correos');
 }
 
-// 2. Correo válido: entra y se recuerda normalizado.
+// 2. La pareja completa: entra y se recuerdan ambos, normalizados y en orden.
 {
-  const { $, window, cerrar } = await entrar({ equipo: 'Los Optimizadores', correo: '  Pablo.Gonzalez@UDD.CL ' });
+  const { $, window, cerrar } = await entrar({ equipo: 'Los Optimizadores', correo: '  Pablo.Gonzalez@UDD.CL ', pareja: 'Ana.Perez@udd.cl' });
   assert.equal($('#joinError').textContent, '');
   assert.equal($('#join').hidden, true);
-  assert.equal(JSON.parse(window.sessionStorage.getItem('musicfest:last')).email, 'pablo.gonzalez@udd.cl');
+  assert.deepEqual(JSON.parse(window.sessionStorage.getItem('musicfest:last')).emails,
+    ['pablo.gonzalez@udd.cl', 'ana.perez@udd.cl'], 'primero quien opera');
   assert.equal($('#email').hasAttribute('aria-invalid'), false);
   cerrar();
-  console.log('✓ correo válido: entra y se recuerda en minúsculas');
+  console.log('✓ la pareja completa: entra y se recuerdan los dos, en orden');
+}
+
+// 2b. Trabajar solo: el segundo campo en blanco es legítimo.
+{
+  const { $, window, cerrar } = await entrar({ equipo: 'Solitario', correo: 'ana@udd.cl' });
+  assert.equal($('#joinError').textContent, '');
+  assert.equal($('#join').hidden, true);
+  assert.deepEqual(JSON.parse(window.sessionStorage.getItem('musicfest:last')).emails, ['ana@udd.cl']);
+  cerrar();
+  console.log('✓ trabajar solo: basta con el primer correo');
+}
+
+// 2c. El mismo correo en los dos campos se rechaza y señala el segundo.
+{
+  const { $, window, cerrar } = await entrar({ equipo: 'Repetido', correo: 'ana@udd.cl', pareja: 'ANA@udd.cl' });
+  assert.equal($('#join').hidden, false, 'no debe entrar');
+  assert.match($('#joinError').textContent, /solo o sola/);
+  assert.equal($('#email2').getAttribute('aria-invalid'), 'true', 'el campo señalado es el segundo');
+  assert.equal($('#email').hasAttribute('aria-invalid'), false, 'el primero está bien y no se marca');
+  assert.equal(window.document.activeElement.id, 'email2');
+  cerrar();
+  console.log('✓ correo repetido: rechaza y señala el segundo campo');
+}
+
+// 2d. Un dominio ajeno en el segundo campo señala ese campo, no el primero.
+{
+  const { $, window, cerrar } = await entrar({ equipo: 'Mixto', correo: 'ana@udd.cl', pareja: 'beto@gmail.com' });
+  assert.equal($('#join').hidden, false);
+  assert.match($('#joinError').textContent, /@udd\.cl/);
+  assert.equal($('#email2').getAttribute('aria-invalid'), 'true');
+  assert.equal(window.document.activeElement.id, 'email2');
+  cerrar();
+  console.log('✓ el error señala el campo que lo causó, no siempre el primero');
 }
 
 // 3. Otro dominio: no entra, mensaje visible y foco en el campo.
@@ -105,7 +142,7 @@ async function entrar({ equipo, correo }) {
   await load('js/student.js');
   $('#roleStudent').dispatchEvent(new window.Event('click'));
   await new Promise(r => setTimeout(r, 100));
-  $('#code').value = 'DEMO'; $('#team').value = 'Reintento'; $('#email').value = 'ana@alumnos.udd.cl';
+  $('#code').value = 'DEMO'; $('#team').value = 'Reintento'; $('#email').value = 'ana@alumnos.udd.cl'; $('#email2').value = '';
   $('#joinForm').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
   await new Promise(r => setTimeout(r, 20));
   assert.notEqual($('#joinError').textContent, '', 'subdominio rechazado');

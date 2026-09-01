@@ -12,7 +12,7 @@ import { syncedArtwork, releaseInfo as seedReleaseInfo } from '../data/covers.ge
 import { days as defaultDays } from '../domain/game.js';
 import { toArtistDocs, fromArtistDocs, sameArtist } from '../domain/activity-mapper.js';
 import { serializeChecks } from '../domain/submissions.js';
-import { validarCorreo } from '../domain/correo.js';
+import { validarCorreos } from '../domain/correo.js';
 import { decidirIngreso, politicaDe, mensajeNombreTomado, miembrosTras, POLITICAS } from '../domain/equipos.js';
 
 const SEED_IDS = new Set(seedArtists.map(a => a.id));
@@ -36,7 +36,7 @@ const state = {
   submissions: new Map(),     // submissionId -> data
   teamId: null,
   teamName: null,
-  email: null,               // correo @udd.cl del estudiante, si lo dio
+  emails: [],                // correos @udd.cl de la pareja, si los dieron
   session: null,              // objeto legacy compuesto
   remote: null,               // último snapshot compuesto (base del diff)
   unsubscribe: [],
@@ -255,12 +255,13 @@ async function subscribeTeam(teamId) {
 // connect
 // ---------------------------------------------------------------------------
 
-export async function connect({ code, role = 'student', teamName = null, email = null, create = false, ownerUid = null } = {}) {
+export async function connect({ code, role = 'student', teamName = null, emails = [], create = false, ownerUid = null } = {}) {
   await disconnect();
   state.role = role;
-  // El correo es opcional: si viene mal formado se ignora en silencio en vez de
-  // impedir la entrada. La interfaz ya avisó antes de llegar hasta acá.
-  state.email = validarCorreo(email).correo;
+  // Los correos son opcionales: si vienen mal formados se ignoran en silencio
+  // en vez de impedir la entrada. La interfaz ya avisó antes de llegar hasta acá.
+  const revisados = validarCorreos(emails);
+  state.emails = revisados.ok ? revisados.correos : [];
   state.code = String(code || 'DEMO').trim().toUpperCase();
 
   const user = role === 'admin' ? await currentUser() : await signInStudent();
@@ -274,7 +275,7 @@ export async function connect({ code, role = 'student', teamName = null, email =
   if (role === 'admin') {
     await subscribeTeacher();
   } else if (teamName) {
-    state.teamId = await joinTeam(teamName, state.email);
+    state.teamId = await joinTeam(teamName, state.emails);
     await subscribeTeam(state.teamId);
   }
 
@@ -295,7 +296,7 @@ export async function disconnect() {
   state.activity = null;
   state.session = null;
   state.remote = null;
-  state.email = null;
+  state.emails = [];
   state.ready = false;
 }
 
@@ -303,7 +304,7 @@ export async function disconnect() {
 // Equipos
 // ---------------------------------------------------------------------------
 
-export async function joinTeam(name, email = null) {
+export async function joinTeam(name, emails = []) {
   const { db, fsMod } = await sdk();
   const teamId = normalizeTeamId(name);
   const ref = fsMod.doc(db, paths.activities, state.activityId, 'teams', teamId);
@@ -321,11 +322,12 @@ export async function joinTeam(name, email = null) {
   });
   if (!permitido) throw new Error(mensajeNombreTomado(state.teamName));
 
-  // Los correos se acumulan en el equipo sin duplicados: un equipo son varias
-  // personas y cada dispositivo aporta a lo sumo el suyo. Nunca se borran acá,
-  // porque quien entra segundo no tiene por qué pisar lo que dejó el primero.
-  const previos = datos.memberEmails || [];
-  const memberEmails = (email && !previos.includes(email) ? [...previos, email] : previos).slice(0, MAX_TEAM_EMAILS);
+  // Los correos se acumulan en el equipo sin duplicados: cada dispositivo aporta
+  // los de su pareja —hasta dos— y nunca se borran acá, porque quien entra
+  // segundo no tiene por qué pisar lo que dejó el primero.
+  const memberEmails = [...(datos.memberEmails || [])];
+  for (const correo of emails) if (correo && !memberEmails.includes(correo)) memberEmails.push(correo);
+  memberEmails.splice(MAX_TEAM_EMAILS);
   const memberUids = miembrosTras(accion, miembros, state.uid);
 
   if (accion === 'crear') {

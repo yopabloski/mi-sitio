@@ -45,3 +45,37 @@ export function validarCorreo(bruto) {
 
   return { ok: true, correo, error: null };
 }
+
+/**
+ * La pareja: dos correos, ambos opcionales. Trabajar solo es legítimo, y que
+ * entre uno por los dos también, así que ninguno de los dos campos obliga.
+ *
+ * El único rechazo propio de la pareja es escribir el mismo correo dos veces:
+ * no aporta un segundo integrante y ensucia el registro con un duplicado que
+ * después hay que limpiar a mano.
+ *
+ * @param {Array<string>} brutos lo que escribió el estudiante, en orden de campo
+ * @returns {{ok:boolean, correos:string[], error:string|null, indice:number|null}}
+ *   `indice` es el campo que hay que enfocar cuando algo falla.
+ */
+export function validarCorreos(brutos = []) {
+  const correos = [];
+
+  for (let i = 0; i < brutos.length; i++) {
+    const resultado = validarCorreo(brutos[i]);
+    if (!resultado.ok) return { ok: false, correos: [], error: resultado.error, indice: i };
+    if (!resultado.correo) continue;
+
+    if (correos.includes(resultado.correo)) {
+      return {
+        ok: false,
+        correos: [],
+        error: 'Los dos correos son el mismo. Si trabajas solo o sola, deja el segundo en blanco.',
+        indice: i
+      };
+    }
+    correos.push(resultado.correo);
+  }
+
+  return { ok: true, correos, error: null, indice: null };
+}
