@@ -18,7 +18,8 @@
     "sync:covers": "node scripts/sync-artist-covers.mjs",
     "deploy:rules": "cd ../.. && firebase deploy --only firestore:rules,firestore:indexes",
     "covers:download": "node scripts/download-covers.mjs",
-    "covers:normalize": "node scripts/normalize-covers.mjs"
+    "covers:normalize": "node scripts/normalize-covers.mjs",
+    "covers:localize": "node scripts/localize-covers.mjs"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^3.0.4",

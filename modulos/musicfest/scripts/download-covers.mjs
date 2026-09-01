@@ -179,6 +179,21 @@ const limpiarPrevias = (id, conservar) => {
   }
 };
 
+
+// --force sin --code lee una fuente local que puede ser vieja: la exportación
+// musicfest-*.json es una foto de un momento, y sus URLs no saben nada de las
+// carátulas que se hayan elegido después. Sin este aviso, un --force distraído
+// reemplaza trabajo de curaduría por lo que había hace meses.
+if (force && !code && !urlManual && candidatos.length) {
+  const conArchivo = candidatos.filter(a => yaDescargada(a.id)).length;
+  if (conArchivo) {
+    console.warn(`\n  ⚠ --force sin --code: vas a reemplazar ${conArchivo} carátulas que ya están en el`);
+    console.warn('    repositorio con las URLs de una fuente local que puede estar desactualizada.');
+    console.warn('    Si buscabas las que elegiste en el panel docente, corta con Ctrl+C y usa --code.');
+    console.warn('    Para una sola carátula concreta: --only ARTISTA --url DIRECCION.');
+  }
+}
+
 if (dryRun) {
   candidatos.forEach(a => console.log(`  · ${a.id}  ${yaDescargada(a.id) ? '(ya está)' : ''}`));
   console.log('\n--dry-run: no se descargó nada.');

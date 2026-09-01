@@ -70,6 +70,34 @@ git commit -m "Bajar carátulas de MusicFest al repositorio"
 - Las que fallen conservan su URL externa: nada se rompe, sólo sigue dependiendo
   del CDN.
 
+## Revisar y cambiar varias: la planilla
+
+Es la vía preferida cuando hay que mirar el catálogo completo o cambiar más de
+una o dos carátulas. Ver 81 portadas juntas es lo que hace posible la decisión
+curatorial —si la imagen representa al artista o es sólo la tapa de un disco
+cualquiera—, y eso no se puede hacer artista por artista en el panel.
+
+El ciclo:
+
+1. Se genera una planilla con una fila por artista: la carátula actual
+   incrustada en la celda, el álbum del que salió con enlace a su ficha, el
+   estado de revisión, el peso, el tamaño de origen, y dos columnas vacías para
+   la URL nueva y las notas.
+2. Se llena la columna **URL nueva** sólo en las que se quieren cambiar. El
+   resto se deja en blanco.
+3. Se aplican los reemplazos con `--only ARTISTA --url DIRECCION`, uno por fila
+   con URL, y se cierra con un `npm run covers:normalize`.
+
+Para un lote conviene `--no-normalize` en cada descarga y normalizar una sola
+vez al final: veinte tablas del normalizador seguidas esconden cualquier fallo.
+
+Qué mirar al terminar: que `git status` liste exactamente tantas carátulas
+modificadas como filas llenaste, y que las dimensiones de origen sean cuadradas.
+Las que no lo sean se recortan al centro y merecen una mirada en el pool.
+
+La planilla es un documento de trabajo, no infraestructura: no vive en el
+repositorio.
+
 ## Cambiar una carátula que ya está en el repositorio
 
 Este es el caso que confunde, así que conviene tenerlo escrito. Una vez que la
@@ -154,6 +182,34 @@ reales. Con pantallas retina, 600 cubre todo con margen; 800 sería peso puro.
 El manifiesto vive fuera de `assets/covers/` a propósito: `download-covers.mjs`
 recorre ese directorio entero para armar el mapa, y cualquier archivo extra ahí
 adentro terminaría como una entrada falsa en `covers.local.js`.
+
+## La semilla también apunta al repositorio
+
+`js/data/covers.generated.js` guarda la primera sincronización con Apple Music.
+Sus URLs quedaron obsoletas en cuanto las carátulas bajaron al repositorio
+—`localArtwork` las pisa en toda la cadena— pero seguían haciendo daño:
+`remote-store.js` las usa para sembrar `artworkUrl` al crear una actividad
+nueva, que nacía apuntando a un CDN ajeno.
+
+```bash
+npm run covers:localize -- --dry-run
+npm run covers:localize
+```
+
+Reemplaza cada URL de `syncedArtwork` por la ruta local del mismo artista. No
+toca `releaseInfo` —álbum, año, estado de revisión y el enlace a la ficha del
+disco son metadatos que el panel muestra— ni borra nada. Es idempotente: los
+artistas sin archivo en el repositorio conservan su URL, que es lo único para
+lo que todavía sirve.
+
+## Una trampa con --force
+
+`download-covers.mjs` sin `--code` lee la exportación `musicfest-*.json` del
+módulo, que es una foto de un momento. Sus URLs no saben nada de las carátulas
+elegidas después, así que un `--force` distraído reemplaza trabajo de curaduría
+por lo que había hace meses. El script avisa antes de hacerlo, pero conviene
+saberlo: para traer lo que elegiste en el panel va `--code`, y para una carátula
+concreta, `--only ARTISTA --url DIRECCION`.
 
 ## Cómo las resuelve la aplicación
 
