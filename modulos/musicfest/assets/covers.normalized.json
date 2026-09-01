@@ -1,6 +1,6 @@
 {
   "_comentario": "Generado por scripts/normalize-covers.mjs · no editar a mano. Guarda el hash de cada carátula ya normalizada para que volver a correr el script no la reprocese.",
-  "generado": "2026-09-01T04:20:35.947Z",
+  "generado": "2026-09-01T05:59:17.933Z",
   "size": 600,
   "quality": 80,
   "covers": {
@@ -381,17 +381,17 @@
     },
     "gorillaz": {
       "file": "gorillaz.webp",
-      "hash": "464b98fb02d33f299ddde6bb5068d770515a926db3c5e14898c186c1bff7bb4a",
+      "hash": "9ed07b4c9051ea33262213fbf01c8ebf56d4d8ee0682a7c35b9b6b3a96bfcfa7",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 46058,
+      "bytes": 27632,
       "from": {
-        "file": "gorillaz.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 115120
+        "file": "gorillaz.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 50426
       }
     },
     "harry-styles": {
@@ -471,32 +471,32 @@
     },
     "jorja-smith": {
       "file": "jorja-smith.webp",
-      "hash": "823076cb9b723d4c5569b16d90b40cd11ace793598f1d2b6b79db59429396d19",
+      "hash": "d8834f746abdedbcde078b32edc5aec5c43d15a07395bdbf29d98d51657abe62",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 20342,
+      "bytes": 24046,
       "from": {
-        "file": "jorja-smith.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 75205
+        "file": "jorja-smith.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 42254
       }
     },
     "justin-bieber": {
       "file": "justin-bieber.webp",
-      "hash": "99b53db7f58459ee6c0e99b672be64f548a1c2bc03b6ef1a0d31f11aaffc631e",
+      "hash": "5870ee7f960e8c7818b45108a439d98cf86f56c24e94478c3cd1ee79d902460c",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 1368,
+      "bytes": 3108,
       "from": {
-        "file": "justin-bieber.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 9405
+        "file": "justin-bieber.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 4924
       }
     },
     "kali-uchis": {
@@ -516,32 +516,32 @@
     },
     "kanye-west": {
       "file": "kanye-west.webp",
-      "hash": "0137216ff683aab5cc2abfdeb7e654e8c0b655dab3f14631069ec735710ba896",
+      "hash": "d07e72fc02f30a439b021e98d29d4b064d48feaf4825e4bc5c497d056ce1251c",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 8640,
+      "bytes": 75000,
       "from": {
-        "file": "kanye-west.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 40179
+        "file": "kanye-west.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 154306
       }
     },
     "karol-g": {
       "file": "karol-g.webp",
-      "hash": "fcd9e3f1d3227ddc45ea2121fc41bbe8f8d311cacf0fa3f53046a0cefa1985ae",
+      "hash": "ffff452eb36a6ef7d4fb00834ad5f5c93f80d55143ac9b0430ebfb65330602ee",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 36500,
+      "bytes": 13120,
       "from": {
-        "file": "karol-g.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 103784
+        "file": "karol-g.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 22680
       }
     },
     "kendrick-lamar": {
@@ -576,17 +576,17 @@
     },
     "lana-del-rey": {
       "file": "lana-del-rey.webp",
-      "hash": "ff2cdc507ceafad1b6ebb321aaf0fb9016e980ac30106bd2ef2a54ca67b85bea",
+      "hash": "cbef344f8faee64476b9d16af0bfa5a36369d82a8fd13566a77a3050eff50ce4",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 16440,
+      "bytes": 24256,
       "from": {
-        "file": "lana-del-rey.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 63411
+        "file": "lana-del-rey.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 45366
       }
     },
     "linkin-park": {
@@ -621,47 +621,47 @@
     },
     "maneskin": {
       "file": "maneskin.webp",
-      "hash": "873b18f95f2ba2c65bfaea693f4dd4f917995c0c9b5fab97a88800052b7fdf5f",
+      "hash": "0ce813418ded00528e897acbf6f7ef90f82e06470fdd501bd3ce8697bf468db1",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 16806,
+      "bytes": 16632,
       "from": {
-        "file": "maneskin.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 60867
+        "file": "maneskin.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 28424
       }
     },
     "metro-boomin": {
       "file": "metro-boomin.webp",
-      "hash": "92fd71f540c4354e9aa1607c5b034306709b8979edfc19cb37b2ba8fcd2b0879",
+      "hash": "d5a08273b0fb4e0dc25473a0611a5d9dfab96373d5339074f201263d5e0cacec",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 53066,
+      "bytes": 77268,
       "from": {
-        "file": "metro-boomin.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 143510
+        "file": "metro-boomin.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 139474
       }
     },
     "mgmt": {
       "file": "mgmt.webp",
-      "hash": "ba5e4b94c5556c4ab16db9e2ccf0c8ecb08be94b3a84be16490ad616fe165ae5",
+      "hash": "1a7f1e6ff32f170964a9fd881e1a23649f54bae78a28b9943a6e8439827d9354",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 43078,
+      "bytes": 9526,
       "from": {
-        "file": "mgmt.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 121007
+        "file": "mgmt.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 15618
       }
     },
     "miley-cyrus": {
@@ -696,17 +696,17 @@
     },
     "mora": {
       "file": "mora.webp",
-      "hash": "69842afcf403d491d450a7d64f82199894ac4f189f385aa547630c63842a6ddb",
+      "hash": "9ca272924da84d9652500c87069d0460a4f8954b2960f67eccabcbcbf1d85158",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 44028,
+      "bytes": 13822,
       "from": {
-        "file": "mora.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 115785
+        "file": "mora.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 24536
       }
     },
     "moral-distraida": {
@@ -801,17 +801,17 @@
     },
     "polima-westcoast": {
       "file": "polima-westcoast.webp",
-      "hash": "3ab834bc9bb1b3ccf0c5a40b04484a10ae2d89b802ef4c2c98de0c299baaf2a3",
+      "hash": "a86ed68662dac086b4519233b33ef345fcea4a53bb1f0ecce448f15236194171",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 44794,
+      "bytes": 17230,
       "from": {
-        "file": "polima-westcoast.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 122442
+        "file": "polima-westcoast.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 31196
       }
     },
     "post-malone": {
@@ -861,32 +861,32 @@
     },
     "radiohead": {
       "file": "radiohead.webp",
-      "hash": "14417ca381b9c9dab1ccfb437e76e9f7e4ccd5b0db2ccf514cc900c0c9cdc22d",
+      "hash": "90e07028d16ec3548fb5f6e6a056b79e0cbee46e09677cd283f0f5097e128779",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 55426,
+      "bytes": 75220,
       "from": {
-        "file": "radiohead.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 132019
+        "file": "radiohead.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 140904
       }
     },
     "rauw-alejandro": {
       "file": "rauw-alejandro.webp",
-      "hash": "84eec40971aed8f6aac61383fda757b64f2fd7635034c00ee21dd17dfe659cec",
+      "hash": "19808539076fcabf281f0686a9ef8b41d899d5414fbd71b0b005698870517bbb",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 41668,
+      "bytes": 60458,
       "from": {
         "file": "rauw-alejandro.webp",
         "width": 716,
         "height": 716,
-        "bytes": 79776
+        "bytes": 113076
       }
     },
     "rihanna": {
@@ -906,62 +906,62 @@
     },
     "rosalia": {
       "file": "rosalia.webp",
-      "hash": "5d7ac4e35fd0c4b7c707dc1618053d62db82cc54b038b95ac7637090cdd28e52",
+      "hash": "0538c91428c30416adab48eda86229a80153b1199723bdd7475a486436e47e07",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 26708,
+      "bytes": 11192,
       "from": {
-        "file": "rosalia.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 76092
+        "file": "rosalia.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 19384
       }
     },
     "sam-smith": {
       "file": "sam-smith.webp",
-      "hash": "2de58cf92a6dbd3377e5e518f96f6fe6ed9d49e8233064596a17e4663e8c43f4",
+      "hash": "7610936f62921ae4434fcb49914f985572cbca7c3065c039fc207d6badcdbe92",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 18534,
+      "bytes": 25918,
       "from": {
-        "file": "sam-smith.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 71407
+        "file": "sam-smith.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 48934
       }
     },
     "shakira": {
       "file": "shakira.webp",
-      "hash": "e62fc69d3e452c1bb8a9cc1730e00698689ebbf5831d2038e58752acc9163d8b",
+      "hash": "9dde6eb0663daf1ebe8babdf7c7b531f7f5bde9378a0748a2098b0b4e42302e4",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 44900,
+      "bytes": 32926,
       "from": {
-        "file": "shakira.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 111364
+        "file": "shakira.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 63476
       }
     },
     "stray-kids": {
       "file": "stray-kids.webp",
-      "hash": "e9be79420c229df914b1a52a976663f0f89b82efa17fb193d7c6e5bda60dee60",
+      "hash": "006781a16b009605b406218bf10893241531704c4eaa1d68c87ea6775ca08c1b",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 38194,
+      "bytes": 31782,
       "from": {
         "file": "stray-kids.webp",
         "width": 716,
         "height": 716,
-        "bytes": 69834
+        "bytes": 55010
       }
     },
     "sza": {
@@ -981,17 +981,17 @@
     },
     "tame-impala": {
       "file": "tame-impala.webp",
-      "hash": "6aa21bc54f6fb8c53509e8f1003fdb06cc53781dfe7197ad09be9d0608a4a28c",
+      "hash": "7ad17616ca07ad47953048e33ef6df6de6cee15d049b0a463e5bc2f72a97b8db",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 26918,
+      "bytes": 26752,
       "from": {
-        "file": "tame-impala.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 88303
+        "file": "tame-impala.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 51532
       }
     },
     "taylor-swift": {
@@ -1011,17 +1011,17 @@
     },
     "the-1975": {
       "file": "the-1975.webp",
-      "hash": "7cfa467f303d861400e5816a64a0a04dfa83ce7c74f92276068432930703d9a1",
+      "hash": "b3b621df49deb1d02718a70940405591ba0aff72a18c162c346879275ab50c0f",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 5782,
+      "bytes": 31336,
       "from": {
-        "file": "the-1975.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 37916
+        "file": "the-1975.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 58506
       }
     },
     "the-killers": {
@@ -1056,17 +1056,17 @@
     },
     "the-strokes": {
       "file": "the-strokes.webp",
-      "hash": "0716f37f483d0014f0cdb8ff983e6c303e3708646de6a14d4a5f24836874f75f",
+      "hash": "c620da677bb0f7ccadfd901c25522707cc0178e7dc60986d4fe302bb34b9b22b",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 9780,
+      "bytes": 43674,
       "from": {
-        "file": "the-strokes.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 42786
+        "file": "the-strokes.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 82310
       }
     },
     "the-weeknd": {
@@ -1086,17 +1086,17 @@
     },
     "tini": {
       "file": "tini.webp",
-      "hash": "4944ca1fe6a2ffdac45ebd27d22a4cc4868e08f14bf32ae3320c0e9d84560e6c",
+      "hash": "fd6b31bf1e9522e4bc89de54cfa170e8b39a7bf2b5503c1fea0150168364f1c9",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 17602,
+      "bytes": 30466,
       "from": {
-        "file": "tini.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 71679
+        "file": "tini.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 52956
       }
     },
     "travis-scott": {
@@ -1116,17 +1116,17 @@
     },
     "twenty-one-pilots": {
       "file": "twenty-one-pilots.webp",
-      "hash": "1532c62333a54c82d5fc50727e38cb9fafa86c869ef2f0ec13b3e805ed7bec76",
+      "hash": "9c4ec9032887604b745cafcefe21ba39dd3ccc1cb43d06ade6e9e9811cfa95a2",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 34636,
+      "bytes": 10844,
       "from": {
-        "file": "twenty-one-pilots.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 113650
+        "file": "twenty-one-pilots.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 21960
       }
     },
     "tyler-the-creator": {
@@ -1146,17 +1146,17 @@
     },
     "wallows": {
       "file": "wallows.webp",
-      "hash": "0602107692f958cf606ed2c19f7e9c727b64369348b3e884da02a265b792ec73",
+      "hash": "f0bddb6c2f57542622560e1b62504f6d8aed1370cd2a34958b613506a543aea2",
       "size": 600,
       "quality": 80,
       "width": 600,
       "height": 600,
-      "bytes": 64326,
+      "bytes": 45130,
       "from": {
-        "file": "wallows.jpg",
-        "width": 600,
-        "height": 600,
-        "bytes": 144541
+        "file": "wallows.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 96432
       }
     },
     "years-years": {
