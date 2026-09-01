@@ -17,14 +17,16 @@
     "admin:grant": "node scripts/grant-admin.mjs",
     "sync:covers": "node scripts/sync-artist-covers.mjs",
     "deploy:rules": "cd ../.. && firebase deploy --only firestore:rules,firestore:indexes",
-    "covers:download": "node scripts/download-covers.mjs"
+    "covers:download": "node scripts/download-covers.mjs",
+    "covers:normalize": "node scripts/normalize-covers.mjs"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^3.0.4",
     "firebase": "^10.14.1",
     "firebase-admin": "^12.7.0",
     "firebase-tools": "^15.0.0",
-    "jsdom": "^25.0.1"
+    "jsdom": "^25.0.1",
+    "sharp": "^0.35.4"
   },
   "engines": {
     "node": ">=20"

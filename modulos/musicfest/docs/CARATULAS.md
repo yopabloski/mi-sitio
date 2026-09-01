@@ -19,8 +19,9 @@ importa aquí:
 | Recuperación ante error | Restaurar a mano | `git checkout` |
 | Dependencia externa | Google Cloud | Ninguna |
 
-El único costo es el peso del repositorio: unos 5 MB para las 81 carátulas, o
-2 MB si sólo bajas las aprobadas.
+El único costo es el peso del repositorio, y `npm run covers:normalize` lo deja
+en alrededor de un tercio: las carátulas de Apple vienen sin optimizar y a
+tamaños dispares.
 
 ## Flujo de trabajo
 
@@ -38,10 +39,21 @@ npm run covers:download                 # sólo las aprobadas
 npm run covers:download -- --all        # también las que están por confirmar
 ```
 
-4. **Commit.**
+4. **Normalizarla.** Apple entrega tamaños y formatos dispares. Este paso las
+   deja todas en WebP de 600×600, que es lo que la interfaz realmente necesita.
 
 ```bash
-git add modulos/musicfest/assets/covers modulos/musicfest/js/data/covers.local.js
+npm run covers:normalize -- --dry-run   # informa, no escribe
+npm run covers:normalize                # sólo las que hagan falta
+npm run covers:normalize -- --force     # reprocesa todas
+```
+
+5. **Commit.**
+
+```bash
+git add modulos/musicfest/assets/covers \
+        modulos/musicfest/assets/covers.normalized.json \
+        modulos/musicfest/js/data/covers.local.js
 git commit -m "Bajar carátulas de MusicFest al repositorio"
 ```
 
@@ -56,6 +68,26 @@ git commit -m "Bajar carátulas de MusicFest al repositorio"
   la URL original en `sourceUrl`, por si hiciera falta rastrear la fuente.
 - Las que fallen conservan su URL externa: nada se rompe, sólo sigue dependiendo
   del CDN.
+
+## Qué hace normalize-covers
+
+- Reduce cada carátula a 600×600 y la convierte a WebP q80. Las que ya son más
+  chicas se dejan como están: agrandarlas no inventa detalle, sólo peso.
+- Borra el archivo original cuando cambia la extensión. El historial de git lo
+  conserva, así que no hace falta guardar una copia aparte.
+- Regenera `js/data/covers.local.js`, igual que `download-covers.mjs`.
+- Anota el hash de cada archivo en `assets/covers.normalized.json`. Volver a
+  correrlo no reprocesa nada ni deja diff: es idempotente.
+- Las que fallen se quedan como estaban y salen listadas al final.
+
+Por qué 600 px y no más: la tarjeta del pool es una grilla de mínimo 220 px
+(`.artist-cover`, `aspect-ratio: 1`), la previsualización del panel docente
+llega a 240 px y la tira del cartel dibuja a 96 px con `scale: 2`, o sea 192 px
+reales. Con pantallas retina, 600 cubre todo con margen; 800 sería peso puro.
+
+El manifiesto vive fuera de `assets/covers/` a propósito: `download-covers.mjs`
+recorre ese directorio entero para armar el mapa, y cualquier archivo extra ahí
+adentro terminaría como una entrada falsa en `covers.local.js`.
 
 ## Cómo las resuelve la aplicación
 
