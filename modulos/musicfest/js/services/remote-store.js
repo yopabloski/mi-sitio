@@ -386,13 +386,23 @@ export async function releaseTeam(teamId) {
  */
 export async function listActivityCodes() {
   const { db, fsMod } = await sdk();
-  const snapshot = await fsMod.getDocs(fsMod.collection(db, paths.codes));
-  return snapshot.docs.map(d => {
+  // Dos consultas fijas, no una por partida: el índice de códigos dice cuáles
+  // se pueden abrir, y la colección de actividades aporta el estado de cada una.
+  const [codigos, actividades] = await Promise.all([
+    fsMod.getDocs(fsMod.collection(db, paths.codes)),
+    fsMod.getDocs(fsMod.collection(db, paths.activities))
+  ]);
+  const porId = new Map(actividades.docs.map(d => [d.id, d.data()]));
+
+  return codigos.docs.map(d => {
     const data = d.data();
+    const actividad = porId.get(data.activityId) || {};
+    const fecha = actividad.updatedAt || data.updatedAt;
     return {
       code: data.code || d.id.toUpperCase(),
       activityId: data.activityId || null,
-      updatedAt: data.updatedAt?.toDate?.().toISOString() || data.updatedAt || null
+      state: actividad.state || null,
+      updatedAt: fecha?.toDate?.().toISOString() || fecha || null
     };
   });
 }

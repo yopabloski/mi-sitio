@@ -1,9 +1,9 @@
-// El código de partida tiene una trampa: no es el identificador de la actividad
-// sino un puntero. Renombrar hacia un código ajeno se lo roba y deja la otra
-// partida sin forma de abrirse. Estas pruebas fijan el seguro.
+// Elegir partida es la única operación sobre códigos que quedó: se abre una
+// existente o se crea otra. Cambiarle el código a una partida ya creada se
+// eliminó a propósito —ver la cabecera de js/domain/partidas.js—.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizarCodigo, conflictoDeCodigo, ordenarPartidas, elegirPartida } from '../../js/domain/partidas.js';
+import { normalizarCodigo, etiquetaEstado, etiquetaPartida, ordenarPartidas, elegirPartida } from '../../js/domain/partidas.js';
 
 test('el código se normaliza a mayúsculas y sin adornos', () => {
   assert.equal(normalizarCodigo('  mf2026 '), 'MF2026');
@@ -11,31 +11,6 @@ test('el código se normaliza a mayúsculas y sin adornos', () => {
   assert.equal(normalizarCodigo('curso-a'), 'CURSO-A', 'el guion se conserva');
   assert.equal(normalizarCodigo(null), '');
   assert.equal(normalizarCodigo('¡¿!'), '');
-});
-
-test('renombrar a un código libre se permite', () => {
-  assert.equal(conflictoDeCodigo({ codigo: 'MF2026', mapa: { DEMO: 'mf-demo' }, activityIdActual: 'mf-demo' }), null);
-});
-
-test('renombrar al código que ya tiene la propia partida se permite', () => {
-  assert.equal(conflictoDeCodigo({ codigo: 'demo', mapa: { DEMO: 'mf-demo' }, activityIdActual: 'mf-demo' }), null);
-});
-
-// El caso real del 1 de septiembre: la partida de prueba se quedó con el código
-// DEMO y la anterior desapareció del mapa.
-test('renombrar al código de OTRA partida se rechaza y explica la salida', () => {
-  const motivo = conflictoDeCodigo({ codigo: 'DEMO', mapa: { DEMO: 'mf-demo-q6wj8k' }, activityIdActual: 'mf-prueba1-75b2wy' });
-  assert.ok(motivo, 'tiene que haber un motivo');
-  assert.match(motivo, /DEMO/, 'nombra el código en conflicto');
-  assert.match(motivo, /selector/, 'ofrece abrir esa partida en vez de robarle el código');
-});
-
-test('un código vacío se rechaza', () => {
-  assert.match(conflictoDeCodigo({ codigo: '   ', mapa: {}, activityIdActual: 'mf-a' }), /vacío/);
-});
-
-test('sin actividad actual no se inventa un conflicto', () => {
-  assert.equal(conflictoDeCodigo({ codigo: 'DEMO', mapa: { DEMO: 'mf-demo' }, activityIdActual: null }), null);
 });
 
 test('las partidas se ordenan de la más reciente a la más antigua', () => {
@@ -73,4 +48,34 @@ test('sin selección ni código escrito se pide una de las dos cosas', () => {
   const r = elegirPartida({ seleccionada: '', escrita: '  ', actual: 'DEMO' });
   assert.equal(r.accion, 'quedarse');
   assert.match(r.error, /Elige una partida o escribe/);
+});
+
+test('cada estado tiene su lectura en la lista', () => {
+  assert.equal(etiquetaEstado('lobby'), 'sin empezar');
+  assert.equal(etiquetaEstado('active'), 'en curso');
+  assert.equal(etiquetaEstado('paused'), 'pausada');
+  assert.equal(etiquetaEstado('closed'), 'cerrada');
+});
+
+test('un estado desconocido o ausente no inventa texto', () => {
+  for (const raro of [undefined, null, '', 'inventado']) assert.equal(etiquetaEstado(raro), '');
+});
+
+test('la etiqueta junta código y estado', () => {
+  assert.equal(etiquetaPartida({ code: 'mf2026', state: 'active' }), 'MF2026 · en curso');
+  assert.equal(etiquetaPartida({ code: 'MARZO-A', state: 'closed' }), 'MARZO-A · cerrada');
+});
+
+// Estar abierta en el panel y estar en curso son cosas distintas: una partida
+// cerrada se abre en el panel justamente para revisarla.
+test('la partida cargada en el panel se distingue de su estado', () => {
+  assert.equal(etiquetaPartida({ code: 'MF2026', state: 'closed', abierta: true }),
+    'MF2026 · cerrada · abierta aquí');
+  assert.equal(etiquetaPartida({ code: 'MF2026', state: 'lobby', abierta: true }),
+    'MF2026 · sin empezar · abierta aquí');
+});
+
+test('sin estado conocido, la etiqueta es sólo el código', () => {
+  assert.equal(etiquetaPartida({ code: 'MF2026' }), 'MF2026');
+  assert.equal(etiquetaPartida({ code: 'MF2026', abierta: true }), 'MF2026 · abierta aquí');
 });

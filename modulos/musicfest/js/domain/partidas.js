@@ -2,35 +2,42 @@
 //
 // En MusicFest el código no es el identificador de la actividad. Hay una
 // indirección: `musicfestCodes/{código}` guarda el `activityId` real, que lleva
-// un sufijo aleatorio. Esa indirección permite renombrar una partida sin mover
-// sus equipos ni sus entregas, pero abre una trampa: renombrar hacia un código
-// que ya usa OTRA actividad le roba el mapeo y la deja huérfana —existe en la
-// base de datos pero ya no se llega a ella desde ninguna parte—.
+// un sufijo aleatorio.
 //
-// Eso pasó de verdad el 1 de septiembre de 2026 y costó una limpieza a mano.
-// Por eso `conflictoDeCodigo` existe: la comprobación vive acá, con pruebas, y
-// no como un `if` olvidable dentro del manejador de un botón.
+// Hubo un botón para cambiarle el código a una partida existente, y era una
+// trampa: apuntar el código hacia otra actividad le robaba el mapeo y dejaba la
+// anterior huérfana —existiendo en la base de datos, pero inalcanzable desde
+// cualquier parte—. Pasó de verdad el 1 de septiembre de 2026 y costó una
+// limpieza a mano. La operación se eliminó en vez de ponerle un seguro: si el
+// código ES la partida, cambiárselo no significa nada claro. Se abre la que se
+// quiere, o se crea otra.
 
 /** Lo que el docente escribe se guarda siempre así: mayúsculas, sin adornos. */
 export const normalizarCodigo = valor =>
   String(valor ?? '').trim().toUpperCase().replace(/[^A-Z0-9-]/g, '');
 
-/**
- * ¿Se puede renombrar la partida actual a este código?
- *
- * @param {{codigo:string, mapa:Object<string,string>, activityIdActual:string|null}} situacion
- *   `mapa` va de código normalizado a activityId, tal como está en Firestore.
- * @returns {string|null} el motivo del rechazo, o null si se puede.
- */
-export function conflictoDeCodigo({ codigo, mapa = {}, activityIdActual = null }) {
-  const limpio = normalizarCodigo(codigo);
-  if (!limpio) return 'El código no puede quedar vacío.';
+// Cómo se lee cada estado en la lista. Son los mismos cuatro estados que maneja
+// el panel, en minúscula y en femenino porque acompañan a "partida".
+const ESTADOS = {
+  lobby: 'sin empezar',
+  active: 'en curso',
+  paused: 'pausada',
+  closed: 'cerrada'
+};
 
-  const dueño = mapa[limpio];
-  if (dueño && activityIdActual && dueño !== activityIdActual) {
-    return `El código ${limpio} ya es de otra partida. Elige uno distinto, o abre esa partida desde el selector.`;
-  }
-  return null;
+export const etiquetaEstado = estado => ESTADOS[estado] || '';
+
+/**
+ * El texto de una opción del selector. "Abierta aquí" distingue la partida que
+ * el panel tiene cargada del estado de la actividad, que son cosas distintas:
+ * una partida cerrada puede estar abierta en el panel para revisarla.
+ */
+export function etiquetaPartida({ code, state, abierta = false }) {
+  const partes = [normalizarCodigo(code)];
+  const estado = etiquetaEstado(state);
+  if (estado) partes.push(estado);
+  if (abierta) partes.push('abierta aquí');
+  return partes.join(' · ');
 }
 
 /** Las más recientes primero: es el orden en que un docente las busca. */

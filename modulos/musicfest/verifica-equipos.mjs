@@ -107,7 +107,7 @@ const draft = team => JSON.stringify({ team, selections: { friday: [], saturday:
 
 // --- Partidas: abrir, crear y renombrar --------------------------------------
 
-// 5. El selector muestra la partida abierta y los dos botones están separados.
+// 5. El selector muestra la partida abierta y no queda rastro del renombrado.
 {
   const { $, cerrar } = boot();
   await load('js/admin.js');
@@ -115,13 +115,34 @@ const draft = team => JSON.stringify({ team, selections: { friday: [], saturday:
   assert.ok($('#activityPicker'), 'debe existir el selector de partidas');
   assert.ok($('#newActivityCode'), 'y el campo para un código nuevo');
   assert.equal($('#openActivity').textContent, 'Abrir partida');
-  assert.equal($('#saveIdentity').textContent, 'Cambiar el código', 'cambiar el código ya no se confunde con abrir');
   assert.equal($('#activityName'), null, 'el nombre de la actividad ya no existe: el código es la partida');
+  assert.equal($('#activityCode'), null, 'ni el campo para cambiarle el código a una partida ya creada');
+  assert.equal($('#saveIdentity'), null, 'esa operación se eliminó, no se le puso un seguro');
+  assert.ok($('#exportActivity'), 'exportar configuración sigue en su sitio');
+  assert.ok($('#printCards'), 'y las cartas para imprimir también');
   const opciones = [...$('#activityPicker').options].map(o => o.value);
   assert.deepEqual(opciones, ['DEMO'], 'en demo la única partida es la del navegador');
-  assert.match($('#activityPicker').options[0].textContent, /abierta/);
+  assert.equal($('#activityPicker').options[0].textContent, 'DEMO · sin empezar · abierta aquí',
+    'la opción dice el código, el estado de la partida y que es la cargada');
   cerrar();
-  console.log('✓ el selector muestra la partida abierta y los botones están separados');
+  console.log('✓ el selector muestra la partida abierta y no queda rastro del renombrado');
+}
+
+// 5b. El estado de la lista sigue al de la partida, no se queda pegado.
+{
+  const { $, window, cerrar } = boot();
+  await load('js/admin.js');
+  await new Promise(r => setTimeout(r, 30));
+  assert.match($('#activityPicker').options[0].textContent, /sin empezar/);
+  $('#start').dispatchEvent(new window.Event('click'));
+  await new Promise(r => setTimeout(r, 30));
+  assert.match($('#activityPicker').options[0].textContent, /en curso/, 'iniciar la partida se refleja en la lista');
+  $('#close').dispatchEvent(new window.Event('click'));
+  await new Promise(r => setTimeout(r, 30));
+  assert.match($('#activityPicker').options[0].textContent, /cerrada · abierta aquí/,
+    'cerrada y cargada en el panel a la vez: son cosas distintas');
+  cerrar();
+  console.log('✓ el estado de cada partida se ve en la lista y se mantiene al día');
 }
 
 // 6. Abrir la partida en la que ya estás no recarga nada.
@@ -169,24 +190,6 @@ const draft = team => JSON.stringify({ team, selections: { friday: [], saturday:
   assert.deepEqual(recargas, [true], 'y recarga para conectarse a ella');
   cerrar();
   console.log('✓ crear una partida nueva confirma, normaliza el código y recarga');
-}
-
-// 9. Renombrar a un código ajeno se rechaza y deja el campo como estaba.
-//    (El caso real que orfanó una actividad el 1 de septiembre.)
-{
-  const { $, window, cerrar } = boot();
-  await load('js/admin.js');
-  await new Promise(r => setTimeout(r, 30));
-  const modulo = await load('js/domain/partidas.js');
-  assert.equal(modulo.conflictoDeCodigo({ codigo: 'DEMO', mapa: { DEMO: 'mf-otra' }, activityIdActual: 'mf-esta' }) !== null, true);
-  // En modo demo no hay índice de códigos, así que el renombre sí procede.
-  $('#activityCode').value = 'MF2026';
-  $('#saveIdentity').dispatchEvent(new window.Event('click', { bubbles: true }));
-  await new Promise(r => setTimeout(r, 20));
-  assert.equal($('#activityMsg').textContent, '', 'sin conflicto, sin mensaje de error');
-  assert.equal(JSON.parse(window.localStorage.getItem('musicfest:session:MF2026')).code, 'MF2026');
-  cerrar();
-  console.log('✓ cambiar el código funciona y el seguro contra códigos ajenos existe');
 }
 
 console.log('\nPanel de equipos y partidas verificado.');
