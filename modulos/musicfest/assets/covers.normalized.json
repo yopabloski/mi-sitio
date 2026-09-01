@@ -1,0 +1,1223 @@
+{
+  "_comentario": "Generado por scripts/normalize-covers.mjs · no editar a mano. Guarda el hash de cada carátula ya normalizada para que volver a correr el script no la reprocese.",
+  "generado": "2026-09-01T04:20:35.947Z",
+  "size": 600,
+  "quality": 80,
+  "covers": {
+    "21-savage": {
+      "file": "21-savage.webp",
+      "hash": "d15df27c0331e919a3cbc528f074b38e41e440a50fb15c55b20533ba06577514",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 20058,
+      "from": {
+        "file": "21-savage.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 73339
+      }
+    },
+    "a-ap-rocky": {
+      "file": "a-ap-rocky.webp",
+      "hash": "b002e60639cfff89e63ec1234ca14a3ca4291460151519946d2052e613946a18",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 56764,
+      "from": {
+        "file": "a-ap-rocky.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 96408
+      }
+    },
+    "alvaro-diaz": {
+      "file": "alvaro-diaz.webp",
+      "hash": "336e2a46c7111446fd20e7a1dfbcd2b0cabfb4002c4aafd5e06416725db0a87c",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 43476,
+      "from": {
+        "file": "alvaro-diaz.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 81292
+      }
+    },
+    "arctic-monkeys": {
+      "file": "arctic-monkeys.webp",
+      "hash": "cfe3e2f6b434df708ef148355f93cad6164d5a6f50141f7edf682832c89e9c39",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 35264,
+      "from": {
+        "file": "arctic-monkeys.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 103074
+      }
+    },
+    "ariana-grande": {
+      "file": "ariana-grande.webp",
+      "hash": "8549c001551780299f3a29fa0b79f4d7345fa83afa8870b6249c09534e07b707",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 36314,
+      "from": {
+        "file": "ariana-grande.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 106509
+      }
+    },
+    "bad-bunny": {
+      "file": "bad-bunny.webp",
+      "hash": "15d4316babf5a3880d43d6c2b4a637412845052e0aba7e3d93787c6820a4f3b3",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 90340,
+      "from": {
+        "file": "bad-bunny.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 186239
+      }
+    },
+    "benjamin-walker": {
+      "file": "benjamin-walker.webp",
+      "hash": "d216516b069d69aeb742e9d2676f19b58f571fee53567edcca82e448a12c1275",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 79954,
+      "from": {
+        "file": "benjamin-walker.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 160210
+      }
+    },
+    "beyonce": {
+      "file": "beyonce.webp",
+      "hash": "f3cd51e7ad31597f4dc35d5c700ee6a992536c2e5a52c8387d0e93ff69a3ae2d",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 25420,
+      "from": {
+        "file": "beyonce.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 70280
+      }
+    },
+    "billie-eilish": {
+      "file": "billie-eilish.webp",
+      "hash": "f90941295cf1bc827c993d79476ef209a3e13587c6f08071feda77c81f320ddf",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 6644,
+      "from": {
+        "file": "billie-eilish.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 11836
+      }
+    },
+    "boygenius": {
+      "file": "boygenius.webp",
+      "hash": "7af0b65bf94db993f1bec166b696ae9b795743093d65e488872d7f95f6a7d007",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 7878,
+      "from": {
+        "file": "boygenius.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 13484
+      }
+    },
+    "bruno-mars": {
+      "file": "bruno-mars.webp",
+      "hash": "bc940aa0391df814756cc7c24d953523db261e9bd49df30e23f0ef6b837c313a",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 59070,
+      "from": {
+        "file": "bruno-mars.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 140513
+      }
+    },
+    "clairo": {
+      "file": "clairo.webp",
+      "hash": "79e5974ef3b29bf5d4188e20cd5f9ff8f696cb78dde37b88cb6b56bd9644b61a",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 41390,
+      "from": {
+        "file": "clairo.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 114598
+      }
+    },
+    "coldplay": {
+      "file": "coldplay.webp",
+      "hash": "bda0d1c31419adbe858c5438f2900bf0414cb09c84f8836393a3f0133eb00fec",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 10340,
+      "from": {
+        "file": "coldplay.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 63602
+      }
+    },
+    "cris-mj": {
+      "file": "cris-mj.webp",
+      "hash": "ee099ff6dd27e152c3cee482dd4b087639022113cbbb40c6516af4da0995803f",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 102798,
+      "from": {
+        "file": "cris-mj.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 195084
+      }
+    },
+    "deftones": {
+      "file": "deftones.webp",
+      "hash": "7a368d8a77e1c41555973e738397be375e5ed6724873f0bf1f12a867f2396c33",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 40724,
+      "from": {
+        "file": "deftones.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 81228
+      }
+    },
+    "denise-rosenthal": {
+      "file": "denise-rosenthal.webp",
+      "hash": "0568adef86e9015ce72fd6f1e8b90dc360115a6c862751868d5d51ab1664d00c",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 82000,
+      "from": {
+        "file": "denise-rosenthal.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 178442
+      }
+    },
+    "doja-cat": {
+      "file": "doja-cat.webp",
+      "hash": "6f4c8ae9dafdbb050de17169303893b473350bd8550cfffa7a967305d4319196",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 44024,
+      "from": {
+        "file": "doja-cat.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 114247
+      }
+    },
+    "drake": {
+      "file": "drake.webp",
+      "hash": "234160a907cbbca49492cdb69444f0b723f6afe353353d55e4207bdfd6720e78",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 17238,
+      "from": {
+        "file": "drake.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 44503
+      }
+    },
+    "dua-lipa": {
+      "file": "dua-lipa.webp",
+      "hash": "680d276675b0c164dae845977b1b2afea50bc9ec59a3d79646a9163d494a5ad0",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 10958,
+      "from": {
+        "file": "dua-lipa.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 19832
+      }
+    },
+    "duki": {
+      "file": "duki.webp",
+      "hash": "0902da415a97ce020eb7d890ff94ff244cafe48614aa295baa111a0d7f9d2f3c",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 12780,
+      "from": {
+        "file": "duki.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 24006
+      }
+    },
+    "ed-sheeran": {
+      "file": "ed-sheeran.webp",
+      "hash": "8c2580c7e7ed87d91c66ccf39b409b64b794d1e48bcada16f418fb00a876c84e",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 62224,
+      "from": {
+        "file": "ed-sheeran.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 125256
+      }
+    },
+    "eladio-carrion": {
+      "file": "eladio-carrion.webp",
+      "hash": "372efc4130e67128d356970ab73c981d23efe54dd59530fe22d6c3410f6f8252",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 30250,
+      "from": {
+        "file": "eladio-carrion.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 52728
+      }
+    },
+    "emilia": {
+      "file": "emilia.webp",
+      "hash": "41adf1311d79795327229871acfcaa117cff495c3630707806b642d79d1319b6",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 66744,
+      "from": {
+        "file": "emilia.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 163912
+      }
+    },
+    "feid": {
+      "file": "feid.webp",
+      "hash": "815ee561f01598bc5d71575ca1a7d39e1430fc5464dc14a11b766061159a665c",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 61428,
+      "from": {
+        "file": "feid.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 111182
+      }
+    },
+    "florence-the-machine": {
+      "file": "florence-the-machine.webp",
+      "hash": "04ea60efb6ddd07ffea2fe2218dc36851f280dbc77da317afb570bc84869a4e5",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 33298,
+      "from": {
+        "file": "florence-the-machine.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 99593
+      }
+    },
+    "gorillaz": {
+      "file": "gorillaz.webp",
+      "hash": "464b98fb02d33f299ddde6bb5068d770515a926db3c5e14898c186c1bff7bb4a",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 46058,
+      "from": {
+        "file": "gorillaz.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 115120
+      }
+    },
+    "harry-styles": {
+      "file": "harry-styles.webp",
+      "hash": "b620758997719bf72cc86b03680b986025887e731f8b5e4e82ae757f92cc3ecb",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 14316,
+      "from": {
+        "file": "harry-styles.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 50711
+      }
+    },
+    "hozier": {
+      "file": "hozier.webp",
+      "hash": "4c9ef35ea223630821b9e6449de94c1a340366cf7a8bc8a3e651bcb979924a84",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 80666,
+      "from": {
+        "file": "hozier.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 169780
+      }
+    },
+    "ice-spice": {
+      "file": "ice-spice.webp",
+      "hash": "5964406713d67c7a7c1989fe9abfd0d117d7bd444ac06363e37b00a190b6caef",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 80452,
+      "from": {
+        "file": "ice-spice.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 176356
+      }
+    },
+    "jack-harlow": {
+      "file": "jack-harlow.webp",
+      "hash": "cc136bbb6dac85bb59847445a3724f2014162cdede630b8efbec45d211de3db5",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 12860,
+      "from": {
+        "file": "jack-harlow.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 65297
+      }
+    },
+    "jhayco": {
+      "file": "jhayco.webp",
+      "hash": "3a2e7dba6016ff4b685caa7a9a99bc055b83aaee85649df35dc81fced192d679",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 33956,
+      "from": {
+        "file": "jhayco.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 58830
+      }
+    },
+    "jorja-smith": {
+      "file": "jorja-smith.webp",
+      "hash": "823076cb9b723d4c5569b16d90b40cd11ace793598f1d2b6b79db59429396d19",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 20342,
+      "from": {
+        "file": "jorja-smith.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 75205
+      }
+    },
+    "justin-bieber": {
+      "file": "justin-bieber.webp",
+      "hash": "99b53db7f58459ee6c0e99b672be64f548a1c2bc03b6ef1a0d31f11aaffc631e",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 1368,
+      "from": {
+        "file": "justin-bieber.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 9405
+      }
+    },
+    "kali-uchis": {
+      "file": "kali-uchis.webp",
+      "hash": "5f21b854b88e27e3329bb7bdae1c6bdf12a4b28be2deaf360b2e842ee5db88fb",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 27574,
+      "from": {
+        "file": "kali-uchis.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 49374
+      }
+    },
+    "kanye-west": {
+      "file": "kanye-west.webp",
+      "hash": "0137216ff683aab5cc2abfdeb7e654e8c0b655dab3f14631069ec735710ba896",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 8640,
+      "from": {
+        "file": "kanye-west.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 40179
+      }
+    },
+    "karol-g": {
+      "file": "karol-g.webp",
+      "hash": "fcd9e3f1d3227ddc45ea2121fc41bbe8f8d311cacf0fa3f53046a0cefa1985ae",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 36500,
+      "from": {
+        "file": "karol-g.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 103784
+      }
+    },
+    "kendrick-lamar": {
+      "file": "kendrick-lamar.webp",
+      "hash": "597a835944cccdde00abfe2b2530d51d07bd3fe7289d1faca54e88d923db7fbd",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 17552,
+      "from": {
+        "file": "kendrick-lamar.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 69206
+      }
+    },
+    "kidd-voodoo": {
+      "file": "kidd-voodoo.webp",
+      "hash": "35200e7ffea4dd74cb69e024b5f9221856615e0d1a6fc76a9ce01b9b366c48c9",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 53592,
+      "from": {
+        "file": "kidd-voodoo.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 139638
+      }
+    },
+    "lana-del-rey": {
+      "file": "lana-del-rey.webp",
+      "hash": "ff2cdc507ceafad1b6ebb321aaf0fb9016e980ac30106bd2ef2a54ca67b85bea",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 16440,
+      "from": {
+        "file": "lana-del-rey.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 63411
+      }
+    },
+    "linkin-park": {
+      "file": "linkin-park.webp",
+      "hash": "d0f14ac3594e8247312d859559f2b8f2a51f7ee85ec88792856da0b555e4a59f",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 28160,
+      "from": {
+        "file": "linkin-park.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 47142
+      }
+    },
+    "los-bunkers": {
+      "file": "los-bunkers.webp",
+      "hash": "0a766d7c8eb660d844d48a8d785df1ab8fd3acaa9e4189fdf3f1a37e694e928f",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 67246,
+      "from": {
+        "file": "los-bunkers.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 156521
+      }
+    },
+    "maneskin": {
+      "file": "maneskin.webp",
+      "hash": "873b18f95f2ba2c65bfaea693f4dd4f917995c0c9b5fab97a88800052b7fdf5f",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 16806,
+      "from": {
+        "file": "maneskin.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 60867
+      }
+    },
+    "metro-boomin": {
+      "file": "metro-boomin.webp",
+      "hash": "92fd71f540c4354e9aa1607c5b034306709b8979edfc19cb37b2ba8fcd2b0879",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 53066,
+      "from": {
+        "file": "metro-boomin.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 143510
+      }
+    },
+    "mgmt": {
+      "file": "mgmt.webp",
+      "hash": "ba5e4b94c5556c4ab16db9e2ccf0c8ecb08be94b3a84be16490ad616fe165ae5",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 43078,
+      "from": {
+        "file": "mgmt.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 121007
+      }
+    },
+    "miley-cyrus": {
+      "file": "miley-cyrus.webp",
+      "hash": "f12329c2abadeff039beb427e045d530b543f8531ce5eed42e67a58ded07ab08",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 46248,
+      "from": {
+        "file": "miley-cyrus.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 130025
+      }
+    },
+    "milo-j": {
+      "file": "milo-j.webp",
+      "hash": "81bc3e919743daf1712257cc4dacf3c1ba44416d71abc3b10e8a9b4b7091e60e",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 24458,
+      "from": {
+        "file": "milo-j.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 94811
+      }
+    },
+    "mora": {
+      "file": "mora.webp",
+      "hash": "69842afcf403d491d450a7d64f82199894ac4f189f385aa547630c63842a6ddb",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 44028,
+      "from": {
+        "file": "mora.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 115785
+      }
+    },
+    "moral-distraida": {
+      "file": "moral-distraida.webp",
+      "hash": "170f4838a15020ee1b20c270d0767308bfc169ca6315d21251d0d30e0e2e18b3",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 130370,
+      "from": {
+        "file": "moral-distraida.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 243624
+      }
+    },
+    "myke-towers": {
+      "file": "myke-towers.webp",
+      "hash": "d0b62d5fb098c6f487c80b163ceff5e1dacef0c592f2234cf7286dee6b5f0586",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 37750,
+      "from": {
+        "file": "myke-towers.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 70382
+      }
+    },
+    "nicki-nicole": {
+      "file": "nicki-nicole.webp",
+      "hash": "eb68b8835a801cedb3e69fa5f76ce389da0fc8787fc2a811fac5f2ccdc584d7b",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 31814,
+      "from": {
+        "file": "nicki-nicole.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 62580
+      }
+    },
+    "olivia-rodrigo": {
+      "file": "olivia-rodrigo.webp",
+      "hash": "f3e619a87931a115f31493b9d23db31d4ac86981ba460de58a117fd307ba2808",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 13844,
+      "from": {
+        "file": "olivia-rodrigo.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 71961
+      }
+    },
+    "paloma-mami": {
+      "file": "paloma-mami.webp",
+      "hash": "0af3d5698a7211a8e7bdf5897520e87f69b36fe2500437aec3e7325d6951a1eb",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 17608,
+      "from": {
+        "file": "paloma-mami.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 30982
+      }
+    },
+    "phoebe-bridgers": {
+      "file": "phoebe-bridgers.webp",
+      "hash": "bf733cc4fca496f51d3f5fb43ff1c70b41b63483ff27b23db32362ca5cd3fb4b",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 7184,
+      "from": {
+        "file": "phoebe-bridgers.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 28810
+      }
+    },
+    "polima-westcoast": {
+      "file": "polima-westcoast.webp",
+      "hash": "3ab834bc9bb1b3ccf0c5a40b04484a10ae2d89b802ef4c2c98de0c299baaf2a3",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 44794,
+      "from": {
+        "file": "polima-westcoast.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 122442
+      }
+    },
+    "post-malone": {
+      "file": "post-malone.webp",
+      "hash": "40fcdef1d211fb5c98aaa7c83c752e68bb2c342db002009f2b575def4260783f",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 15778,
+      "from": {
+        "file": "post-malone.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 57101
+      }
+    },
+    "princesa-alba": {
+      "file": "princesa-alba.webp",
+      "hash": "33b220a2d2a640c49aa0209c291b271ef9df4d9c52be876fea7acd27cbb481ee",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 53286,
+      "from": {
+        "file": "princesa-alba.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 125158
+      }
+    },
+    "quevedo": {
+      "file": "quevedo.webp",
+      "hash": "77d27badc6ef2b8d0e458862e12da38fb2504c6ff77eebb0f54d054a05ea526f",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 31486,
+      "from": {
+        "file": "quevedo.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 111486
+      }
+    },
+    "radiohead": {
+      "file": "radiohead.webp",
+      "hash": "14417ca381b9c9dab1ccfb437e76e9f7e4ccd5b0db2ccf514cc900c0c9cdc22d",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 55426,
+      "from": {
+        "file": "radiohead.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 132019
+      }
+    },
+    "rauw-alejandro": {
+      "file": "rauw-alejandro.webp",
+      "hash": "84eec40971aed8f6aac61383fda757b64f2fd7635034c00ee21dd17dfe659cec",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 41668,
+      "from": {
+        "file": "rauw-alejandro.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 79776
+      }
+    },
+    "rihanna": {
+      "file": "rihanna.webp",
+      "hash": "1da7c7686552a5a28068d61cb73bc50e1af59da996968bf0f81dfd2cdd21eb26",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 19946,
+      "from": {
+        "file": "rihanna.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 35856
+      }
+    },
+    "rosalia": {
+      "file": "rosalia.webp",
+      "hash": "5d7ac4e35fd0c4b7c707dc1618053d62db82cc54b038b95ac7637090cdd28e52",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 26708,
+      "from": {
+        "file": "rosalia.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 76092
+      }
+    },
+    "sam-smith": {
+      "file": "sam-smith.webp",
+      "hash": "2de58cf92a6dbd3377e5e518f96f6fe6ed9d49e8233064596a17e4663e8c43f4",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 18534,
+      "from": {
+        "file": "sam-smith.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 71407
+      }
+    },
+    "shakira": {
+      "file": "shakira.webp",
+      "hash": "e62fc69d3e452c1bb8a9cc1730e00698689ebbf5831d2038e58752acc9163d8b",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 44900,
+      "from": {
+        "file": "shakira.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 111364
+      }
+    },
+    "stray-kids": {
+      "file": "stray-kids.webp",
+      "hash": "e9be79420c229df914b1a52a976663f0f89b82efa17fb193d7c6e5bda60dee60",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 38194,
+      "from": {
+        "file": "stray-kids.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 69834
+      }
+    },
+    "sza": {
+      "file": "sza.webp",
+      "hash": "dd157a18832432f5d8b6a475141fb46970790b46baf89ba444ab90f654f1ee06",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 65974,
+      "from": {
+        "file": "sza.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 150331
+      }
+    },
+    "tame-impala": {
+      "file": "tame-impala.webp",
+      "hash": "6aa21bc54f6fb8c53509e8f1003fdb06cc53781dfe7197ad09be9d0608a4a28c",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 26918,
+      "from": {
+        "file": "tame-impala.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 88303
+      }
+    },
+    "taylor-swift": {
+      "file": "taylor-swift.webp",
+      "hash": "4ed7b76277c9d0116a57f6d3f7aae43a1cfc5f1be8263dc3539dfc4857fec70e",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 56878,
+      "from": {
+        "file": "taylor-swift.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 136393
+      }
+    },
+    "the-1975": {
+      "file": "the-1975.webp",
+      "hash": "7cfa467f303d861400e5816a64a0a04dfa83ce7c74f92276068432930703d9a1",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 5782,
+      "from": {
+        "file": "the-1975.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 37916
+      }
+    },
+    "the-killers": {
+      "file": "the-killers.webp",
+      "hash": "7e8c1236a05128c3222325f3eba6eb5b26194f6cc954f8a14412c0480ecec5ba",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 45664,
+      "from": {
+        "file": "the-killers.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 116153
+      }
+    },
+    "the-neighbourhood": {
+      "file": "the-neighbourhood.webp",
+      "hash": "8734c229b19590b93cb6f2f2c88d4bb67d2025ab5451e55a933011bfa1b5b58f",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 35102,
+      "from": {
+        "file": "the-neighbourhood.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 96190
+      }
+    },
+    "the-strokes": {
+      "file": "the-strokes.webp",
+      "hash": "0716f37f483d0014f0cdb8ff983e6c303e3708646de6a14d4a5f24836874f75f",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 9780,
+      "from": {
+        "file": "the-strokes.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 42786
+      }
+    },
+    "the-weeknd": {
+      "file": "the-weeknd.webp",
+      "hash": "e145646410d8301e0a09ddf00baa48321bb7fed5614f861c376cb4b998c7edc0",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 18630,
+      "from": {
+        "file": "the-weeknd.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 72934
+      }
+    },
+    "tini": {
+      "file": "tini.webp",
+      "hash": "4944ca1fe6a2ffdac45ebd27d22a4cc4868e08f14bf32ae3320c0e9d84560e6c",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 17602,
+      "from": {
+        "file": "tini.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 71679
+      }
+    },
+    "travis-scott": {
+      "file": "travis-scott.webp",
+      "hash": "98838cd973eae52b0ad254ec5c03988d8d1e63d251ababc5d4353779487eee88",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 6946,
+      "from": {
+        "file": "travis-scott.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 23967
+      }
+    },
+    "twenty-one-pilots": {
+      "file": "twenty-one-pilots.webp",
+      "hash": "1532c62333a54c82d5fc50727e38cb9fafa86c869ef2f0ec13b3e805ed7bec76",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 34636,
+      "from": {
+        "file": "twenty-one-pilots.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 113650
+      }
+    },
+    "tyler-the-creator": {
+      "file": "tyler-the-creator.webp",
+      "hash": "af194b87c14ba5c3b2de4ea89eb5b883aa7d622f7e257b93a64e3ac88b0e23bb",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 14062,
+      "from": {
+        "file": "tyler-the-creator.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 61592
+      }
+    },
+    "wallows": {
+      "file": "wallows.webp",
+      "hash": "0602107692f958cf606ed2c19f7e9c727b64369348b3e884da02a265b792ec73",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 64326,
+      "from": {
+        "file": "wallows.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 144541
+      }
+    },
+    "years-years": {
+      "file": "years-years.webp",
+      "hash": "4a0d83a47fe807d9e90307fdb7ed8e875a2a8471c980eafd1921a277b89c62c9",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 59242,
+      "from": {
+        "file": "years-years.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 145182
+      }
+    },
+    "young-cister": {
+      "file": "young-cister.webp",
+      "hash": "31aa48eb5f7bcb78afd22acdc030cc8c4a1d11cb73645c8533c405d79a667d24",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 32636,
+      "from": {
+        "file": "young-cister.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 109421
+      }
+    },
+    "young-miko": {
+      "file": "young-miko.webp",
+      "hash": "55b74a8091fc4a3c48875bf5d450a069da4120607e1fbd29b3fa5ba28c6d1e26",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 17188,
+      "from": {
+        "file": "young-miko.webp",
+        "width": 716,
+        "height": 716,
+        "bytes": 31014
+      }
+    },
+    "ysy-a": {
+      "file": "ysy-a.webp",
+      "hash": "73fac1865bba3ffaacbf977374fc39c8f503d4d8be7cc42aa9502bd204272989",
+      "size": 600,
+      "quality": 80,
+      "width": 600,
+      "height": 600,
+      "bytes": 74730,
+      "from": {
+        "file": "ysy-a.jpg",
+        "width": 600,
+        "height": 600,
+        "bytes": 178949
+      }
+    }
+  }
+}
