@@ -100,6 +100,9 @@ export async function reopenDay(code, dayIndex) {
   return summary;
 }
 
+// En modo demo no hay índice de códigos: la única partida es la del navegador.
+export const listActivityCodes = () => (remote ? remote.listActivityCodes() : Promise.resolve([]));
+
 // El panel docente necesita el código de la partida para el modo demo: ahí los
 // equipos se deducen de los borradores en localStorage, no hay colección.
 export const listTeams = code => (remote ? remote.listTeams() : local.listDrafts(code).map(d => ({ id: d.team, name: d.team })));

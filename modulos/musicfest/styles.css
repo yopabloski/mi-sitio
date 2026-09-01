@@ -56,6 +56,14 @@ body.gate-open{overflow:hidden}
 .team-card button:disabled{opacity:.4;cursor:not-allowed}
 .empty-teams{grid-column:1/-1;padding:28px;border:1px dashed;font-size:11px}
 
+/* Abrir una partida y renombrar la actual son cosas distintas y se parecían
+   demasiado. La línea las separa; las notas dicen qué hace cada botón. */
+.config-sep{border:0;border-top:1px solid var(--line);margin:26px 0 20px}
+.config-note{margin:10px 0 0;font-size:11px;line-height:1.5;opacity:.62}
+.config-error{margin:8px 0 0;min-height:14px;font-size:12px;font-weight:700;color:var(--orange)}
+.config-error:not(:empty){border-left:3px solid var(--orange);padding-left:10px}
+.config-fields select{display:block;width:100%;margin-top:5px;padding:10px;border:1px solid;background:#f8f5e8;font:15px "Archivo Black"}
+
 /* ===================== PORTADA · acceso ===================== */
 .brief button{border:0;background:var(--orange);padding:17px;font-weight:900}
 

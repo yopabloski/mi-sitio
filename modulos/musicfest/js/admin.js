@@ -1,9 +1,10 @@
 import{days,genres}from'./domain/game.js';import{artists,artwork}from'./data/artists.js';
-import{connect,ensureSession,saveSession,listDrafts,listTeams,releaseTeam,setSubmissionStatus,watchSession,transition,reopenDay,backend,status as storeStatus}from'./services/store.js';
+import{connect,ensureSession,saveSession,listDrafts,listTeams,listActivityCodes,releaseTeam,setSubmissionStatus,watchSession,transition,reopenDay,backend,activityId,status as storeStatus}from'./services/store.js';
 import{syncedArtwork,releaseInfo as syncedReleaseInfo}from'./data/covers.generated.js';
 import{localArtwork}from'./data/covers.local.js';
 import{recomputeSubmission}from'./domain/submissions.js';
 import{politicaDe,POLITICAS}from'./domain/equipos.js';
+import{normalizarCodigo,conflictoDeCodigo,ordenarPartidas,elegirPartida}from'./domain/partidas.js';
 import{openTeacherGate}from'./services/admin-gate.js';
 const $=s=>document.querySelector(s);const rememberedCode=localStorage.getItem('musicfest:admin:last-code')||'DEMO';
 const teacher=await openTeacherGate();
@@ -75,7 +76,7 @@ catch(error){alert(error.message||'No fue posible completar la operación.')}
 finally{buttons.forEach(b=>b.disabled=false);render()}}
 $('#start').onclick=()=>control('start');$('#pause').onclick=()=>control('pause');$('#advance').onclick=()=>control('advance');$('#back').onclick=()=>control('back');$('#close').onclick=()=>control('close');
 document.querySelectorAll('.mode-select button').forEach(b=>b.onclick=()=>{session.mode=b.dataset.mode;session.activeDayIndex=0;log('mode',`Modalidad cambiada a ${b.dataset.mode}.`);persist()});
-$('#saveIdentity').onclick=()=>{const previous=session.code;session.name=$('#activityName').value.trim()||'MusicFest';session.code=$('#activityCode').value.trim().toUpperCase().replace(/[^A-Z0-9-]/g,'')||'DEMO';localStorage.setItem('musicfest:admin:last-code',session.code);log('identity',`Identidad actualizada${previous!==session.code?` · nuevo código ${session.code}`:''}.`);persist()};
+$('#saveIdentity').onclick=()=>{const previous=session.code,destino=normalizarCodigo($('#activityCode').value)||'DEMO',choque=conflictoDeCodigo({codigo:destino,mapa:mapaDeCodigos,activityIdActual:activityId()});$('#activityMsg').textContent='';if(choque){$('#activityMsg').textContent=choque;$('#activityCode').value=previous;return}session.name=$('#activityName').value.trim()||'MusicFest';session.code=destino;localStorage.setItem('musicfest:admin:last-code',session.code);log('identity',`Identidad actualizada${previous!==session.code?` · nuevo código ${session.code}`:''}.`);persist()};
 $('#ruleTabs').onclick=e=>{if(e.target.dataset.ruleDay===undefined)return;editorDayIndex=Number(e.target.dataset.ruleDay);renderRuleEditor()};$('#saveRules').onclick=()=>{const d=activeDays()[editorDayIndex];Object.assign(d,{artistCount:Number($('#rArtists').value),budget:Number($('#rBudget').value),duration:Number($('#rDuration').value),minChilean:Number($('#rChilean').value),minGenres:Number($('#rGenres').value),genreMinimums:{Pop:Number($('#rPop').value),Rock:Number($('#rRock').value),Rap:Number($('#rRap').value),'Trap Latino':Number($('#rTrap').value)}});log('rules',`Reglas de ${d.name} actualizadas.`);persist()};
 $('#reopen').onclick=()=>{$('#reopenDayName').textContent=activeDays()[session.activeDayIndex].name;$('#reopenDialog').showModal()};$('#cancelReopen').onclick=()=>$('#reopenDialog').close();$('#confirmReopen').onclick=async()=>{$('#reopenDialog').close();await control('reopen',{dayIndex:session.activeDayIndex})};
 $('#catalogSearch').oninput=e=>{catalogQuery=e.target.value.trim().toLowerCase();renderCatalog()};$('#catalogList').onclick=e=>{const edit=e.target.closest('[data-edit]'),remove=e.target.closest('[data-delete]'),toggle=e.target.closest('[data-pool]');if(edit){loadArtistEditor(edit.dataset.edit);return}if(remove){const id=remove.dataset.delete,a=allArtists().find(x=>x.id===id);if(!a||!confirm(`¿Eliminar a ${a.name} del catálogo? Esta acción lo retirará también del pool de la actividad.`))return;session.deletedArtistIds.push(id);session.activeArtistIds=session.activeArtistIds.filter(x=>x!==id);delete session.artistOverrides[id];delete session.artwork[id];if(editingArtistId===id)resetArtistEditor('El artista fue eliminado del catálogo.');log('catalog',`${a.name} eliminado del catálogo.`);persist();return}if(!toggle)return;const id=toggle.dataset.pool,index=session.activeArtistIds.indexOf(id);if(index>=0)session.activeArtistIds.splice(index,1);else session.activeArtistIds.push(id);log('catalog',`${allArtists().find(a=>a.id===id)?.name} ${index>=0?'retirado del':'incorporado al'} pool.`);persist()};$('#selectAllArtists').onclick=()=>{session.activeArtistIds=allArtists().map(a=>a.id);persist()};$('#clearArtists').onclick=()=>{session.activeArtistIds=[];persist()};$('#findCovers').onclick=findCovers;$('#coverResults').onclick=e=>{const button=e.target.closest('[data-cover]');if(!button)return;$('#newCover').value=button.dataset.cover;document.querySelectorAll('[data-cover]').forEach(x=>x.classList.toggle('selected',x===button))};$('#addArtist').onclick=()=>{const name=$('#newName').value.trim(),genre=$('#newGenre').value,country=$('#newCountry').value.trim().toUpperCase(),cost=Number($('#newCost').value),popularity=Number($('#newPopularity').value),duration=Number($('#newDuration').value),cover=$('#newCover').value.trim();if(!name||!country||cost<0||popularity<1||popularity>5||duration<=0){$('#coverStatus').textContent='Completa todas las características con valores válidos.';return}if(editingArtistId){session.artistOverrides[editingArtistId]={name,genre,country,cost,popularity,duration};if(cover)session.artwork[editingArtistId]=cover;else delete session.artwork[editingArtistId];log('catalog',`${name} actualizado en el catálogo.`);resetArtistEditor('Cambios guardados correctamente.');persist();return}let id=slugify(name),suffix=2;while(allArtists().some(a=>a.id===id))id=`${slugify(name)}-${suffix++}`;session.customArtists.push({id,name,genre,country,cost,popularity,duration});session.activeArtistIds.push(id);if(cover)session.artwork[id]=cover;log('catalog',`${name} agregado al pool de artistas.`);resetArtistEditor();persist()};
@@ -119,3 +120,29 @@ if(!confirm(`¿Liberar "${nombre}"? El nombre queda disponible para quien lo tom
 e.target.disabled=true;
 try{await releaseTeam(teamId)}catch(problem){alert(problem.message||'No fue posible liberar el equipo.')}
 finally{renderTeams()}});
+// Abrir o crear una partida. Hasta ahora esto sólo se podía hacer escribiendo
+// en localStorage desde la consola del navegador, que no es algo que se le pida
+// a un docente cinco minutos antes de una clase.
+//
+// Cambiar de partida rehace conexión, suscripciones y temporizadores, así que
+// en vez de desmontarlo todo a mano se recarga la página: el panel arranca
+// leyendo el código de localStorage, que es justo lo que acabamos de cambiar.
+let mapaDeCodigos={};
+async function renderActivityPicker(){const selector=$('#activityPicker');if(!selector)return;
+let partidas=[];try{partidas=await listActivityCodes()}catch(problem){$('#activityMsg').textContent=problem.message||'No fue posible leer las partidas existentes.'}
+mapaDeCodigos=Object.fromEntries(partidas.filter(p=>p.activityId).map(p=>[normalizarCodigo(p.code),p.activityId]));
+const actual=normalizarCodigo(session.code);
+if(!partidas.some(p=>normalizarCodigo(p.code)===actual))partidas=[{code:session.code,activityId:activityId(),updatedAt:session.updatedAt},...partidas];
+selector.innerHTML=ordenarPartidas(partidas).map(p=>{const codigo=normalizarCodigo(p.code);
+return `<option value="${esc(codigo)}"${codigo===actual?' selected':''}>${esc(codigo)}${codigo===actual?' · abierta':''}</option>`}).join('')}
+
+$('#openActivity')?.addEventListener('click',()=>{const mensaje=$('#activityMsg');mensaje.textContent='';
+const {accion,codigo,error}=elegirPartida({seleccionada:$('#activityPicker')?.value,escrita:$('#newActivityCode')?.value,actual:session.code});
+if(error){mensaje.textContent=error;return}
+if(accion==='quedarse'){mensaje.textContent=`Ya estás en la partida ${codigo}.`;return}
+const nueva=!mapaDeCodigos[codigo];
+if(nueva&&!confirm(`No existe ninguna partida con el código ${codigo}. ¿Crear una nueva?`))return;
+localStorage.setItem('musicfest:admin:last-code',codigo);
+location.reload()});
+
+renderActivityPicker();

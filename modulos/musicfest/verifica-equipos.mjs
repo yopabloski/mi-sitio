@@ -23,10 +23,14 @@ function boot(semillas = {}) {
   globalThis.removeEventListener = window.removeEventListener.bind(window);
   globalThis.dispatchEvent = window.dispatchEvent.bind(window);
   globalThis.fetch = async () => { throw new Error('sin red'); };
+  // admin.js recarga la página al cambiar de partida. En jsdom no hay
+  // navegación: se espía la llamada, que además es lo que hay que comprobar.
+  const recargas = [];
+  globalThis.location = { reload: () => recargas.push(true) };
   const intervals = [];
   globalThis.setInterval = (fn, ms) => { const id = nativeSetInterval(fn, ms); intervals.push(id); return id; };
   const cerrar = () => { intervals.forEach(clearInterval); globalThis.setInterval = nativeSetInterval; window.close(); };
-  return { window, cerrar, avisos, confirmados, $: s => window.document.querySelector(s), $$: s => [...window.document.querySelectorAll(s)] };
+  return { window, cerrar, avisos, confirmados, recargas, $: s => window.document.querySelector(s), $$: s => [...window.document.querySelectorAll(s)] };
 }
 
 const load = name => import(new URL(name, MODULE_DIR).href + `?t=${Date.now()}${Math.random()}`);
@@ -101,5 +105,88 @@ const draft = team => JSON.stringify({ team, selections: { friday: [], saturday:
   console.log('✓ el panel refleja la política que ya tenía la partida');
 }
 
-console.log('\nPanel de equipos verificado.');
+// --- Partidas: abrir, crear y renombrar --------------------------------------
+
+// 5. El selector muestra la partida abierta y los dos botones están separados.
+{
+  const { $, cerrar } = boot();
+  await load('js/admin.js');
+  await new Promise(r => setTimeout(r, 30));
+  assert.ok($('#activityPicker'), 'debe existir el selector de partidas');
+  assert.ok($('#newActivityCode'), 'y el campo para un código nuevo');
+  assert.equal($('#openActivity').textContent, 'Abrir partida');
+  assert.equal($('#saveIdentity').textContent, 'Renombrar esta partida', 'renombrar ya no se confunde con abrir');
+  const opciones = [...$('#activityPicker').options].map(o => o.value);
+  assert.deepEqual(opciones, ['DEMO'], 'en demo la única partida es la del navegador');
+  assert.match($('#activityPicker').options[0].textContent, /abierta/);
+  cerrar();
+  console.log('✓ el selector muestra la partida abierta y los botones están separados');
+}
+
+// 6. Abrir la partida en la que ya estás no recarga nada.
+{
+  const { $, window, cerrar, recargas } = boot();
+  await load('js/admin.js');
+  await new Promise(r => setTimeout(r, 30));
+  window.localStorage.removeItem('musicfest:admin:last-code');
+  $('#activityPicker').value = 'DEMO';
+  $('#openActivity').dispatchEvent(new window.Event('click', { bubbles: true }));
+  await new Promise(r => setTimeout(r, 20));
+  assert.match($('#activityMsg').textContent, /Ya estás en la partida DEMO/);
+  assert.equal(window.localStorage.getItem('musicfest:admin:last-code'), null, 'no debe tocar el código guardado');
+  assert.deepEqual(recargas, [], 'y no debe recargar la página');
+  cerrar();
+  console.log('✓ abrir la partida abierta no hace nada y lo dice');
+}
+
+// 7. Sin selección ni código escrito, pide una de las dos cosas.
+{
+  const { $, window, cerrar } = boot();
+  await load('js/admin.js');
+  await new Promise(r => setTimeout(r, 30));
+  $('#activityPicker').innerHTML = '';
+  $('#newActivityCode').value = '   ';
+  $('#openActivity').dispatchEvent(new window.Event('click', { bubbles: true }));
+  await new Promise(r => setTimeout(r, 20));
+  assert.match($('#activityMsg').textContent, /Elige una partida o escribe/);
+  cerrar();
+  console.log('✓ sin partida ni código, pide una de las dos cosas');
+}
+
+// 8. Un código nuevo se normaliza y queda guardado para el arranque siguiente.
+{
+  const { $, window, cerrar, confirmados, recargas } = boot();
+  await load('js/admin.js');
+  await new Promise(r => setTimeout(r, 30));
+  $('#newActivityCode').value = ' mf 2026! ';
+  $('#openActivity').dispatchEvent(new window.Event('click', { bubbles: true }));
+  await new Promise(r => setTimeout(r, 20));
+  assert.match(confirmados.at(-1) || '', /No existe ninguna partida con el código MF2026/,
+    'crear una partida nueva se confirma antes, no por sorpresa');
+  assert.equal(window.localStorage.getItem('musicfest:admin:last-code'), 'MF2026',
+    'el panel arrancará en la partida nueva, ya normalizada');
+  assert.deepEqual(recargas, [true], 'y recarga para conectarse a ella');
+  cerrar();
+  console.log('✓ crear una partida nueva confirma, normaliza el código y recarga');
+}
+
+// 9. Renombrar a un código ajeno se rechaza y deja el campo como estaba.
+//    (El caso real que orfanó una actividad el 1 de septiembre.)
+{
+  const { $, window, cerrar } = boot();
+  await load('js/admin.js');
+  await new Promise(r => setTimeout(r, 30));
+  const modulo = await load('js/domain/partidas.js');
+  assert.equal(modulo.conflictoDeCodigo({ codigo: 'DEMO', mapa: { DEMO: 'mf-otra' }, activityIdActual: 'mf-esta' }) !== null, true);
+  // En modo demo no hay índice de códigos, así que el renombre sí procede.
+  $('#activityCode').value = 'MF2026';
+  $('#saveIdentity').dispatchEvent(new window.Event('click', { bubbles: true }));
+  await new Promise(r => setTimeout(r, 20));
+  assert.equal($('#activityMsg').textContent, '', 'sin conflicto, sin mensaje de error');
+  assert.equal(JSON.parse(window.localStorage.getItem('musicfest:session:MF2026')).code, 'MF2026');
+  cerrar();
+  console.log('✓ renombrar funciona y el seguro contra códigos ajenos existe');
+}
+
+console.log('\nPanel de equipos y partidas verificado.');
 process.exit(0);

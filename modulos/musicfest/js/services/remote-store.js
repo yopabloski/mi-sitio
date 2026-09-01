@@ -379,6 +379,24 @@ export async function releaseTeam(teamId) {
 
 // El panel pide `memberEmails`; ahora vienen del roster privado, no del
 // documento del equipo. La forma que ve admin.js no cambia.
+/**
+ * Las partidas que existen, para que el docente elija en vez de adivinar.
+ * `musicfestCodes` es el índice de códigos: un documento por código, con el
+ * `activityId` al que apunta.
+ */
+export async function listActivityCodes() {
+  const { db, fsMod } = await sdk();
+  const snapshot = await fsMod.getDocs(fsMod.collection(db, paths.codes));
+  return snapshot.docs.map(d => {
+    const data = d.data();
+    return {
+      code: data.code || d.id.toUpperCase(),
+      activityId: data.activityId || null,
+      updatedAt: data.updatedAt?.toDate?.().toISOString() || data.updatedAt || null
+    };
+  });
+}
+
 export const listTeams = () => [...state.teams.values()].map(team => ({ ...team, memberEmails: state.rosters.get(team.id) || [] }));
 
 // ---------------------------------------------------------------------------
