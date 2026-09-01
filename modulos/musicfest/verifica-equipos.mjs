@@ -115,7 +115,8 @@ const draft = team => JSON.stringify({ team, selections: { friday: [], saturday:
   assert.ok($('#activityPicker'), 'debe existir el selector de partidas');
   assert.ok($('#newActivityCode'), 'y el campo para un código nuevo');
   assert.equal($('#openActivity').textContent, 'Abrir partida');
-  assert.equal($('#saveIdentity').textContent, 'Renombrar esta partida', 'renombrar ya no se confunde con abrir');
+  assert.equal($('#saveIdentity').textContent, 'Cambiar el código', 'cambiar el código ya no se confunde con abrir');
+  assert.equal($('#activityName'), null, 'el nombre de la actividad ya no existe: el código es la partida');
   const opciones = [...$('#activityPicker').options].map(o => o.value);
   assert.deepEqual(opciones, ['DEMO'], 'en demo la única partida es la del navegador');
   assert.match($('#activityPicker').options[0].textContent, /abierta/);
@@ -185,7 +186,7 @@ const draft = team => JSON.stringify({ team, selections: { friday: [], saturday:
   assert.equal($('#activityMsg').textContent, '', 'sin conflicto, sin mensaje de error');
   assert.equal(JSON.parse(window.localStorage.getItem('musicfest:session:MF2026')).code, 'MF2026');
   cerrar();
-  console.log('✓ renombrar funciona y el seguro contra códigos ajenos existe');
+  console.log('✓ cambiar el código funciona y el seguro contra códigos ajenos existe');
 }
 
 console.log('\nPanel de equipos y partidas verificado.');
