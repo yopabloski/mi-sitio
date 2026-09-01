@@ -16,9 +16,9 @@ import { validarCorreos } from '../domain/correo.js';
 import { decidirIngreso, politicaDe, mensajeNombreTomado, miembrosTras, POLITICAS } from '../domain/equipos.js';
 
 const SEED_IDS = new Set(seedArtists.map(a => a.id));
-// Tope defensivo: un equipo de aula no pasa de un puñado de personas y el
-// documento no es lugar para una lista que crezca sin límite.
-const MAX_TEAM_EMAILS = 12;
+// Un dispositivo declara a lo sumo la pareja que está usándolo. El tope no es
+// decorativo: lo repiten las reglas de Firestore, que son las que mandan.
+const MAX_EMAILS_POR_DISPOSITIVO = 2;
 const clone = value => (typeof structuredClone === 'function' ? structuredClone(value) : JSON.parse(JSON.stringify(value)));
 const nowIso = () => new Date().toISOString();
 
@@ -33,6 +33,8 @@ const state = {
   events: [],
   teams: new Map(),
   drafts: new Map(),          // teamId -> { selections, statuses, revision }
+  rosters: new Map(),         // teamId -> correos declarados, sólo para el docente
+  rosterUnsubscribe: new Map(),
   submissions: new Map(),     // submissionId -> data
   teamId: null,
   teamName: null,
@@ -187,6 +189,9 @@ async function subscribeTeacher() {
     for (const [teamId, stop] of state.draftUnsubscribe) {
       if (!state.teams.has(teamId)) { stop(); state.draftUnsubscribe.delete(teamId); state.drafts.delete(teamId); }
     }
+    for (const [teamId, stop] of state.rosterUnsubscribe) {
+      if (!state.teams.has(teamId)) { stop(); state.rosterUnsubscribe.delete(teamId); state.rosters.delete(teamId); }
+    }
     for (const teamId of state.teams.keys()) {
       if (state.draftUnsubscribe.has(teamId)) continue;
       const stop = fsMod.onSnapshot(fsMod.collection(db, ...root, 'teams', teamId, 'drafts'), draftSnap => {
@@ -197,6 +202,20 @@ async function subscribeTeacher() {
         notifyDrafts();
       }, error => { state.lastError = error; });
       state.draftUnsubscribe.set(teamId, stop);
+    }
+    // El roster vive aparte del documento del equipo justamente porque ese
+    // documento es de lectura pública. Sólo el docente lo escucha.
+    for (const teamId of state.teams.keys()) {
+      if (state.rosterUnsubscribe.has(teamId)) continue;
+      const stop = fsMod.onSnapshot(fsMod.collection(db, ...root, 'teams', teamId, 'roster'), rosterSnap => {
+        const correos = [];
+        for (const d of rosterSnap.docs) {
+          for (const correo of d.data().emails || []) if (!correos.includes(correo)) correos.push(correo);
+        }
+        state.rosters.set(teamId, correos);
+        notifyDrafts();
+      }, error => { state.lastError = error; });
+      state.rosterUnsubscribe.set(teamId, stop);
     }
     notifyDrafts();
   }, error => { state.lastError = error; }));
@@ -286,8 +305,11 @@ export async function connect({ code, role = 'student', teamName = null, emails 
 export async function disconnect() {
   state.unsubscribe.forEach(stop => { try { stop(); } catch {} });
   state.draftUnsubscribe.forEach(stop => { try { stop(); } catch {} });
+  state.rosterUnsubscribe.forEach(stop => { try { stop(); } catch {} });
   state.unsubscribe = [];
   state.draftUnsubscribe.clear();
+  state.rosterUnsubscribe.clear();
+  state.rosters.clear();
   state.artistDocs.clear();
   state.teams.clear();
   state.drafts.clear();
@@ -322,21 +344,29 @@ export async function joinTeam(name, emails = []) {
   });
   if (!permitido) throw new Error(mensajeNombreTomado(state.teamName));
 
-  // Los correos se acumulan en el equipo sin duplicados: cada dispositivo aporta
-  // los de su pareja —hasta dos— y nunca se borran acá, porque quien entra
-  // segundo no tiene por qué pisar lo que dejó el primero.
-  const memberEmails = [...(datos.memberEmails || [])];
-  for (const correo of emails) if (correo && !memberEmails.includes(correo)) memberEmails.push(correo);
-  memberEmails.splice(MAX_TEAM_EMAILS);
   const memberUids = miembrosTras(accion, miembros, state.uid);
 
   if (accion === 'crear') {
     await fsMod.setDoc(ref, {
-      name: state.teamName, memberUids, memberEmails,
+      name: state.teamName, memberUids,
       createdAt: fsMod.serverTimestamp(), lastSeenAt: fsMod.serverTimestamp()
     });
   } else {
-    await fsMod.updateDoc(ref, { memberUids, memberEmails, lastSeenAt: fsMod.serverTimestamp() });
+    await fsMod.updateDoc(ref, { memberUids, lastSeenAt: fsMod.serverTimestamp() });
+  }
+
+  // Los correos NO van en el documento del equipo: ese documento es de lectura
+  // pública (el cliente tiene que leerlo antes de entrar, para saber si crea el
+  // equipo o se suma), y con el código de la partida cualquiera podría llegar a
+  // él. Van a `roster/{uid}`, que sólo lee el docente y su propio dueño.
+  // Un documento por dispositivo: así se sabe quién operó, y dos personas que
+  // entran a la vez no se pisan la escritura.
+  if (emails.length) {
+    const rosterRef = fsMod.doc(db, paths.activities, state.activityId, 'teams', teamId, 'roster', state.uid);
+    await fsMod.setDoc(rosterRef, {
+      emails: emails.slice(0, MAX_EMAILS_POR_DISPOSITIVO),
+      updatedAt: fsMod.serverTimestamp()
+    }, { merge: true });
   }
   return teamId;
 }
@@ -347,7 +377,9 @@ export async function releaseTeam(teamId) {
   await fsMod.updateDoc(fsMod.doc(db, paths.activities, state.activityId, 'teams', teamId), { memberUids: [] });
 }
 
-export const listTeams = () => [...state.teams.values()];
+// El panel pide `memberEmails`; ahora vienen del roster privado, no del
+// documento del equipo. La forma que ve admin.js no cambia.
+export const listTeams = () => [...state.teams.values()].map(team => ({ ...team, memberEmails: state.rosters.get(team.id) || [] }));
 
 // ---------------------------------------------------------------------------
 // API heredada de local-store.js

@@ -206,21 +206,19 @@ service cloud.firestore {
         allow get: if true;
         allow list: if isMusicFestAdmin();
 
-        // Correos institucionales del equipo: campo opcional. La validación de
-        // dominio vive en el cliente (js/domain/correo.js); acá sólo se acota
-        // la forma —lista de texto, con tope— y se impide que un estudiante
-        // borre lo que otro ya dejó. El docente no tiene esa restricción.
-        function emailsNuevos() {
-          return request.resource.data.get('memberEmails', []);
+        // Este documento es de LECTURA PÚBLICA por necesidad: el estudiante
+        // tiene que leerlo antes de entrar para saber si crea el equipo o se
+        // suma. Por eso los correos no viven acá sino en `roster/{uid}`, más
+        // abajo. Estas dos funciones existen para que no vuelvan a entrar:
+        // un documento nuevo no puede traer `memberEmails`, y uno existente
+        // —los que quedaron de antes— no puede cambiarlo. Sólo el docente
+        // puede tocarlo, que es como se limpian los heredados.
+        function sinCorreosNuevos() {
+          return !request.resource.data.keys().hasAny(['memberEmails']);
         }
-        function emailsPrevios() {
-          return resource.data.get('memberEmails', []);
-        }
-        function emailsBienFormados() {
-          return emailsNuevos() is list && emailsNuevos().size() <= 12;
-        }
-        function emailsSoloCrecen() {
-          return emailsBienFormados() && emailsNuevos().hasAll(emailsPrevios());
+        function correosIntactos() {
+          return request.resource.data.get('memberEmails', [])
+              == resource.data.get('memberEmails', []);
         }
 
         // Un equipo nuevo nace reclamado por quien lo crea.
@@ -229,7 +227,7 @@ service cloud.firestore {
           && request.resource.data.name.size() > 0
           && request.resource.data.memberUids.hasOnly([request.auth.uid])
           && request.resource.data.memberUids.size() == 1
-          && emailsBienFormados()
+          && sinCorreosNuevos()
           && activity().state != 'closed';
 
         allow update: if isMusicFestAdmin()
@@ -238,7 +236,7 @@ service cloud.firestore {
             isTeamMember(teamId)
             && request.resource.data.memberUids == resource.data.memberUids
             && request.resource.data.name == resource.data.name
-            && emailsSoloCrecen()
+            && correosIntactos()
           )
           // Segundo dispositivo del mismo equipo, sólo si la actividad lo permite.
           || (
@@ -247,7 +245,7 @@ service cloud.firestore {
             && activity().state != 'closed'
             && request.resource.data.name == resource.data.name
             && request.resource.data.memberUids == resource.data.memberUids.concat([request.auth.uid])
-            && emailsSoloCrecen()
+            && correosIntactos()
           )
           // Equipo liberado por el docente: queda existiendo con la membresía
           // vacía y lo reclama quien llegue, sin importar la política. Sin esta
@@ -258,10 +256,27 @@ service cloud.firestore {
             && resource.data.memberUids.size() == 0
             && request.resource.data.memberUids == [request.auth.uid]
             && request.resource.data.name == resource.data.name
-            && emailsSoloCrecen()
+            && correosIntactos()
           );
 
         allow delete: if isMusicFestAdmin();
+
+        // Roster: los correos institucionales que declara cada dispositivo.
+        // Es el único lugar del módulo con datos personales, así que lo lee
+        // sólo el docente —o el propio dueño, para poder corregirse— y nunca
+        // se puede listar desde fuera del panel.
+        match /roster/{memberUid} {
+          allow get: if isMusicFestAdmin() || (signedIn() && request.auth.uid == memberUid);
+          allow list: if isMusicFestAdmin();
+
+          allow create, update: if signedIn()
+            && request.auth.uid == memberUid
+            && request.resource.data.emails is list
+            && request.resource.data.emails.size() <= 2
+            && activity().state != 'closed';
+
+          allow delete: if isMusicFestAdmin() || (signedIn() && request.auth.uid == memberUid);
+        }
 
         // Borrador por revisión: reabrir crea una revisión nueva y conserva
         // intacta la anterior.
