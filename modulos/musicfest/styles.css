@@ -177,3 +177,36 @@ body.gate-open{overflow:hidden}
 
 /* Monograma cuadrado en las cabeceras de la aplicación. */
 .app-top img{width:auto;height:46px;border:1.5px solid var(--ink);border-radius:5px}
+
+/* ===================== CARTEL DEL LINEUP ===================== */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.pool-tabs{display:flex;gap:0;border-bottom:2px solid var(--ink);margin-bottom:16px}
+.pool-tabs button{
+  border:2px solid var(--ink);border-bottom:0;background:transparent;color:var(--ink);
+  padding:11px 20px;margin-right:-2px;cursor:pointer;
+  font:900 12px/1 "DM Sans",sans-serif;letter-spacing:.1em;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px
+}
+.pool-tabs button.active{background:var(--ink);color:var(--paper)}
+.pool-tabs button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.pool-tabs b{
+  display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;
+  background:var(--orange);color:var(--ink);font-size:11px
+}
+.pool-tabs button.active b{background:var(--green)}
+
+.poster-pane{display:flex;flex-direction:column;align-items:center;gap:16px}
+.poster-canvas{
+  width:100%;max-width:520px;height:auto;display:block;
+  border:2px solid var(--ink);box-shadow:8px 8px 0 var(--ink)
+}
+.poster-actions{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;max-width:520px}
+.poster-actions button{
+  width:100%;border:2px solid var(--ink);background:var(--green);color:var(--ink);
+  padding:15px;cursor:pointer;box-shadow:5px 5px 0 var(--ink);
+  font:900 14px/1 "DM Sans",sans-serif;letter-spacing:.08em;text-transform:uppercase;
+  transition:transform .14s ease,box-shadow .14s ease
+}
+.poster-actions button:hover:not(:disabled){transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.poster-actions button:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+#posterHint{margin:0;font-size:12px;opacity:.6;text-align:center;min-height:16px}

@@ -1,6 +1,8 @@
 import{artists,artwork}from'./data/artists.js';import{days,validate}from'./domain/game.js';import{connect,ensureSession,loadDraft,saveDraft,watchSession,backend}from'./services/store.js';
 import{syncedArtwork,releaseInfo as syncedReleaseInfo}from'./data/covers.generated.js';
 import{localArtwork}from'./data/covers.local.js';
+import{posterModel,posterFilename}from'./domain/poster.js';
+import{drawPoster,downloadPoster,fontsReady}from'./ui/poster-canvas.js';
 const $=s=>document.querySelector(s),setSync=text=>{const el=$('#syncText');if(el)el.textContent=text},genreColor={'Pop':'#4ca5ff','Rock':'#078994','Rap':'#f0a51a','Trap Latino':'#ff4d22'};let session,draft,currentDay=0,filter='Todos',query='';
 const initials=n=>n.split(/\s+/).slice(0,2).map(x=>x[0]).join('').replace('$','A');
 const catalogArtists=()=>{const combined=[...artists,...(session?.customArtists||[])],active=session?.activeArtistIds,deleted=session?.deletedArtistIds||[],overrides=session?.artistOverrides||{};const unique=combined.filter((a,i)=>!deleted.includes(a.id)&&combined.findIndex(x=>x.id===a.id)===i).map(a=>({...a,...(overrides[a.id]||{})}));return active?unique.filter(a=>active.includes(a.id)):unique};const catalogArtwork=id=>localArtwork[id]||session?.artwork?.[id]||artwork[id]||syncedArtwork[id];const catalogRelease=id=>session?.releaseInfo?.[id]||syncedReleaseInfo[id];
@@ -14,7 +16,27 @@ if(fresh&&fresh.revision===session.revision){draft=fresh}
 else{const from=session.reopenedFrom??0;days.slice(from).forEach(d=>{if(draft.selections[d.id].length)draft.statuses[d.id]='needs_revalidation'});draft.revision=session.revision;saveDraft(session.code,draft)}}
 if(session.mode==='sequential')currentDay=session.activeDayIndex;render()}
 addEventListener('musicfest-draft',()=>{if(!session||!draft||backend!=='firebase')return;const fresh=loadDraft(session.code,draft.team);if(JSON.stringify(fresh.statuses)===JSON.stringify(draft.statuses)&&JSON.stringify(fresh.selections)===JSON.stringify(draft.selections))return;draft=fresh;render()});
-function render(){if(!session||!draft)return;const active=['active','paused'].includes(session.state);$('#waiting').hidden=active;$('#workspace').hidden=!active;$('#sessionState').textContent=session.state==='lobby'?'Lobby':session.state==='active'?'En curso':session.state==='paused'?'Pausada':'Cerrada';$('#dayTitle').textContent=session.mode==='simultaneous'?'Festival completo':days[currentDay].name;$('#roundLabel').textContent=session.mode==='simultaneous'?'MODO SIMULTÁNEO':`RONDA ${currentDay+1}/3`;renderDays();renderBrief();renderArtists()}
+let pane='pool',posterTimer=null,fontsLoaded=fontsReady();
+function currentPoster(){const day=days[currentDay];
+return posterModel(draft.selections[day.id],day,catalogArtists(),
+{teamName:draft.team,activityName:session.name,revision:draft.revision,status:draft.statuses[day.id]})}
+function renderPoster(){if(pane!=='poster'||!session||!draft)return;
+clearTimeout(posterTimer);
+posterTimer=setTimeout(async()=>{await fontsLoaded;const model=currentPoster();
+await drawPoster($('#posterCanvas'),model,{coverOf:catalogArtwork});
+$('#posterDownload').disabled=model.empty;
+$('#posterAlt').textContent=model.empty?'El cartel está vacío.'
+:`Cartel de ${model.day.name}: ${model.artists.map(a=>a.name).join(', ')}. Popularidad ${model.totals.score}.`},120)}
+function setPane(next){pane=next;
+$('#panePool').hidden=next!=='pool';$('#panePoster').hidden=next!=='poster';
+[...$('#poolTabs').children].forEach(b=>{const on=b.dataset.pane===next;b.classList.toggle('active',on);b.setAttribute('aria-selected',String(on))});
+renderPoster()}
+$('#poolTabs').onclick=e=>{const b=e.target.closest('[data-pane]');if(b)setPane(b.dataset.pane)};
+$('#posterDownload').onclick=async()=>{const model=currentPoster();
+try{await downloadPoster($('#posterCanvas'),posterFilename(model.teamName,model.day.name));
+$('#posterHint').textContent='Cartel descargado.'}
+catch(error){$('#posterHint').textContent='No fue posible generar la imagen: '+error.message}};
+function render(){if(!session||!draft)return;const active=['active','paused'].includes(session.state);$('#waiting').hidden=active;$('#workspace').hidden=!active;$('#sessionState').textContent=session.state==='lobby'?'Lobby':session.state==='active'?'En curso':session.state==='paused'?'Pausada':'Cerrada';$('#dayTitle').textContent=session.mode==='simultaneous'?'Festival completo':days[currentDay].name;$('#roundLabel').textContent=session.mode==='simultaneous'?'MODO SIMULTÁNEO':`RONDA ${currentDay+1}/3`;renderDays();renderBrief();renderArtists();$('#posterCount').textContent=String(draft.selections[days[currentDay].id].length);renderPoster()}
 function renderDays(){const el=$('#daySwitch');el.innerHTML='';if(session.mode==='sequential')return;days.forEach((d,i)=>{const b=document.createElement('button');b.textContent=d.name;b.className=i===currentDay?'active':'';b.onclick=()=>{currentDay=i;render()};el.append(b)})}
 function currentIds(){return draft.selections[days[currentDay].id]}
 function renderBrief(){const day=days[currentDay],pool=catalogArtists(),result=validate(currentIds(),day,pool),locked=['submitted','closed'].includes(draft.statuses[day.id]);$('#constraints').innerHTML=result.checks.map(([name,ok,value])=>`<div class="constraint ${ok?'ok':''}"><span>${name}</span><b>${value}</b></div>`).join('');$('#score').textContent=String(result.totals.score).padStart(2,'0');const allValid=session.mode==='simultaneous'?days.every(d=>validate(draft.selections[d.id],d,pool).valid):result.valid;$('#submit').disabled=!allValid||locked||session.state!=='active';$('#submit').textContent=locked?'Lineup enviado':session.mode==='simultaneous'?'Enviar festival':'Enviar lineup';$('#submitHint').textContent=draft.statuses[day.id]==='needs_revalidation'?'Este lineup debe validarse y enviarse nuevamente.':!result.valid?'Completa todas las condiciones para enviar.':''}

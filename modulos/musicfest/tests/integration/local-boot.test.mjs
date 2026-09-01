@@ -212,6 +212,43 @@ test('el estudiante entra, arma un lineup válido y lo entrega', async t => {
   await new Promise(r => setTimeout(r, 300));
 });
 
+test('la pestaña del cartel refleja el lineup y habilita la descarga', async t => {
+  // jsdom no implementa canvas: el dibujo se salta solo, pero todo lo que lo
+  // rodea —pestañas, contador, texto alternativo, estado del botón— sí se prueba.
+  const { $, window } = bootDom(t, 'index.html');
+  const activa = JSON.parse(window.localStorage.getItem('musicfest:session:DEMO'));
+  activa.state = 'active';
+  window.localStorage.setItem('musicfest:session:DEMO', JSON.stringify(activa));
+  await load('js/student.js');
+
+  $('#code').value = 'DEMO';
+  $('#team').value = 'Los Optimizadores';
+  $('#joinForm').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+  await new Promise(r => setTimeout(r, 40));
+
+  assert.equal($('#panePoster').hidden, true, 'el pool es la pestaña inicial');
+  assert.equal($('#posterCount').textContent, String(
+    JSON.parse(window.localStorage.getItem('musicfest:draft:DEMO:Los Optimizadores')).selections[
+      activa.mode === 'sequential' ? activa.days[activa.activeDayIndex].id : 'friday'].length));
+
+  const tabCartel = $('[data-pane="poster"]');
+  tabCartel.dispatchEvent(new window.Event('click', { bubbles: true }));
+  await new Promise(r => setTimeout(r, 220));
+
+  assert.equal($('#panePoster').hidden, false, 'la pestaña del cartel se muestra');
+  assert.equal($('#panePool').hidden, true, 'el pool se oculta');
+  assert.equal(tabCartel.getAttribute('aria-selected'), 'true');
+  assert.ok($('#posterAlt').textContent.length > 0, 'el cartel describe su contenido para lectores de pantalla');
+
+  const draft = JSON.parse(window.localStorage.getItem('musicfest:draft:DEMO:Los Optimizadores'));
+  const dayId = activa.days[activa.mode === 'sequential' ? activa.activeDayIndex : 0].id;
+  const tieneArtistas = draft.selections[dayId].length > 0;
+  assert.equal($('#posterDownload').disabled, !tieneArtistas,
+    'la descarga sólo se ofrece si hay algo que descargar');
+
+  await new Promise(r => setTimeout(r, 200));
+});
+
 test('el panel docente ve la entrega, la recalcula y la valida', async t => {
   const { $, window } = bootDom(t, 'admin.html');
   await load('js/admin.js');
