@@ -69,11 +69,36 @@ test('validar no depende del entorno: mismo texto, mismo resultado', () => {
 // Trabajan de a dos, pero es habitual que sólo uno se siente al computador y
 // que alguno trabaje solo. Ninguno de los dos campos puede obligar.
 
-test('los dos campos en blanco siguen siendo válidos y no dejan correos', () => {
+test('sin exigir nada, los dos campos en blanco son válidos', () => {
   const r = validarCorreos(['', '   ']);
   assert.equal(r.ok, true);
   assert.deepEqual(r.correos, []);
   assert.equal(r.indice, null);
+});
+
+// La actividad de la UDD exige el primero: es la llave que une la plataforma
+// con las encuestas y las pruebas. La exigencia es una opción, no una constante.
+test('con el primero obligatorio, dejarlo en blanco se rechaza y señala ese campo', () => {
+  for (const par of [['', ''], ['   ', ''], ['', 'beto@udd.cl']]) {
+    const r = validarCorreos(par, { primeroObligatorio: true });
+    assert.equal(r.ok, false, JSON.stringify(par));
+    assert.equal(r.indice, 0, 'el campo a completar es el primero');
+    assert.deepEqual(r.correos, []);
+    assert.match(r.error, /@udd\.cl/);
+  }
+});
+
+test('con el primero obligatorio, el segundo sigue siendo opcional', () => {
+  const r = validarCorreos(['ana@udd.cl', ''], { primeroObligatorio: true });
+  assert.equal(r.ok, true);
+  assert.deepEqual(r.correos, ['ana@udd.cl']);
+});
+
+test('exigir el primero no cambia el resto de las reglas', () => {
+  assert.equal(validarCorreos(['ana@gmail.com', ''], { primeroObligatorio: true }).indice, 0);
+  assert.equal(validarCorreos(['ana@udd.cl', 'ana@udd.cl'], { primeroObligatorio: true }).indice, 1);
+  assert.deepEqual(validarCorreos(['ana@udd.cl', 'beto@udd.cl'], { primeroObligatorio: true }).correos,
+    ['ana@udd.cl', 'beto@udd.cl']);
 });
 
 test('sin argumentos tampoco falla', () => {

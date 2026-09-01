@@ -8,6 +8,13 @@
 // Sólo @udd.cl exacto. Los subdominios (alumnos.udd.cl, correo.udd.cl) se
 // rechazan a propósito: si algún día hay que aceptarlos, se agregan acá y en
 // las pruebas, no repartidos por la interfaz.
+//
+// El día que la actividad salga de la UDD —colegios, otra universidad— lo que
+// corresponde es que el dominio sea una configuración de la actividad y que
+// esta constante pase a ser sólo su valor por defecto. La tentación de repartir
+// un correo de relleno a todos es peor de lo que parece: el correo es la llave
+// que une lo que pasa en la plataforma con las encuestas y las pruebas, y un
+// valor repetido la anula.
 
 export const DOMINIO = 'udd.cl';
 
@@ -47,19 +54,33 @@ export function validarCorreo(bruto) {
 }
 
 /**
- * La pareja: dos correos, ambos opcionales. Trabajar solo es legítimo, y que
- * entre uno por los dos también, así que ninguno de los dos campos obliga.
+ * La pareja: dos correos. El primero identifica a quien opera y es la llave que
+ * une su trabajo en la plataforma con las encuestas y las pruebas, así que se
+ * exige. El segundo no: hay quien trabaja solo, y hay parejas donde el
+ * compañero no está al momento de entrar.
  *
- * El único rechazo propio de la pareja es escribir el mismo correo dos veces:
- * no aporta un segundo integrante y ensucia el registro con un duplicado que
- * después hay que limpiar a mano.
+ * El rechazo propio de la pareja es escribir el mismo correo dos veces: no
+ * aporta un segundo integrante y ensucia el registro con un duplicado.
+ *
+ * `primeroObligatorio` es una opción y no una constante porque la exigencia es
+ * una decisión de la actividad, no de esta función.
  *
  * @param {Array<string>} brutos lo que escribió el estudiante, en orden de campo
+ * @param {{primeroObligatorio?:boolean}} [opciones]
  * @returns {{ok:boolean, correos:string[], error:string|null, indice:number|null}}
  *   `indice` es el campo que hay que enfocar cuando algo falla.
  */
-export function validarCorreos(brutos = []) {
+export function validarCorreos(brutos = [], { primeroObligatorio = false } = {}) {
   const correos = [];
+
+  if (primeroObligatorio && correoVacio(brutos[0])) {
+    return {
+      ok: false,
+      correos: [],
+      error: `Necesitamos tu correo @${DOMINIO} para dejarte entrar.`,
+      indice: 0
+    };
+  }
 
   for (let i = 0; i < brutos.length; i++) {
     const resultado = validarCorreo(brutos[i]);

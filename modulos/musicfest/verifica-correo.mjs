@@ -46,34 +46,46 @@ async function entrar({ equipo, correo = '', pareja = '' }) {
   return ctx;
 }
 
-// 0. Los dos campos existen, ambos son opcionales y están bien rotulados.
+// 0. Los dos campos existen: el primero obligatorio, el segundo opcional.
 {
   const { $, cerrar } = boot();
   for (const id of ['email', 'email2']) {
-    const campo = $('#' + id);
-    assert.ok(campo, 'debe existir #' + id);
-    assert.equal(campo.hasAttribute('required'), false, id + ' es opcional');
-    assert.equal(campo.placeholder, 'nombre@udd.cl');
-    assert.ok(campo.closest('label').querySelector('small').textContent.includes('opcional'), id);
+    assert.ok($('#' + id), 'debe existir #' + id);
+    assert.equal($('#' + id).placeholder, 'nombre@udd.cl');
   }
+  assert.equal($('#email').hasAttribute('required'), true, 'el primero es obligatorio');
+  assert.equal($('#email').closest('label').querySelector('small'), null, 'y no se rotula como opcional');
+  assert.equal($('#email2').hasAttribute('required'), false, 'el segundo es opcional');
+  assert.ok($('#email2').closest('label').querySelector('small').textContent.includes('opcional'));
   assert.match($('#email').closest('label').textContent, /Tu correo/, 'el primero es de quien opera');
   assert.match($('#email2').closest('label').textContent, /pareja/, 'el segundo es de la pareja');
   // Orden visual: código, equipo, tu correo, correo de la pareja, botón.
   const orden = [...$('#joinForm').children].map(n => n.querySelector('input')?.id || n.tagName);
   assert.deepEqual(orden.slice(0, 5), ['code', 'team', 'email', 'email2', 'BUTTON'], JSON.stringify(orden));
   cerrar();
-  console.log('✓ los dos campos existen, son opcionales y van después del equipo');
+  console.log('✓ los dos campos existen, el primero obligatorio, tras el equipo');
 }
 
-// 1. En blanco: entra igual, sin error y sin recordar correo.
+// 1. Sin el primer correo no se entra: es la llave de la investigación.
 {
   const { $, window, cerrar } = await entrar({ equipo: 'Sin Correo', correo: '' });
-  assert.equal($('#joinError').textContent, '', 'en blanco no debe dar error');
-  assert.equal($('#join').hidden, true, 'debe entrar a la partida');
-  assert.equal($('#teamLabel').textContent, 'Sin Correo');
-  assert.deepEqual(JSON.parse(window.sessionStorage.getItem('musicfest:last')).emails, []);
+  assert.equal($('#join').hidden, false, 'no debe entrar sin correo');
+  assert.equal($('#game').hidden, true);
+  assert.match($('#joinError').textContent, /@udd\.cl/);
+  assert.equal($('#email').getAttribute('aria-invalid'), 'true');
+  assert.equal(window.document.activeElement.id, 'email');
+  assert.equal(window.sessionStorage.getItem('musicfest:last'), null);
   cerrar();
-  console.log('✓ ambos campos en blanco: entra igual y no guarda correos');
+  console.log('✓ sin el primer correo no se entra');
+}
+
+// 1b. Y tampoco basta con poner sólo el de la pareja.
+{
+  const { $, cerrar } = await entrar({ equipo: 'Solo Pareja', correo: '', pareja: 'beto@udd.cl' });
+  assert.equal($('#join').hidden, false, 'el segundo campo no reemplaza al primero');
+  assert.equal($('#email').getAttribute('aria-invalid'), 'true');
+  cerrar();
+  console.log('✓ el correo de la pareja no reemplaza al propio');
 }
 
 // 2. La pareja completa: entra y se recuerdan ambos, normalizados y en orden.

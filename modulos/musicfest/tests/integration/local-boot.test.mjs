@@ -153,6 +153,7 @@ test('el estudiante entra, arma un lineup válido y lo entrega', async t => {
 
   $('#code').value = 'DEMO';
   $('#team').value = 'Los Optimizadores';
+  $('#email').value = 'ana@udd.cl';
   $('#joinForm').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
   await new Promise(r => setTimeout(r, 30));
 
@@ -223,6 +224,7 @@ test('la pestaña del cartel refleja el lineup y habilita la descarga', async t 
 
   $('#code').value = 'DEMO';
   $('#team').value = 'Los Optimizadores';
+  $('#email').value = 'ana@udd.cl';
   $('#joinForm').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
   await new Promise(r => setTimeout(r, 40));
 
