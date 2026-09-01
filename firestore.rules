@@ -206,12 +206,30 @@ service cloud.firestore {
         allow get: if true;
         allow list: if isMusicFestAdmin();
 
+        // Correos institucionales del equipo: campo opcional. La validación de
+        // dominio vive en el cliente (js/domain/correo.js); acá sólo se acota
+        // la forma —lista de texto, con tope— y se impide que un estudiante
+        // borre lo que otro ya dejó. El docente no tiene esa restricción.
+        function emailsNuevos() {
+          return request.resource.data.get('memberEmails', []);
+        }
+        function emailsPrevios() {
+          return resource.data.get('memberEmails', []);
+        }
+        function emailsBienFormados() {
+          return emailsNuevos() is list && emailsNuevos().size() <= 12;
+        }
+        function emailsSoloCrecen() {
+          return emailsBienFormados() && emailsNuevos().hasAll(emailsPrevios());
+        }
+
         // Un equipo nuevo nace reclamado por quien lo crea.
         allow create: if signedIn()
           && request.resource.data.name is string
           && request.resource.data.name.size() > 0
           && request.resource.data.memberUids.hasOnly([request.auth.uid])
           && request.resource.data.memberUids.size() == 1
+          && emailsBienFormados()
           && activity().state != 'closed';
 
         allow update: if isMusicFestAdmin()
@@ -220,6 +238,7 @@ service cloud.firestore {
             isTeamMember(teamId)
             && request.resource.data.memberUids == resource.data.memberUids
             && request.resource.data.name == resource.data.name
+            && emailsSoloCrecen()
           )
           // Segundo dispositivo del mismo equipo, sólo si la actividad lo permite.
           || (
@@ -228,6 +247,7 @@ service cloud.firestore {
             && activity().state != 'closed'
             && request.resource.data.name == resource.data.name
             && request.resource.data.memberUids == resource.data.memberUids.concat([request.auth.uid])
+            && emailsSoloCrecen()
           );
 
         allow delete: if isMusicFestAdmin();

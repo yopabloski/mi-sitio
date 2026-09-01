@@ -4,11 +4,12 @@ import{localArtwork}from'./data/covers.local.js';
 import{posterModel,posterFilename}from'./domain/poster.js';
 import{drawPoster,downloadPoster,fontsReady}from'./ui/poster-canvas.js';
 import{ordenarPool,siguienteOrden,flecha,describir,SIN_ORDEN}from'./domain/pool.js';
+import{validarCorreo}from'./domain/correo.js';
 const $=s=>document.querySelector(s),setSync=text=>{const el=$('#syncText');if(el)el.textContent=text},genreColor={'Pop':'#4ca5ff','Rock':'#078994','Rap':'#f0a51a','Trap Latino':'#ff4d22'};let session,draft,currentDay=0,filter='Todos',query='',orden={...SIN_ORDEN};
 const initials=n=>n.split(/\s+/).slice(0,2).map(x=>x[0]).join('').replace('$','A');
 const catalogArtists=()=>{const combined=[...artists,...(session?.customArtists||[])],active=session?.activeArtistIds,deleted=session?.deletedArtistIds||[],overrides=session?.artistOverrides||{};const unique=combined.filter((a,i)=>!deleted.includes(a.id)&&combined.findIndex(x=>x.id===a.id)===i).map(a=>({...a,...(overrides[a.id]||{})}));return active?unique.filter(a=>active.includes(a.id)):unique};const catalogArtwork=id=>localArtwork[id]||session?.artwork?.[id]||artwork[id]||syncedArtwork[id];const catalogRelease=id=>session?.releaseInfo?.[id]||syncedReleaseInfo[id];
-$('#joinForm').addEventListener('submit',async e=>{e.preventDefault();const code=$('#code').value.trim().toUpperCase(),team=$('#team').value.trim(),button=$('#joinForm button'),error=$('#joinError');error.textContent='';button.disabled=true;button.dataset.label=button.dataset.label||button.innerHTML;button.textContent='Conectando…';
-try{await connect({code,role:'student',teamName:team});session=ensureSession(code);draft=loadDraft(code,team);sessionStorage.setItem('musicfest:last',JSON.stringify({code,team}));$('#join').hidden=true;$('#game').hidden=false;$('#teamLabel').textContent=team;$('#sessionLabel').textContent=`${session.name} · ${session.code}`;setSync(backend==='firebase'?'Sincronizado':'Modo local');currentDay=session.mode==='sequential'?session.activeDayIndex:0;watchSession(code,onSession);onSession(session)}
+$('#joinForm').addEventListener('submit',async e=>{e.preventDefault();const code=$('#code').value.trim().toUpperCase(),team=$('#team').value.trim(),correoInput=$('#email'),button=$('#joinForm button'),error=$('#joinError');error.textContent='';correoInput?.removeAttribute('aria-invalid');const correo=validarCorreo(correoInput?.value);if(!correo.ok){error.textContent=correo.error;correoInput?.setAttribute('aria-invalid','true');correoInput?.focus();return}button.disabled=true;button.dataset.label=button.dataset.label||button.innerHTML;button.textContent='Conectando…';
+try{await connect({code,role:'student',teamName:team,email:correo.correo});session=ensureSession(code);draft=loadDraft(code,team);sessionStorage.setItem('musicfest:last',JSON.stringify({code,team,email:correo.correo}));$('#join').hidden=true;$('#game').hidden=false;$('#teamLabel').textContent=team;$('#sessionLabel').textContent=`${session.name} · ${session.code}`;setSync(backend==='firebase'?'Sincronizado':'Modo local');currentDay=session.mode==='sequential'?session.activeDayIndex:0;watchSession(code,onSession);onSession(session)}
 catch(problem){error.textContent=problem.message||'No fue posible entrar a la partida.';button.innerHTML=button.dataset.label}
 finally{button.disabled=false}});
 function onSession(next){session=next;if(session.days)session.days.forEach((d,i)=>Object.assign(days[i],d));
@@ -60,4 +61,4 @@ $('#roleStudent').onclick=()=>showRoles(false);
 $('#roleBack').onclick=()=>{$('#joinError').textContent='';showRoles(true)};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#joinForm').hidden)showRoles(true)});
 const last=JSON.parse(sessionStorage.getItem('musicfest:last')||'null');
-if(last){$('#code').value=last.code;$('#team').value=last.team;showRoles(false)}
+if(last){$('#code').value=last.code;$('#team').value=last.team;if(last.email&&$('#email'))$('#email').value=last.email;showRoles(false)}

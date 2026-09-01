@@ -12,8 +12,12 @@ import { syncedArtwork, releaseInfo as seedReleaseInfo } from '../data/covers.ge
 import { days as defaultDays } from '../domain/game.js';
 import { toArtistDocs, fromArtistDocs, sameArtist } from '../domain/activity-mapper.js';
 import { serializeChecks } from '../domain/submissions.js';
+import { validarCorreo } from '../domain/correo.js';
 
 const SEED_IDS = new Set(seedArtists.map(a => a.id));
+// Tope defensivo: un equipo de aula no pasa de un puñado de personas y el
+// documento no es lugar para una lista que crezca sin límite.
+const MAX_TEAM_EMAILS = 12;
 const clone = value => (typeof structuredClone === 'function' ? structuredClone(value) : JSON.parse(JSON.stringify(value)));
 const nowIso = () => new Date().toISOString();
 
@@ -31,6 +35,7 @@ const state = {
   submissions: new Map(),     // submissionId -> data
   teamId: null,
   teamName: null,
+  email: null,               // correo @udd.cl del estudiante, si lo dio
   session: null,              // objeto legacy compuesto
   remote: null,               // último snapshot compuesto (base del diff)
   unsubscribe: [],
@@ -249,9 +254,12 @@ async function subscribeTeam(teamId) {
 // connect
 // ---------------------------------------------------------------------------
 
-export async function connect({ code, role = 'student', teamName = null, create = false, ownerUid = null } = {}) {
+export async function connect({ code, role = 'student', teamName = null, email = null, create = false, ownerUid = null } = {}) {
   await disconnect();
   state.role = role;
+  // El correo es opcional: si viene mal formado se ignora en silencio en vez de
+  // impedir la entrada. La interfaz ya avisó antes de llegar hasta acá.
+  state.email = validarCorreo(email).correo;
   state.code = String(code || 'DEMO').trim().toUpperCase();
 
   const user = role === 'admin' ? await currentUser() : await signInStudent();
@@ -265,7 +273,7 @@ export async function connect({ code, role = 'student', teamName = null, create 
   if (role === 'admin') {
     await subscribeTeacher();
   } else if (teamName) {
-    state.teamId = await joinTeam(teamName);
+    state.teamId = await joinTeam(teamName, state.email);
     await subscribeTeam(state.teamId);
   }
 
@@ -286,6 +294,7 @@ export async function disconnect() {
   state.activity = null;
   state.session = null;
   state.remote = null;
+  state.email = null;
   state.ready = false;
 }
 
@@ -293,24 +302,32 @@ export async function disconnect() {
 // Equipos
 // ---------------------------------------------------------------------------
 
-export async function joinTeam(name) {
+export async function joinTeam(name, email = null) {
   const { db, fsMod } = await sdk();
   const teamId = normalizeTeamId(name);
   const ref = fsMod.doc(db, paths.activities, state.activityId, 'teams', teamId);
   const snapshot = await fsMod.getDoc(ref);
   state.teamName = String(name).trim();
 
+  // Los correos se acumulan en el equipo sin duplicados: un equipo son varias
+  // personas y cada dispositivo aporta a lo sumo el suyo. Nunca se borran acá,
+  // porque quien entra segundo no tiene por qué pisar lo que dejó el primero.
+  const conCorreo = (previos = []) =>
+    (email && !previos.includes(email) ? [...previos, email] : previos).slice(0, MAX_TEAM_EMAILS);
+
   if (!snapshot.exists()) {
     await fsMod.setDoc(ref, {
-      name: state.teamName, memberUids: [state.uid],
+      name: state.teamName, memberUids: [state.uid], memberEmails: conCorreo(),
       createdAt: fsMod.serverTimestamp(), lastSeenAt: fsMod.serverTimestamp()
     });
   } else {
-    const members = snapshot.data().memberUids || [];
+    const data = snapshot.data();
+    const members = data.memberUids || [];
+    const emails = conCorreo(data.memberEmails || []);
     if (members.includes(state.uid)) {
-      await fsMod.updateDoc(ref, { lastSeenAt: fsMod.serverTimestamp() });
+      await fsMod.updateDoc(ref, { memberEmails: emails, lastSeenAt: fsMod.serverTimestamp() });
     } else if ((state.activity?.teamJoinPolicy || 'open') === 'open') {
-      await fsMod.updateDoc(ref, { memberUids: [...members, state.uid], lastSeenAt: fsMod.serverTimestamp() });
+      await fsMod.updateDoc(ref, { memberUids: [...members, state.uid], memberEmails: emails, lastSeenAt: fsMod.serverTimestamp() });
     } else {
       throw new Error(`El equipo "${state.teamName}" ya está tomado en otro dispositivo. Pide al docente que lo libere.`);
     }

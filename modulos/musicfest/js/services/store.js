@@ -22,14 +22,18 @@ export const backend = enabled ? 'firebase' : 'local';
 // ---------------------------------------------------------------------------
 
 /**
- * @param {{code:string, role?:'admin'|'student', teamName?:string, create?:boolean}} options
+ * `email` es el correo @udd.cl del estudiante, opcional y ya validado por
+ * js/domain/correo.js. En modo demo no hay dónde guardarlo —no existe la
+ * colección de equipos— así que se devuelve y nada más.
+ *
+ * @param {{code:string, role?:'admin'|'student', teamName?:string, email?:string|null, create?:boolean}} options
  */
 export async function connect(options) {
   if (!remote) {
     const session = local.ensureSession(options.code);
     session.days = session.days || defaultDays.map(d => structuredClone(d));
     local.saveSession(session);
-    return { activityId: `local:${session.code}`, teamId: options.teamName || null, uid: 'local' };
+    return { activityId: `local:${session.code}`, teamId: options.teamName || null, uid: 'local', email: options.email || null };
   }
   return remote.connect(options);
 }
