@@ -6,6 +6,9 @@
 //   npm run covers:download -- --all              todas las que tengan URL
 //   npm run covers:download -- --code DEMO        además actualiza Firestore
 //   npm run covers:download -- --force            vuelve a bajar las existentes
+//   npm run covers:download -- --only shakira      reemplaza sólo a ese artista
+//   npm run covers:download -- --only shakira --url https://…   desde una URL a mano
+//   npm run covers:download -- --only x --url … --no-normalize   sin normalizar al final
 //
 // Por qué existe: Cloud Storage for Firebase exige plan Blaze desde el 3 de
 // febrero de 2026 y este proyecto está en Spark. Como el sitio ya se publica en
@@ -23,7 +26,7 @@
 //   js/data/covers.local.js          mapa id -> ruta relativa, para el modo demo
 //   Firestore (si --code)            artworkUrl reescrito a la ruta relativa
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, unlinkSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join, resolve } from 'node:path';
 import { arg } from './firebase-admin-init.mjs';
@@ -36,6 +39,39 @@ const dryRun = Boolean(arg('dry-run'));
 const todas = Boolean(arg('all'));
 const force = Boolean(arg('force'));
 const code = arg('code');
+
+// --only reemplaza la carátula de artistas puntuales: ignora el estado de
+// revisión, vuelve a bajar aunque el archivo ya exista, borra la copia
+// anterior y deja el normalizador corriendo detrás. Es el camino para cambiar
+// una carátula que ya está en el repositorio, donde el mapa local manda sobre
+// cualquier elección hecha en el panel docente.
+const only = arg('only');
+if (only === true) {
+  console.error('✗ --only necesita al menos un id: npm run covers:download -- --only shakira,tini');
+  process.exit(1);
+}
+const soloIds = only ? String(only).split(',').map(x => x.trim()).filter(Boolean) : null;
+
+// --url salta el panel docente por completo. Existe porque el mapa local pisa
+// cualquier carátula elegida en el panel para un artista que ya tiene archivo
+// en el repositorio: ahí la única vía es traer la imagen desde la línea de
+// comandos. No necesita --code ni credenciales.
+// En un lote conviene bajar todo y normalizar una sola vez al final: veinte
+// tablas del normalizador seguidas esconden cualquier fallo.
+const sinNormalizar = Boolean(arg('no-normalize'));
+const urlManual = arg('url');
+if (urlManual === true) {
+  console.error('✗ --url necesita la dirección de la imagen.');
+  process.exit(1);
+}
+if (urlManual && (!soloIds || soloIds.length !== 1)) {
+  console.error('✗ --url va con exactamente un --only: npm run covers:download -- --only gorillaz --url https://…');
+  process.exit(1);
+}
+if (urlManual && !/^https?:\/\//.test(String(urlManual))) {
+  console.error(`✗ --url debe empezar con http:// o https://. Recibí: ${urlManual}`);
+  process.exit(1);
+}
 
 // ---------------------------------------------------------------------------
 // 1. Reunir las carátulas a bajar
@@ -83,16 +119,35 @@ async function desdeArchivos() {
 }
 
 const firestore = code ? await desdeFirestore(code) : null;
-const catalogo = firestore ? firestore.items : await desdeArchivos();
+// Con --url la imagen viene dada: no hace falta consultar ninguna fuente.
+const catalogo = firestore ? firestore.items : (urlManual ? [] : await desdeArchivos());
 
-const candidatos = catalogo.filter(a => {
+const candidatos = urlManual
+  ? [{ ...(catalogo.find(a => a.id === soloIds[0]) || { id: soloIds[0] }), artworkUrl: String(urlManual), artworkStatus: 'approved' }]
+  : catalogo.filter(a => {
   if (!a.artworkUrl) return false;
   if (!/^https?:\/\//.test(a.artworkUrl)) return false;   // ya es local
+  if (soloIds) return soloIds.includes(a.id);
   return todas || a.artworkStatus === 'approved';
 });
 
-console.log(`\n${catalogo.length} artistas · ${candidatos.length} carátulas ${todas ? '' : 'aprobadas '}por bajar.`);
-if (!todas) console.log('Usa --all para incluir también las que están por confirmar.');
+if (urlManual) {
+  console.log(`\nReemplazo manual · ${soloIds[0]} ← ${urlManual}`);
+} else if (soloIds) {
+  console.log(`\n${catalogo.length} artistas · ${candidatos.length} de ${soloIds.length} por reemplazar.`);
+  const sinUrl = soloIds.filter(id => !candidatos.some(a => a.id === id));
+  if (sinUrl.length) {
+    console.warn(`  ! Sin carátula nueva que bajar: ${sinUrl.join(', ')}`);
+    console.warn('    Elige la carátula en el panel docente y guarda el artista antes de correr esto.');
+  }
+  if (!code) {
+    console.warn('  ! Sin --code la fuente es un archivo local, que trae la carátula anterior y no la');
+    console.warn('    que acabas de elegir en el panel. Usa --code CODIGO, o pasa la imagen con --url.');
+  }
+} else {
+  console.log(`\n${catalogo.length} artistas · ${candidatos.length} carátulas ${todas ? '' : 'aprobadas '}por bajar.`);
+  if (!todas) console.log('Usa --all para incluir también las que están por confirmar.');
+}
 
 // ---------------------------------------------------------------------------
 // 2. Descargar
@@ -111,6 +166,19 @@ const yaDescargada = id => {
   return encontrado ? RELATIVE(encontrado) : null;
 };
 
+// Un artista tiene exactamente un archivo. Si la carátula nueva llega en otro
+// formato que la anterior (shakira.jpg donde había shakira.webp), quedarían
+// dos archivos con el mismo id: el mapa apuntaría al que la lectura del
+// directorio encuentre primero y el normalizador procesaría los dos.
+const limpiarPrevias = (id, conservar) => {
+  if (!existsSync(COVERS_DIR)) return;
+  for (const nombre of readdirSync(COVERS_DIR)) {
+    if (nombre !== conservar && nombre.replace(/\.[^.]+$/, '') === id) {
+      unlinkSync(join(COVERS_DIR, nombre));
+    }
+  }
+};
+
 if (dryRun) {
   candidatos.forEach(a => console.log(`  · ${a.id}  ${yaDescargada(a.id) ? '(ya está)' : ''}`));
   console.log('\n--dry-run: no se descargó nada.');
@@ -125,7 +193,7 @@ let bajadas = 0, reutilizadas = 0, bytes = 0;
 
 for (const artista of candidatos) {
   const existente = yaDescargada(artista.id);
-  if (existente && !force) {
+  if (existente && !force && !soloIds) {
     rutas[artista.id] = existente;
     reutilizadas++;
     continue;
@@ -140,6 +208,7 @@ for (const artista of candidatos) {
 
     const archivo = `${artista.id}.${extensionDe(contentType, artista.artworkUrl)}`;
     writeFileSync(join(COVERS_DIR, archivo), buffer);
+    limpiarPrevias(artista.id, archivo);       // recién ahora: si la descarga falla, la vieja sigue ahí
     rutas[artista.id] = RELATIVE(archivo);
     bajadas++;
     bytes += buffer.length;
@@ -207,7 +276,29 @@ console.table({
   pesoTotal: `${(pesoTotal / 1024 / 1024).toFixed(1)} MB`
 });
 if (fallos.length) console.table(fallos);
-console.log(fallos.length
-  ? '\nLas que fallaron conservan su URL externa. Puedes reintentar con --force.'
-  : '\n✓ Listo. Recuerda hacer commit de assets/covers/ y js/data/covers.local.js.');
+// Con --only el ciclo se cierra aquí mismo: bajar y normalizar son un solo
+// gesto para quien vino a cambiar una carátula. En una descarga masiva se
+// dejan separados, porque ahí conviene mirar el resultado en medio.
+let encadenado = false;
+if (soloIds && !fallos.length && bajadas && !sinNormalizar) {
+  const { spawnSync } = await import('node:child_process');
+  console.log('\nNormalizando lo recién bajado…');
+  const resultado = spawnSync(process.execPath, [join(MODULE_ROOT, 'scripts', 'normalize-covers.mjs')], { stdio: 'inherit' });
+  if (resultado.status !== 0) {
+    console.warn('\n! El normalizador no terminó bien. Revísalo con: npm run covers:normalize');
+    process.exit(1);
+  }
+  encadenado = true;
+}
+
+// El normalizador ya cerró con su propio mensaje: no lo repetimos.
+if (fallos.length) {
+  console.log('\nLas que fallaron conservan su URL externa. Puedes reintentar con --force.');
+} else if (sinNormalizar) {
+  console.log('\n✓ Bajada, sin normalizar. Cierra el lote con: npm run covers:normalize');
+} else if (encadenado) {
+  console.log('Y de assets/covers.normalized.json, que también cambió.');
+} else {
+  console.log('\n✓ Listo. Recuerda hacer commit de assets/covers/ y js/data/covers.local.js.');
+}
 process.exit(fallos.length ? 1 : 0);

@@ -34,9 +34,10 @@ tamaños dispares.
 
 ```bash
 cd modulos/musicfest
-npm run covers:download -- --dry-run    # informa, no descarga
-npm run covers:download                 # sólo las aprobadas
-npm run covers:download -- --all        # también las que están por confirmar
+npm run covers:download -- --dry-run          # informa, no descarga
+npm run covers:download                       # sólo las aprobadas
+npm run covers:download -- --all              # también las que están por confirmar
+npm run covers:download -- --only shakira     # reemplaza sólo a ese artista
 ```
 
 4. **Normalizarla.** Apple entrega tamaños y formatos dispares. Este paso las
@@ -68,6 +69,71 @@ git commit -m "Bajar carátulas de MusicFest al repositorio"
   la URL original en `sourceUrl`, por si hiciera falta rastrear la fuente.
 - Las que fallen conservan su URL externa: nada se rompe, sólo sigue dependiendo
   del CDN.
+
+## Cambiar una carátula que ya está en el repositorio
+
+Este es el caso que confunde, así que conviene tenerlo escrito. Una vez que la
+carátula está en `assets/covers/`, el mapa local gana sobre cualquier elección
+del panel docente: `admin.js` aplica `localArtwork` al final y pisa lo demás.
+Elegir otra portada en el panel no cambia nada hasta que la bajes.
+
+No basta con guardar desde el panel, y conviene entender por qué. `admin.js`
+termina con `watchSession(code, next => { session = normalizeSession(next) })`:
+al guardar, la sesión se escribe, el watcher se dispara con lo recién guardado
+y `normalizeSession` vuelve a aplicar `localArtwork` encima. La elección se
+revierte en el acto y no sobrevive en ninguna parte. Para un artista que ya
+tiene archivo en el repositorio, el campo de URL del panel no funciona.
+
+La vía que sí funciona es la línea de comandos, con la dirección de la imagen:
+
+```bash
+npm run covers:download -- --only gorillaz --url https://…
+```
+
+Baja esa imagen, borra la copia anterior, la normaliza y regenera el mapa. No
+necesita `--code` ni credenciales, y sirve para cualquier dirección: Amazon,
+Wikipedia, lo que sea, mientras devuelva una imagen.
+
+Para un artista que **no** tiene archivo en el repositorio —uno personalizado,
+recién agregado— el panel sí sirve: eliges ahí y después bajas lo aprobado.
+
+```bash
+npm run covers:download -- --code CODIGO --only artista-nuevo
+```
+
+`--only` ignora el estado de revisión, vuelve a bajar aunque el archivo ya
+exista, borra la copia anterior y deja el normalizador corriendo detrás. Acepta
+varios ids separados por coma. Después queda el commit de siempre.
+
+Para un lote, `--no-normalize` evita que el normalizador corra en cada vuelta:
+bajas todo y cierras con un solo `npm run covers:normalize`. Veinte tablas
+seguidas esconden cualquier fallo.
+
+Si la descarga falla, la carátula anterior se conserva. El archivo viejo sólo
+se borra después de que la nueva llegó entera.
+
+## Lo que el panel muestra
+
+El resumen del catálogo distingue tres cosas:
+
+- **EN EL REPO** — carátulas servidas desde `assets/covers/`. Son las
+  definitivas y las únicas que permiten exportar el cartel a PNG.
+- **POR BAJAR** — el docente eligió una carátula que todavía vive en un CDN
+  ajeno. Mientras esté así, el botón de descargar el cartel falla para cualquier
+  lineup que la incluya.
+- **POR REVISAR** — carátulas sin confirmar por el docente. Es la revisión de
+  contenido, independiente de dónde se sirva la imagen.
+
+Los filtros del catálogo siguen la misma división, y la fila del artista se
+marca como `POR BAJAR` cuando corresponde.
+
+Una advertencia sobre `POR BAJAR`: sólo detecta artistas que no tienen archivo
+en el repositorio. Si eliges una carátula nueva para un artista que ya lo tiene,
+el contador la muestra hasta que recargues la página, y después vuelve a cero
+aunque el cambio siga pendiente. Es consecuencia directa de que `localArtwork`
+pise la elección al normalizar la sesión. El aviso del editor cubre ese caso:
+al abrir un artista servido desde el repositorio, el panel dice el comando
+exacto que hay que correr.
 
 ## Qué hace normalize-covers
 
