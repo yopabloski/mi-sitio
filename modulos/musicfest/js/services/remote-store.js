@@ -13,6 +13,7 @@ import { days as defaultDays } from '../domain/game.js';
 import { toArtistDocs, fromArtistDocs, sameArtist } from '../domain/activity-mapper.js';
 import { serializeChecks } from '../domain/submissions.js';
 import { validarCorreo } from '../domain/correo.js';
+import { decidirIngreso, politicaDe, mensajeNombreTomado, miembrosTras, POLITICAS } from '../domain/equipos.js';
 
 const SEED_IDS = new Set(seedArtists.map(a => a.id));
 // Tope defensivo: un equipo de aula no pasa de un puñado de personas y el
@@ -124,7 +125,7 @@ async function resolveActivityId(code, { create, ownerUid }) {
     activeArtistIds: seedArtists.map(a => a.id),
     deletedArtistIds: [],
     catalogLocked: false,
-    teamJoinPolicy: 'open',
+    teamJoinPolicy: POLITICAS.UNICA,   // nombres únicos por partida; el panel docente lo puede abrir
     schemaVersion: 2,
     createdAt: fsMod.serverTimestamp(),
     updatedAt: fsMod.serverTimestamp()
@@ -307,30 +308,33 @@ export async function joinTeam(name, email = null) {
   const teamId = normalizeTeamId(name);
   const ref = fsMod.doc(db, paths.activities, state.activityId, 'teams', teamId);
   const snapshot = await fsMod.getDoc(ref);
+  const datos = snapshot.exists() ? snapshot.data() : {};
   state.teamName = String(name).trim();
+
+  // Quién puede entrar lo decide js/domain/equipos.js; acá sólo se ejecuta.
+  const miembros = datos.memberUids || [];
+  const { accion, permitido } = decidirIngreso({
+    existe: snapshot.exists(),
+    miembros,
+    uid: state.uid,
+    politica: politicaDe(state.activity)
+  });
+  if (!permitido) throw new Error(mensajeNombreTomado(state.teamName));
 
   // Los correos se acumulan en el equipo sin duplicados: un equipo son varias
   // personas y cada dispositivo aporta a lo sumo el suyo. Nunca se borran acá,
   // porque quien entra segundo no tiene por qué pisar lo que dejó el primero.
-  const conCorreo = (previos = []) =>
-    (email && !previos.includes(email) ? [...previos, email] : previos).slice(0, MAX_TEAM_EMAILS);
+  const previos = datos.memberEmails || [];
+  const memberEmails = (email && !previos.includes(email) ? [...previos, email] : previos).slice(0, MAX_TEAM_EMAILS);
+  const memberUids = miembrosTras(accion, miembros, state.uid);
 
-  if (!snapshot.exists()) {
+  if (accion === 'crear') {
     await fsMod.setDoc(ref, {
-      name: state.teamName, memberUids: [state.uid], memberEmails: conCorreo(),
+      name: state.teamName, memberUids, memberEmails,
       createdAt: fsMod.serverTimestamp(), lastSeenAt: fsMod.serverTimestamp()
     });
   } else {
-    const data = snapshot.data();
-    const members = data.memberUids || [];
-    const emails = conCorreo(data.memberEmails || []);
-    if (members.includes(state.uid)) {
-      await fsMod.updateDoc(ref, { memberEmails: emails, lastSeenAt: fsMod.serverTimestamp() });
-    } else if ((state.activity?.teamJoinPolicy || 'open') === 'open') {
-      await fsMod.updateDoc(ref, { memberUids: [...members, state.uid], memberEmails: emails, lastSeenAt: fsMod.serverTimestamp() });
-    } else {
-      throw new Error(`El equipo "${state.teamName}" ya está tomado en otro dispositivo. Pide al docente que lo libere.`);
-    }
+    await fsMod.updateDoc(ref, { memberUids, memberEmails, lastSeenAt: fsMod.serverTimestamp() });
   }
   return teamId;
 }

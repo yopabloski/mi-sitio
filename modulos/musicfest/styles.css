@@ -36,6 +36,26 @@ body.gate-open{overflow:hidden}
 .delivery-card.rule-fail{border-color:#ff4d2255}
 .delivery-card footer button:disabled{opacity:.4;cursor:not-allowed}
 
+/* Equipos conectados. Existe para hacer visible lo que antes sólo se deducía:
+   dos grupos con el mismo nombre comparten documento, borrador y entrega. */
+.teams-manager{margin-top:30px}
+.teams-note{margin:12px 0 0;max-width:66ch;font-size:12px;line-height:1.55;opacity:.7}
+.unique-names{display:flex;align-items:center;gap:8px;padding-bottom:10px;cursor:pointer;
+  font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+.unique-names input{width:16px;height:16px;accent-color:var(--ink);cursor:pointer}
+.team-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:16px}
+.team-card{display:flex;flex-direction:column;gap:8px;padding:14px;background:var(--paper);border:2px solid var(--ink)}
+.team-card h3{margin:0;font:18px/1.15 "Archivo Black";word-break:break-word}
+.team-card>small{font-size:8px;font-weight:900;letter-spacing:.12em;opacity:.55}
+.team-card.is-free{border-style:dashed;opacity:.72}
+.team-emails{display:grid;gap:3px;margin:0;padding:0;list-style:none}
+.team-emails li{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;word-break:break-all}
+.team-emails.is-empty{font-family:inherit;font-size:11px;font-style:italic;opacity:.5}
+.team-card button{align-self:flex-start;margin-top:auto;border:1px solid;background:transparent;
+  padding:8px 10px;font-size:8px;font-weight:900;letter-spacing:.08em;cursor:pointer}
+.team-card button:disabled{opacity:.4;cursor:not-allowed}
+.empty-teams{grid-column:1/-1;padding:28px;border:1px dashed;font-size:11px}
+
 /* ===================== PORTADA · acceso ===================== */
 .brief button{border:0;background:var(--orange);padding:17px;font-weight:900}
 

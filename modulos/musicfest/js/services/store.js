@@ -99,7 +99,9 @@ export async function reopenDay(code, dayIndex) {
   return summary;
 }
 
-export const listTeams = () => (remote ? remote.listTeams() : local.listDrafts('').map(d => ({ id: d.team, name: d.team })));
+// El panel docente necesita el código de la partida para el modo demo: ahí los
+// equipos se deducen de los borradores en localStorage, no hay colección.
+export const listTeams = code => (remote ? remote.listTeams() : local.listDrafts(code).map(d => ({ id: d.team, name: d.team })));
 export const releaseTeam = teamId => (remote ? remote.releaseTeam(teamId) : Promise.resolve());
 export const flushSession = () => (remote ? remote.flushSession() : Promise.resolve());
 export const setArtistCover = (artistId, cover) => (remote ? remote.setArtistCover(artistId, cover) : Promise.resolve());

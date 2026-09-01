@@ -243,10 +243,21 @@ service cloud.firestore {
           // Segundo dispositivo del mismo equipo, sólo si la actividad lo permite.
           || (
             signedIn()
-            && activity().teamJoinPolicy == 'open'
+            && activity().get('teamJoinPolicy', 'open') == 'open'
             && activity().state != 'closed'
             && request.resource.data.name == resource.data.name
             && request.resource.data.memberUids == resource.data.memberUids.concat([request.auth.uid])
+            && emailsSoloCrecen()
+          )
+          // Equipo liberado por el docente: queda existiendo con la membresía
+          // vacía y lo reclama quien llegue, sin importar la política. Sin esta
+          // rama, liberar un equipo no lo libera: nadie podría volver a entrar.
+          || (
+            signedIn()
+            && activity().state != 'closed'
+            && resource.data.memberUids.size() == 0
+            && request.resource.data.memberUids == [request.auth.uid]
+            && request.resource.data.name == resource.data.name
             && emailsSoloCrecen()
           );
 
