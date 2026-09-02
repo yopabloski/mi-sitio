@@ -5,23 +5,32 @@
 
 import { enabled } from './firebase-config.js';
 
-const MARKUP = `
+// Cada panel docente dice qué protege. Los valores por defecto son los del
+// panel de control, que fue el primero en usar esta puerta.
+const POR_DEFECTO = {
+  titulo: 'Control de producción',
+  copy: 'Este panel controla la actividad en vivo: reglas, pool, avance de días y validación de entregas. Entra con tu cuenta institucional.'
+};
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const markup = ({ titulo, copy }) => `
 <div class="teacher-gate-card">
   <img src="assets/brand/vector/musicfest-logo-d-noche-vector.svg" alt="MusicFest">
   <p class="kicker">ACCESO DOCENTE</p>
-  <h2>Control de producción</h2>
-  <p class="teacher-gate-copy">Este panel controla la actividad en vivo: reglas, pool, avance de días y validación de entregas. Entra con tu cuenta institucional.</p>
+  <h2>${esc(titulo)}</h2>
+  <p class="teacher-gate-copy">${esc(copy)}</p>
   <button id="teacherGateLogin" type="button">Entrar con Google</button>
   <p id="teacherGateMsg" class="teacher-gate-msg" role="status"></p>
 </div>`;
 
-export async function openTeacherGate() {
+export async function openTeacherGate(textos = {}) {
   if (!enabled) return { uid: 'local', demo: true };
 
   const { restoreTeacher, signInTeacher } = await import('./firebase.js');
   const gate = document.createElement('section');
   gate.className = 'teacher-gate';
-  gate.innerHTML = MARKUP;
+  gate.innerHTML = markup({ ...POR_DEFECTO, ...textos });
   document.body.append(gate);
   document.body.classList.add('gate-open');
 

@@ -328,7 +328,12 @@ export function cablear() {
 
 export async function iniciar() {
   cablear();
-  await openTeacherGate();   // en modo demo se abre sola
+  // En modo demo se abre sola. El texto es propio: esta puerta no protege
+  // los controles de la partida, protege datos personales de los alumnos.
+  await openTeacherGate({
+    titulo: 'Resultados de la encuesta',
+    copy: 'Detrás hay respuestas de percepción con el correo de cada alumno. Entra con tu cuenta institucional para verlas.'
+  });
   await recargar();
 }
 
