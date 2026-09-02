@@ -1,6 +1,6 @@
 # MusicFest · Resultados de las pruebas
 
-Última ejecución: 10 de agosto de 2026, desde `modulos/musicfest`.
+Última ejecución: 2 de septiembre de 2026, desde `modulos/musicfest`.
 
 ## Resumen
 
@@ -8,11 +8,11 @@ Todo verde, ejecutado en el equipo de Pablo (macOS, Node 24.14.1, Temurin 21).
 
 | Suite | Comando | Resultado |
 |---|---|---|
-| Dominio y migración | `npm run test:domain` | **31/31** |
-| Humo de extremo a extremo (modo demo, jsdom) | `npm run test:smoke` | **6/6** |
-| Reglas de Firestore (emulador) | `npm run test:rules` | **27/27** |
+| Dominio y migración | `npm run test:domain` | **128/128** |
+| Humo de extremo a extremo (modo demo, jsdom) | `npm run test:smoke` | **20/20** |
+| Reglas de Firestore (emulador) | `npm run test:rules` | **37/37** |
 | Integración con emuladores | `npm run test:integration` | **5/5** |
-| **Total** | `npm test` + las dos de emulador | **69/69** |
+| **Total** | `npm test` + las dos de emulador | **190/190** |
 
 Verificaciones adicionales:
 
@@ -22,7 +22,7 @@ Verificaciones adicionales:
 - Todas las rutas del sitio responden 200 sobre HTTP, incluidas las de los otros
   dos módulos.
 
-## Detalle · dominio y migración (27)
+## Detalle · restricciones, entregas y migración
 
 `tests/domain/constraints.test.mjs` — 10 pruebas
 
@@ -35,15 +35,17 @@ Verificaciones adicionales:
   corresponde.
 - Reglas editadas por el docente se respetan sin tocar el dominio.
 
-`tests/domain/submissions.test.mjs` — 8 pruebas
+`tests/domain/submissions.test.mjs` — 13 pruebas
 
 - El recálculo reproduce los totales de una entrega honesta.
 - Una popularidad inflada por el cliente se detecta y se ignora.
 - Artistas fuera del pool, repetidos, o un pool recortado después de la entrega
   invalidan el lineup.
 - `crossDayConflicts` detecta un artista asignado a dos días.
-- El ranking sólo cuenta entregas validadas de la revisión vigente, y descarta
-  las infactibles aunque estén validadas.
+- El ranking cuenta entregas factibles de la revisión vigente sin aprobación
+  manual, y descarta las infactibles.
+- La auditoría de cierre distingue entrega existente, falta de chilenos,
+  lineup incompleto, ausencia total y lineup válido sin confirmar.
 
 `tests/domain/migration.test.mjs` — 9 pruebas, sobre la exportación real
 `musicfest-demo-2026-08-10.json`
@@ -56,7 +58,7 @@ Verificaciones adicionales:
   segunda vuelta es estable (no genera escrituras infinitas).
 - El pool importado sigue permitiendo resolver los tres días.
 
-## Detalle · humo de extremo a extremo (6)
+## Detalle · humo de extremo a extremo (9)
 
 `tests/integration/local-boot.test.mjs`, escenario encadenado en modo demo:
 
@@ -69,10 +71,13 @@ Verificaciones adicionales:
 4. El estudiante entra, ve el escenario cerrado, el docente inicia desde "otra
    pestaña", el equipo arma un lineup válido haciendo clic en tarjetas reales y
    lo entrega con `dayIndex`, revisión y estado `pending`.
-5. El panel docente ve la entrega, muestra el recálculo del servidor, confirma
-   que cumple y la valida.
+5. El panel docente ve la entrega, muestra el recálculo automático y la registra
+   como enviada sin pedir aprobación manual.
 6. Una entrega con la popularidad inflada a 999 aparece marcada como
    "REVISAR", muestra `informado 999` y el panel no usa ese número.
+7. El registro de cierre muestra Enviado/Sin enviar y el motivo observable.
+8. El docente puede eliminar un envío sin borrar el lineup del borrador.
+9. El cierre muestra un resumen, pausa brevemente y recibe los últimos borradores.
 
 ## Bugs encontrados y corregidos durante la verificación
 

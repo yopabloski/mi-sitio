@@ -509,8 +509,9 @@ function composeDraft(teamId, teamName) {
   const revision = state.session?.revision || 1;
   const stored = state.drafts.get(teamId);
   const draft = stored
-    ? { team: teamName, selections: clone(stored.selections || {}), statuses: clone(stored.statuses || {}), revision: stored.revision || revision, updatedAt: stored.updatedAt }
+    ? { team: teamName, teamId, selections: clone(stored.selections || {}), statuses: clone(stored.statuses || {}), revision: stored.revision || revision, updatedAt: stored.updatedAt }
     : emptyDraft(teamName, revision);
+  draft.teamId = teamId;
   for (const day of ['friday', 'saturday', 'sunday']) {
     draft.selections[day] = draft.selections[day] || [];
     draft.statuses[day] = draft.statuses[day] || 'editable';
@@ -606,6 +607,24 @@ export async function setSubmissionStatus(code, team, dayId, status) {
     );
   }
   return draft;
+}
+
+/** Docente: elimina una entrega y devuelve ese día al estado sin enviar. */
+export async function deleteSubmission(code, team, dayId) {
+  const teamId = normalizeTeamId(team);
+  const draft = composeDraft(teamId, team);
+  const submission = draft.submissions?.[dayId];
+  if (!submission?.id) return false;
+
+  const { db, fsMod } = await sdk();
+  const revision = submission.revision || draft.revision || state.session?.revision || 1;
+  const draftRef = fsMod.doc(db, paths.activities, state.activityId, 'teams', teamId, 'drafts', String(revision));
+  const statuses = { ...draft.statuses, [dayId]: 'editable' };
+  const batch = fsMod.writeBatch(db);
+  batch.delete(fsMod.doc(db, paths.activities, state.activityId, 'submissions', submission.id));
+  batch.set(draftRef, { statuses, updatedAt: fsMod.serverTimestamp() }, { merge: true });
+  await batch.commit();
+  return true;
 }
 
 /** Escritura directa de la carátula definitiva de un artista. */

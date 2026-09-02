@@ -56,6 +56,8 @@ export const listDrafts = code => (remote ? remote.listDrafts(code) : local.list
 export const watchSession = (code, cb) => (remote ? remote.watchSession(code, cb) : local.watchSession(code, cb));
 export const setSubmissionStatus = (code, team, dayId, state) =>
   (remote ? remote.setSubmissionStatus(code, team, dayId, state) : local.setSubmissionStatus(code, team, dayId, state));
+export const deleteSubmission = (code, team, dayId) =>
+  (remote ? remote.deleteSubmission(code, team, dayId) : Promise.resolve(local.deleteSubmission(code, team, dayId)));
 
 // ---------------------------------------------------------------------------
 // Operaciones docentes

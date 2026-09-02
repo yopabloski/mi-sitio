@@ -102,8 +102,10 @@ Al crear, las reglas comprueban:
 | `validationStatus == 'pending'`, `validatedAt == null`, `validatedBy == null` | Autovalidarse |
 
 Al actualizar, sólo el docente, y aun así `selections`, `teamId`, `dayId`,
-`revision` y `submittedAt` deben quedar idénticos: ni el docente reescribe lo
-que un equipo entregó, sólo emite su veredicto.
+`revision` y `submittedAt` deben quedar idénticos. Esa posibilidad se conserva
+para cohortes antiguas; la interfaz actual no pide validación manual. El docente
+sí puede eliminar el documento completo desde el panel; el borrador y sus
+selecciones se conservan y el día vuelve a estado editable.
 
 **Lo que las reglas no pueden hacer** es sumar. `cost`, `duration` y `score`
 llegan como `reportedTotals` y se tratan como declaración del estudiante, no
@@ -139,7 +141,8 @@ evaluación, así que llamar a `activity()` diez veces cuenta una sola.
 npm run test:rules      # necesita Java 21+ para los emuladores
 ```
 
-`tests/rules/firestore-rules.test.mjs` cubre 22 escenarios, incluidos los
+`tests/rules/firestore-rules.test.mjs` cubre 37 escenarios, incluidos los
 intentos de manipulación: cambiar reglas siendo estudiante, entregar por otro
 equipo, autovalidarse, repetir artistas, usar artistas fuera del pool, entregar
-en una revisión vencida y editar una entrega ya enviada.
+en una revisión vencida y editar o borrar una entrega ya enviada. También prueba
+explícitamente que el docente sí pueda eliminarla.

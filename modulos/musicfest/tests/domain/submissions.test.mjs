@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { days } from '../../js/domain/game.js';
 import { artists } from '../../js/data/artists.js';
-import { recomputeSubmission, crossDayConflicts, buildLeaderboard, serializeChecks, deserializeChecks } from '../../js/domain/submissions.js';
+import { recomputeSubmission, auditarCierre, crossDayConflicts, buildLeaderboard, serializeChecks, deserializeChecks } from '../../js/domain/submissions.js';
 
 const friday = days[0];
 const pool = artists;
@@ -67,14 +67,38 @@ test('crossDayConflicts detecta un artista asignado a dos días', () => {
   assert.equal(conflicts[0].artistId, 'coldplay');
 });
 
-test('el ranking sólo considera entregas validadas de la revisión vigente', () => {
+test('el ranking usa entregas factibles de la revisión vigente sin aprobación manual', () => {
   const entries = [
     submission({ teamId: 'a', teamName: 'A', validationStatus: 'validated', revision: 2 }),
     submission({ teamId: 'b', teamName: 'B', validationStatus: 'pending', revision: 2 }),
     submission({ teamId: 'c', teamName: 'C', validationStatus: 'validated', revision: 1 })
   ];
   const board = buildLeaderboard(entries, { revision: 2, days, artists: pool });
-  assert.deepEqual(board.map(x => x.teamId), ['a']);
+  assert.deepEqual(board.map(x => x.teamId), ['a', 'b']);
+  const legacy = buildLeaderboard(entries, { revision: 2, days, artists: pool, onlyValidated: true });
+  assert.deepEqual(legacy.map(x => x.teamId), ['a'], 'los datos antiguos todavía pueden filtrarse por validación');
+});
+
+test('la auditoría distingue enviado, falta de chilenos y omisión de confirmación', () => {
+  const sunday = { id: 'sunday', name: 'Domingo', artistCount: 2, budget: 10, duration: 4, minChilean: 1, minGenres: 1, genreMinimums: {} };
+  const tinyPool = [
+    { id: 'chi', name: 'Chile', country: 'CHI', genre: 'Rock', cost: 1, duration: 1, popularity: 3 },
+    { id: 'ext-1', name: 'Exterior 1', country: 'ARG', genre: 'Rock', cost: 1, duration: 1, popularity: 3 },
+    { id: 'ext-2', name: 'Exterior 2', country: 'USA', genre: 'Pop', cost: 1, duration: 1, popularity: 3 }
+  ];
+  const drafts = [
+    { team: 'Envió', selections: { sunday: ['ext-1', 'ext-2'] }, submissions: { sunday: { dayId: 'sunday', revision: 2, selections: ['ext-1', 'ext-2'] } } },
+    { team: 'Sin chilenos', selections: { sunday: ['ext-1', 'ext-2'] }, submissions: {} },
+    { team: 'Olvidó confirmar', selections: { sunday: ['chi', 'ext-1'] }, submissions: {} },
+    { team: 'Incompleto', selections: { sunday: ['ext-1'] }, submissions: {} },
+    { team: 'Sin actividad', selections: { sunday: [] }, submissions: {} }
+  ];
+  const rows = auditarCierre(drafts, { revision: 2, days: [sunday], artists: tinyPool });
+  assert.deepEqual(rows.map(row => row.days.sunday.reason), [
+    'sent', 'missing_chilean', 'valid_unsubmitted', 'incomplete', 'no_activity'
+  ]);
+  assert.equal(rows[0].allSent, true, 'enviado describe existencia, aunque el recálculo se muestre aparte');
+  assert.ok(rows[1].days.sunday.failures.some(f => f.name === 'Talento chileno'));
 });
 
 test('una entrega validada pero infactible no entra al ranking', () => {

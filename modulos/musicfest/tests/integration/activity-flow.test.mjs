@@ -1,5 +1,5 @@
 // Integración de extremo a extremo contra los emuladores:
-// importar una actividad completa, jugar un día, validar, reabrir y comprobar
+// importar una actividad completa, jugar un día, recalcular, reabrir y comprobar
 // que la reapertura no destruye las entregas anteriores.
 //
 //   npm run test:integration
@@ -106,7 +106,7 @@ test('el equipo entra, guarda borrador y entrega el viernes', async () => {
   assert.equal(stored.data().validationStatus, 'pending');
 });
 
-test('el docente recalcula, valida y el ranking usa los valores del servidor', async () => {
+test('el docente recalcula y el ranking usa esos valores sin aprobación manual', async () => {
   const activity = (await getDoc(doc(teacher(), activityPath))).data();
   const artistsSnap = await getDocs(collection(teacher(), `${activityPath}/artists`));
   const pool = artistsSnap.docs.map(d => d.data());
@@ -116,12 +116,7 @@ test('el docente recalcula, valida y el ranking usa los valores del servidor', a
   assert.equal(check.valid, true);
   assert.equal(check.tampered, false, `el recálculo no debería diferir: ${check.deltas.join(' | ')}`);
 
-  await updateDoc(doc(teacher(), `${activityPath}/submissions/${submissions[0].id}`), {
-    validationStatus: 'validated', validatedAt: new Date(), validatedBy: TEACHER
-  });
-
-  const validated = (await getDocs(collection(teacher(), `${activityPath}/submissions`))).docs.map(d => d.data());
-  const board = buildLeaderboard(validated, { revision: 1, days: activity.days, artists: pool });
+  const board = buildLeaderboard(submissions, { revision: 1, days: activity.days, artists: pool });
   assert.equal(board.length, 1);
   assert.equal(board[0].score, check.totals.score);
 });
@@ -140,7 +135,7 @@ test('reabrir el viernes conserva la entrega anterior y abre una revisión nueva
   // La entrega de la revisión 1 sigue intacta.
   const survivor = (await getDoc(doc(teacher(), `${activityPath}/submissions/${TEAM_ID}__friday__r1`))).data();
   assert.deepEqual(survivor.selections, before.selections);
-  assert.equal(survivor.validationStatus, 'validated');
+  assert.equal(survivor.validationStatus, 'pending', 'el estado heredado ya no requiere intervención docente');
 
   // El borrador nuevo conserva las selecciones y pide revalidar.
   const fresh = (await getDoc(doc(student(), `${activityPath}/teams/${TEAM_ID}/drafts/2`))).data();

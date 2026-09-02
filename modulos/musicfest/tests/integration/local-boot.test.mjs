@@ -18,7 +18,7 @@ const MODULE_DIR = new URL('../../', import.meta.url);
 const nativeSetInterval = globalThis.setInterval;
 
 // Las pruebas de este archivo son un escenario encadenado: el equipo entrega en
-// una y el docente valida en la siguiente. Cada JSDOM trae su propio
+// una y el docente la audita en la siguiente. Cada JSDOM trae su propio
 // localStorage, así que lo transportamos entre ventanas a mano.
 const sharedStorage = new Map();
 
@@ -251,7 +251,7 @@ test('la pestaña del cartel refleja el lineup y habilita la descarga', async t 
   await new Promise(r => setTimeout(r, 200));
 });
 
-test('el panel docente ve la entrega, la recalcula y la valida', async t => {
+test('el panel docente ve la entrega y la recalcula sin aprobación manual', async t => {
   const { $, window } = bootDom(t, 'admin.html');
   await load('js/admin.js');
   await new Promise(r => setTimeout(r, 10));
@@ -259,22 +259,19 @@ test('el panel docente ve la entrega, la recalcula y la valida', async t => {
   const card = $('#deliveryList .delivery-card');
   assert.ok(card, 'la entrega del equipo debe aparecer en la bandeja');
   assert.ok(card.textContent.includes('Los Optimizadores'));
-  assert.ok(card.textContent.includes('RECÁLCULO DEL SERVIDOR'), 'la tarjeta debe mostrar el recálculo autoritativo');
+  assert.ok(card.textContent.includes('RECÁLCULO AUTOMÁTICO'), 'la tarjeta debe mostrar el recálculo autoritativo');
   assert.ok(card.textContent.includes('CUMPLE TODAS LAS RESTRICCIONES'));
   assert.equal(card.textContent.includes('REVISAR'), false, 'no debería haber discrepancias');
 
-  const validar = $('#deliveryList [data-validate]');
-  assert.equal(validar.disabled, false);
-  validar.dispatchEvent(new window.Event('click', { bubbles: true }));
-  await new Promise(r => setTimeout(r, 20));
-
   const draft = JSON.parse(window.localStorage.getItem('musicfest:draft:DEMO:Los Optimizadores'));
   const entrega = Object.values(draft.submissions)[0];
-  assert.equal(entrega.validationStatus, 'validated');
-  assert.ok(entrega.validatedAt);
+  assert.equal(entrega.validationStatus, 'pending', 'el campo heredado no necesita cambiar para que cuente');
+  assert.equal($('#deliveryList [data-validate]'), null);
+  assert.equal($('#deliveryList [data-return]'), null);
+  assert.ok($('#closeoutBody').textContent.includes('ENVIADO'), 'la matriz usa enviado/sin enviar');
 });
 
-test('una entrega con totales inflados se marca y no se puede validar', async t => {
+test('una entrega con totales inflados se marca aunque figure como enviada', async t => {
   const { $, window } = bootDom(t, 'admin.html');
   const key = 'musicfest:draft:DEMO:Los Optimizadores';
   const draft = JSON.parse(window.localStorage.getItem(key));
@@ -290,4 +287,44 @@ test('una entrega con totales inflados se marca y no se puede validar', async t 
   assert.ok(card.textContent.includes('REVISAR'), 'la discrepancia debe hacerse visible');
   assert.ok(card.textContent.includes('informado 999'));
   assert.equal(card.textContent.includes('999</b><small>POPULARIDAD'), false);
+  assert.ok(card.textContent.includes('ENVIADO'));
+});
+
+test('el docente puede eliminar un envío sin borrar el borrador', async t => {
+  const { $, window } = bootDom(t, 'admin.html');
+  const key = 'musicfest:draft:DEMO:Los Optimizadores';
+  const before = JSON.parse(window.localStorage.getItem(key));
+  const dayId = Object.keys(before.submissions)[0];
+  const selected = [...before.selections[dayId]];
+
+  await load('js/admin.js');
+  await new Promise(r => setTimeout(r, 10));
+  const remove = $('#deliveryList [data-delete-submission]');
+  assert.ok(remove, 'cada entrega debe ofrecer eliminación');
+  remove.dispatchEvent(new window.Event('click', { bubbles: true }));
+  await new Promise(r => setTimeout(r, 30));
+
+  const after = JSON.parse(window.localStorage.getItem(key));
+  assert.equal(after.submissions?.[dayId], undefined);
+  assert.deepEqual(after.selections[dayId], selected, 'el lineup queda disponible para corregir o reenviar');
+  assert.equal(after.statuses[dayId], 'editable');
+  assert.equal($('#deliveryList .delivery-card'), null);
+  assert.ok($('#closeoutBody').textContent.includes('SIN ENVIAR'));
+});
+
+test('el cierre muestra el resumen y espera los últimos borradores', async t => {
+  const { $, window, alerts } = bootDom(t, 'admin.html');
+  await load('js/admin.js');
+  await new Promise(r => setTimeout(r, 10));
+
+  $('#close').dispatchEvent(new window.Event('click'));
+  assert.equal($('#closeDialog').open, true);
+  assert.ok($('#closeDialogSummary').textContent.includes('equipos cerraron los tres días'));
+
+  $('#confirmClose').dispatchEvent(new window.Event('click'));
+  await new Promise(r => setTimeout(r, 900));
+  const session = JSON.parse(window.localStorage.getItem('musicfest:session:DEMO'));
+  assert.equal(session.state, 'closed');
+  assert.equal($('#adminState').textContent, 'Cerrada');
+  assert.deepEqual(alerts, []);
 });

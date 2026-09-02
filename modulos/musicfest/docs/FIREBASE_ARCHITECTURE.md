@@ -13,7 +13,8 @@ autoridad. Sin Admin SDK en el servidor, el reparto queda así:
 | Iniciar, pausar, cerrar | Transacción cliente + reglas | Sólo docente puede escribir la actividad |
 | Avanzar / retroceder día | Transacción cliente + reglas | Idem, y la transacción evita carreras entre dos pestañas |
 | Reabrir día | Transacción + copia de borradores por lote | La revisión anterior queda intacta |
-| Validar / devolver entrega | Reglas: sólo docente escribe `validationStatus` | El estudiante no puede autovalidarse |
+| Auditar entrega | Recálculo automático en el panel | No requiere aprobación manual |
+| Eliminar entrega | Lote docente: borra la entrega y conserva el borrador | Sólo docente puede borrar |
 | Enviar lineup | Reglas verifican la **estructura**; el panel docente recalcula los **números** | Ver §5 |
 | Ranking | Recalculado en el cliente docente desde `selections` | Los totales enviados nunca se usan |
 
@@ -70,7 +71,7 @@ musicfestActivities/{activityId}
     teamId, teamName, dayId, dayIndex, revision
     selections[]                          · lo único autoritativo del estudiante
     reportedTotals, reportedChecks        · informados por el cliente, nunca confiables
-    validationStatus: pending | validated | returned
+    validationStatus: pending | validated | returned   · heredado; la interfaz ya no lo usa
     submittedBy, submittedAt, validatedBy, validatedAt
 
   events/{eventId}
@@ -105,7 +106,7 @@ precio es que alguien podría escribir el nombre de otro equipo; por eso existe
 modulos/musicfest/js/
   domain/
     game.js               · sin cambios; restricciones y totales
-    submissions.js        · recálculo autoritativo, conflictos y ranking
+    submissions.js        · recálculo autoritativo, cierre, conflictos y ranking
     activity-mapper.js    · session ⇄ documentos Firestore (compartido con los scripts)
   services/
     firebase-config.js    · config, flag `enabled`, emuladores, rutas
@@ -140,13 +141,17 @@ Las reglas no pueden sumar, así que no lo detectan. Pero:
    Es decir: **el lineup es real**.
 2. El panel docente ignora `reportedTotals` y recalcula todo con
    `recomputeSubmission()`. Si hay diferencia, la tarjeta muestra un aviso
-   "REVISAR" y el botón de validar queda deshabilitado si el recálculo no cumple.
-3. El ranking (`buildLeaderboard`) sólo considera entregas validadas de la
+   "REVISAR". No hay un segundo paso de aprobación manual.
+3. El ranking (`buildLeaderboard`) considera las entregas factibles de la
    revisión vigente y usa la popularidad recalculada.
+4. `auditarCierre()` cruza entregas y borradores. La matriz docente usa sólo
+   los estados principales **Enviado / Sin enviar**, y para estos últimos
+   conserva el diagnóstico: sin actividad, incompleto, válido sin confirmar,
+   falta de talento chileno u otras restricciones.
 
 Resultado: falsificar los totales no da ninguna ventaja y además queda visible.
-Es la misma postura de La Odisea, donde el `score` lo escribe el cliente y sólo
-cuentan los intentos marcados `validated` por el docente.
+El campo `validationStatus` se conserva para leer cohortes antiguas y mantener
+compatibilidad con las reglas desplegadas, pero el flujo actual no lo modifica.
 
 Con Cloud Functions esto se cerraría de raíz: `submitLineup` calcularía y
 escribiría los totales. El código está preparado para ese cambio —

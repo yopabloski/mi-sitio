@@ -2,7 +2,7 @@
 //
 //   npm run test:rules
 //
-// Cubre: separación docente/estudiante, inmutabilidad de entregas, validación
+// Cubre: separación docente/estudiante, inmutabilidad de entregas, borrado docente, validación
 // estructural del lineup, propiedad del equipo y aislamiento entre equipos.
 
 import test, { before, after, beforeEach } from 'node:test';
@@ -270,7 +270,14 @@ test('una entrega enviada es inmutable para el estudiante', async () => {
   await assertFails(deleteDoc(doc(student(TEAM_A_UID), path)));
 });
 
-test('el docente valida y devuelve, pero no puede reescribir el lineup entregado', async () => {
+test('el docente puede eliminar una entrega', async () => {
+  const path = `${activityPath}/submissions/equipo-a__friday__r1`;
+  await setDoc(doc(student(TEAM_A_UID), path), validSubmission());
+  await assertSucceeds(deleteDoc(doc(teacher(), path)));
+  assert.equal((await getDoc(doc(teacher(), path))).exists(), false);
+});
+
+test('la compatibilidad antigua permite validar y devolver, pero no reescribir el lineup', async () => {
   const path = `${activityPath}/submissions/equipo-a__friday__r1`;
   await setDoc(doc(student(TEAM_A_UID), path), validSubmission());
   await assertSucceeds(updateDoc(doc(teacher(), path), { validationStatus: 'validated', validatedAt: new Date(), validatedBy: TEACHER }));

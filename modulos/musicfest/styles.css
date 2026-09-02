@@ -241,3 +241,18 @@ body.gate-open{overflow:hidden}
 .poster-actions button:hover:not(:disabled){transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
 .poster-actions button:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
 #posterHint{margin:0;font-size:12px;opacity:.6;text-align:center;min-height:16px}
+
+/* Registro docente de cierre: una planilla operativa, no un segundo flujo de
+   aprobación. Los estados principales se leen de un vistazo y el motivo queda
+   subordinado debajo de "Sin enviar". */
+.closeout{margin-top:30px;background:var(--ink);color:var(--paper);border:4px solid var(--ink);box-shadow:8px 9px 0 #17171033}
+.closeout-head{display:flex;justify-content:space-between;align-items:end;gap:24px;padding:24px 26px;border-bottom:1px solid #fff3}
+.closeout-head h2{font:30px/1 "Archivo Black";margin:7px 0 8px}.closeout-head p:last-child{max-width:680px;margin:0;font-size:11px;line-height:1.5;opacity:.72}
+.closeout-head>button{flex:0 0 auto;padding:12px 15px;border:2px solid var(--paper);background:var(--green);color:var(--ink);font-weight:900;box-shadow:4px 4px 0 var(--orange);cursor:pointer}
+.closeout-summary{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:4px solid var(--ink);background:var(--paper);color:var(--ink)}
+.closeout-summary span{padding:17px 20px;min-height:76px}.closeout-summary span+span{border-left:2px solid var(--ink)}.closeout-summary b,.closeout-summary small{display:block}.closeout-summary b{font:30px/1 "Archivo Black"}.closeout-summary small{margin-top:6px;font-size:7px;font-weight:900;letter-spacing:.09em}.closeout-summary .is-risk{background:#ff4d22;color:#fff}
+.closeout-table-wrap{overflow-x:auto;background:#e6e2d3}.closeout-table{width:100%;min-width:880px;border-collapse:collapse;color:var(--ink)}.closeout-table th,.closeout-table td{padding:13px 12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}.closeout-table thead th{background:#cbc7b9;font-size:8px;letter-spacing:.12em;text-transform:uppercase}.closeout-table tbody th{width:190px}.closeout-table tbody th b,.closeout-table tbody th small{display:block}.closeout-table tbody th b{font:16px "Archivo Black"}.closeout-table tbody th small{margin-top:5px;font-size:8px;font-weight:500;opacity:.65}
+.close-state{display:block;min-width:135px;padding:9px 10px;border-left:6px solid #74736b;background:#f2efdf}.close-state b,.close-state small{display:block}.close-state b{font-size:9px;letter-spacing:.08em}.close-state small{margin-top:4px;font-size:8px;line-height:1.35;opacity:.72}.close-state.sent{border-color:#568011;background:#dff3a9}.close-state.missing_chilean{border-color:var(--orange);background:#ffd2c7}.close-state.valid_unsubmitted{border-color:var(--blue);background:#d8eaff}.close-result{display:inline-block;padding:8px 9px;font-size:8px;font-weight:900;line-height:1.35;text-transform:uppercase}.close-result.complete{background:var(--green)}.close-result.open{border:1px solid var(--ink)}.closeout-empty{padding:34px!important;text-align:center!important;font-size:11px}
+.delivery-card footer .delete-submission{border-color:var(--orange);background:transparent;color:#b52a0c}.delivery-card footer .delete-submission:hover{background:var(--orange);color:#fff}
+#closeDialogSummary{padding:12px;border-left:6px solid var(--orange);background:#e4e0d1;font-weight:800;line-height:1.45}
+@media(max-width:800px){.closeout-head{align-items:stretch;flex-direction:column}.closeout-head>button{width:100%}.closeout-summary{grid-template-columns:1fr 1fr}.closeout-summary span:nth-child(3){border-left:0;border-top:2px solid var(--ink)}.closeout-summary span:nth-child(4){border-top:2px solid var(--ink)}}

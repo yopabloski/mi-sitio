@@ -81,7 +81,7 @@ Junto a él viven ahora:
 | `domain/submissions.js` | Recálculo autoritativo de entregas y ranking |
 | `domain/activity-mapper.js` | Traducción `session ⇄ documentos`, compartida con los scripts |
 
-Las operaciones autoritativas (iniciar, avanzar, reabrir, validar) se resuelven
+Las operaciones autoritativas (iniciar, avanzar, reabrir, cerrar y eliminar envíos) se resuelven
 con transacciones y reglas de Firestore, no con Cloud Functions. El porqué y sus
 límites están en `docs/FIREBASE_ARCHITECTURE.md`.
 
