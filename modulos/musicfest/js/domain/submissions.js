@@ -9,6 +9,18 @@
 
 import { validate, totals } from './game.js';
 
+/** Corrige falsos `submitted` heredados cuando nunca existió la entrega. */
+export function reconciliarEstadosDeEnvio(statuses = {}, submissions = {}, revision = 1) {
+  const next = { ...statuses };
+  for (const dayId of ['friday', 'saturday', 'sunday']) {
+    const submission = submissions[dayId];
+    if (next[dayId] === 'submitted' && (!submission || (submission.revision || 1) !== revision)) {
+      next[dayId] = 'editable';
+    }
+  }
+  return next;
+}
+
 // Firestore NO admite arrays dentro de arrays. `validate()` devuelve los checks
 // como [nombre, ok, valor], así que hay que aplanarlos a mapas antes de
 // escribirlos. Sin esto, cada entrega falla con `invalid-argument`.

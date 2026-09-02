@@ -141,8 +141,11 @@ evaluación, así que llamar a `activity()` diez veces cuenta una sola.
 npm run test:rules      # necesita Java 21+ para los emuladores
 ```
 
-`tests/rules/firestore-rules.test.mjs` cubre 37 escenarios, incluidos los
+`tests/rules/firestore-rules.test.mjs` cubre 39 escenarios, incluidos los
 intentos de manipulación: cambiar reglas siendo estudiante, entregar por otro
 equipo, autovalidarse, repetir artistas, usar artistas fuera del pool, entregar
 en una revisión vencida y editar o borrar una entrega ya enviada. También prueba
 explícitamente que el docente sí pueda eliminarla.
+Dos escenarios verifican además la atomicidad: una entrega aceptada confirma
+el borrador en el mismo lote, y una entrega rechazada no deja un falso estado
+`submitted`.

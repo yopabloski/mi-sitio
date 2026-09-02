@@ -11,7 +11,7 @@ import { artists as seedArtists, artwork as seedArtwork } from '../data/artists.
 import { syncedArtwork, releaseInfo as seedReleaseInfo } from '../data/covers.generated.js';
 import { days as defaultDays } from '../domain/game.js';
 import { toArtistDocs, fromArtistDocs, sameArtist } from '../domain/activity-mapper.js';
-import { serializeChecks } from '../domain/submissions.js';
+import { serializeChecks, reconciliarEstadosDeEnvio } from '../domain/submissions.js';
 import { validarCorreos } from '../domain/correo.js';
 import { decidirIngreso, politicaDe, mensajeNombreTomado, miembrosTras, POLITICAS } from '../domain/equipos.js';
 
@@ -47,6 +47,7 @@ const state = {
   pendingSession: null,
   sessionTimer: null,
   draftTimers: new Map(),
+  draftInFlight: new Set(),
   lastError: null
 };
 
@@ -54,7 +55,7 @@ export const status = () => ({
   ready: state.ready, role: state.role, uid: state.uid,
   activityId: state.activityId, code: state.code,
   teamId: state.teamId, error: state.lastError,
-  pendingWrites: Boolean(state.pendingSession) || state.draftTimers.size > 0
+  pendingWrites: Boolean(state.pendingSession) || state.draftTimers.size > 0 || state.draftInFlight.size > 0
 });
 
 export const activityId = () => state.activityId;
@@ -303,6 +304,10 @@ export async function connect({ code, role = 'student', teamName = null, emails 
 }
 
 export async function disconnect() {
+  clearTimeout(state.sessionTimer);
+  for (const timer of state.draftTimers.values()) clearTimeout(timer);
+  state.sessionTimer = null;
+  state.draftTimers.clear();
   state.unsubscribe.forEach(stop => { try { stop(); } catch {} });
   state.draftUnsubscribe.forEach(stop => { try { stop(); } catch {} });
   state.rosterUnsubscribe.forEach(stop => { try { stop(); } catch {} });
@@ -524,6 +529,10 @@ function composeDraft(teamId, teamName) {
     const current = draft.submissions[submission.dayId];
     if (!current || (submission.revision || 1) >= (current.revision || 1)) draft.submissions[submission.dayId] = submission;
   }
+  // Recupera datos creados por la versión optimista antigua: si el borrador
+  // dice submitted pero el documento real nunca existió, no se bloquea al
+  // equipo. El próximo intento usará submitDraft() y quedará confirmado.
+  draft.statuses=reconciliarEstadosDeEnvio(draft.statuses,draft.submissions,revision);
   return draft;
 }
 
@@ -540,19 +549,37 @@ export function saveDraft(code, draft) {
   draft.updatedAt = nowIso();
   const teamId = normalizeTeamId(draft.team);
   clearTimeout(state.draftTimers.get(teamId));
-  state.draftTimers.set(teamId, setTimeout(() => {
-    flushDraft(teamId, draft).catch(error => { state.lastError = error; console.error('[MusicFest] Error al guardar el borrador:', error); });
-  }, 400));
+  const timer=setTimeout(() => {
+    state.draftInFlight.add(teamId);
+    flushDraft(teamId, draft)
+      .catch(error => { state.lastError = error; console.error('[MusicFest] Error al guardar el borrador:', error); })
+      .finally(()=>{state.draftInFlight.delete(teamId);if(state.draftTimers.get(teamId)===timer)state.draftTimers.delete(teamId)});
+  }, 400);
+  state.draftTimers.set(teamId,timer);
   notifyDrafts();
   return draft;
+}
+
+/**
+ * Entrega confirmada: cancela el debounce y espera el commit real. Student.js
+ * usa esta ruta para no anunciar éxito mientras Firestore aún puede rechazarla.
+ */
+export async function submitDraft(code,draft){
+  draft.updatedAt=nowIso();
+  const teamId=normalizeTeamId(draft.team),timer=state.draftTimers.get(teamId);
+  if(timer)clearTimeout(timer);
+  state.draftTimers.delete(teamId);state.draftInFlight.add(teamId);state.lastError=null;
+  try{await flushDraft(teamId,draft);return draft}
+  catch(error){state.lastError=error;throw error}
+  finally{state.draftInFlight.delete(teamId)}
 }
 
 async function flushDraft(teamId, draft) {
   const { db, fsMod } = await sdk();
   const revision = draft.revision || state.session?.revision || 1;
   const root = [paths.activities, state.activityId, 'teams', teamId];
-
-  await fsMod.setDoc(fsMod.doc(db, ...root, 'drafts', String(revision)), {
+  const batch=fsMod.writeBatch(db);
+  batch.set(fsMod.doc(db, ...root, 'drafts', String(revision)), {
     teamName: draft.team,
     selections: clone(draft.selections),
     statuses: clone(draft.statuses),
@@ -561,12 +588,14 @@ async function flushDraft(teamId, draft) {
     updatedAt: fsMod.serverTimestamp()
   }, { merge: true });
 
+  const confirmed=[];
   // Entregas nuevas creadas por student.js dentro de draft.submissions.
   for (const [dayId, submission] of Object.entries(draft.submissions || {})) {
     const id = `${teamId}__${dayId}__r${submission.revision || revision}`;
     if (state.submissions.has(id)) continue;
     const dayIndex = (state.session?.days || []).findIndex(d => d.id === dayId);
-    await fsMod.setDoc(fsMod.doc(db, paths.activities, state.activityId, 'submissions', id), {
+    const reportedChecks=serializeChecks(submission.checks),reportedTotals=submission.totals||null;
+    batch.set(fsMod.doc(db, paths.activities, state.activityId, 'submissions', id), {
       teamId,
       teamName: draft.team,
       dayId,
@@ -574,15 +603,23 @@ async function flushDraft(teamId, draft) {
       dayIndex,
       revision: submission.revision || revision,
       selections: [...submission.selections],
-      reportedTotals: submission.totals || null,
-      reportedChecks: serializeChecks(submission.checks),
+      reportedTotals,
+      reportedChecks,
       validationStatus: 'pending',
       validatedAt: null,
       validatedBy: null,
       submittedBy: state.uid,
       submittedAt: fsMod.serverTimestamp()
     });
+    confirmed.push([id,{id,teamId,teamName:draft.team,dayId,dayName:submission.dayName||dayId,dayIndex,revision:submission.revision||revision,selections:[...submission.selections],reportedTotals,reportedChecks,validationStatus:'pending',validatedAt:null,validatedBy:null,submittedBy:state.uid,submittedAt:submission.submittedAt||nowIso()}]);
   }
+  // Un solo commit: si una regla rechaza la entrega, tampoco queda el borrador
+  // falsamente marcado como submitted.
+  await batch.commit();
+  // El snapshot llegará enseguida, pero este espejo inmediato evita que un
+  // autoguardado del día siguiente intente crear de nuevo la misma entrega.
+  for(const [id,submission]of confirmed)state.submissions.set(id,submission);
+  if(confirmed.length)notifyDrafts();
 }
 
 export async function setSubmissionStatus(code, team, dayId, status) {

@@ -163,6 +163,11 @@ escribiría los totales. El código está preparado para ese cambio —
   `persistentMultipleTabManager`): el borrador se sigue editando sin conexión y
   se reconcilia al volver.
 - Las entregas y las transiciones requieren confirmación del servidor.
+- Borrador y entrega se escriben en un mismo lote atómico. La interfaz no
+  muestra "Lineup enviado" hasta que ese lote queda confirmado; si Firestore
+  lo rechaza, el borrador vuelve a editable y ofrece reintentar.
+- Al hidratar datos antiguos, un estado `submitted` sin documento de entrega
+  se autocorrige a `editable`; esto recupera los falsos positivos anteriores.
 - Las transiciones usan `runTransaction`, de modo que dos pestañas docentes
   abiertas no pueden dejar la sesión en estados distintos.
 

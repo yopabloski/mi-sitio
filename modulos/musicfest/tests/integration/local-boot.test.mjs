@@ -199,6 +199,8 @@ test('el estudiante entra, arma un lineup válido y lo entrega', async t => {
   assert.equal($('#submit').disabled, false, 'con el lineup completo el envío debe habilitarse');
   $('#submit').dispatchEvent(new window.Event('click'));
   $('#confirmSubmit').dispatchEvent(new window.Event('click'));
+  assert.equal($('#submit').textContent, 'Confirmando…', 'no debe anunciar éxito antes de resolver la escritura');
+  assert.ok($('#submitHint').textContent.includes('Esperando confirmación'));
   await new Promise(r => setTimeout(r, 10));
 
   const draft = JSON.parse(window.localStorage.getItem('musicfest:draft:DEMO:Los Optimizadores'));
@@ -208,6 +210,9 @@ test('el estudiante entra, arma un lineup válido y lo entrega', async t => {
   assert.equal(entrega.dayIndex, dayIndex, 'la entrega debe llevar dayIndex para las reglas de Firestore');
   assert.equal(entrega.validationStatus, 'pending');
   assert.equal(entrega.revision, session.revision);
+  assert.equal($('#submit').textContent, 'Lineup enviado');
+  assert.equal($('#submitHint').dataset.state, 'ok');
+  assert.ok($('#submitHint').textContent.includes('confirmado'));
 
   // Deja que se apaguen los temporizadores de "Guardando…" antes de cerrar.
   await new Promise(r => setTimeout(r, 300));

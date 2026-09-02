@@ -52,6 +52,10 @@ export const ensureSession = code => (remote ? remote.ensureSession(code) : loca
 export const saveSession = session => (remote ? remote.saveSession(session) : local.saveSession(session));
 export const loadDraft = (code, team) => (remote ? remote.loadDraft(code, team) : local.loadDraft(code, team));
 export const saveDraft = (code, draft) => (remote ? remote.saveDraft(code, draft) : local.saveDraft(code, draft));
+// A diferencia del autoguardado, una entrega no es optimista: esta promesa se
+// resuelve sólo cuando borrador y submission quedaron confirmados juntos.
+export const submitDraft = (code, draft) =>
+  (remote ? remote.submitDraft(code, draft) : local.submitDraft(code, draft));
 export const listDrafts = code => (remote ? remote.listDrafts(code) : local.listDrafts(code));
 export const watchSession = (code, cb) => (remote ? remote.watchSession(code, cb) : local.watchSession(code, cb));
 export const setSubmissionStatus = (code, team, dayId, state) =>

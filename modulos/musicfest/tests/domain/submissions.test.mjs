@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { days } from '../../js/domain/game.js';
 import { artists } from '../../js/data/artists.js';
-import { recomputeSubmission, auditarCierre, crossDayConflicts, buildLeaderboard, serializeChecks, deserializeChecks } from '../../js/domain/submissions.js';
+import { recomputeSubmission, auditarCierre, crossDayConflicts, buildLeaderboard, serializeChecks, deserializeChecks, reconciliarEstadosDeEnvio } from '../../js/domain/submissions.js';
 
 const friday = days[0];
 const pool = artists;
@@ -162,4 +162,12 @@ test('recomputeSubmission no revienta con una entrega inexistente', () => {
   const resultado = recomputeSubmission(undefined, { days, artists: pool });
   assert.equal(resultado.valid, false);
   assert.equal(resultado.tampered, true);
+});
+
+test('un falso submitted sin documento de entrega vuelve a editable', () => {
+  const statuses = { friday: 'submitted', saturday: 'submitted', sunday: 'editable' };
+  const submissions = { saturday: { revision: 2 } };
+  const result = reconciliarEstadosDeEnvio(statuses, submissions, 2);
+  assert.deepEqual(result, { friday: 'editable', saturday: 'submitted', sunday: 'editable' });
+  assert.equal(statuses.friday, 'submitted', 'la reconciliación no muta el snapshot original');
 });

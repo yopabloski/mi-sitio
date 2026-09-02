@@ -8,11 +8,11 @@ Todo verde, ejecutado en el equipo de Pablo (macOS, Node 24.14.1, Temurin 21).
 
 | Suite | Comando | Resultado |
 |---|---|---|
-| Dominio y migración | `npm run test:domain` | **128/128** |
+| Dominio y migración | `npm run test:domain` | **129/129** |
 | Humo de extremo a extremo (modo demo, jsdom) | `npm run test:smoke` | **20/20** |
-| Reglas de Firestore (emulador) | `npm run test:rules` | **37/37** |
+| Reglas de Firestore (emulador) | `npm run test:rules` | **39/39** |
 | Integración con emuladores | `npm run test:integration` | **5/5** |
-| **Total** | `npm test` + las dos de emulador | **190/190** |
+| **Total** | `npm test` + las dos de emulador | **193/193** |
 
 Verificaciones adicionales:
 
@@ -35,7 +35,7 @@ Verificaciones adicionales:
   corresponde.
 - Reglas editadas por el docente se respetan sin tocar el dominio.
 
-`tests/domain/submissions.test.mjs` — 13 pruebas
+`tests/domain/submissions.test.mjs` — 14 pruebas
 
 - El recálculo reproduce los totales de una entrega honesta.
 - Una popularidad inflada por el cliente se detecta y se ignora.
@@ -46,6 +46,7 @@ Verificaciones adicionales:
   manual, y descarta las infactibles.
 - La auditoría de cierre distingue entrega existente, falta de chilenos,
   lineup incompleto, ausencia total y lineup válido sin confirmar.
+- Un `submitted` antiguo sin documento de entrega se recupera como editable.
 
 `tests/domain/migration.test.mjs` — 9 pruebas, sobre la exportación real
 `musicfest-demo-2026-08-10.json`

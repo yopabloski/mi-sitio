@@ -241,6 +241,7 @@ body.gate-open{overflow:hidden}
 .poster-actions button:hover:not(:disabled){transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
 .poster-actions button:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
 #posterHint{margin:0;font-size:12px;opacity:.6;text-align:center;min-height:16px}
+.brief #submitHint[data-state]{margin-top:10px;padding:10px 11px;border-left:5px solid #fff6;background:#fff1;font-size:9px;line-height:1.45}.brief #submitHint[data-state="pending"]{border-color:var(--blue)}.brief #submitHint[data-state="ok"]{border-color:var(--green);color:var(--green)}.brief #submitHint[data-state="error"]{border-color:var(--orange);background:#ff4d2220;color:#ffb09d}
 
 /* Registro docente de cierre: una planilla operativa, no un segundo flujo de
    aprobación. Los estados principales se leen de un vistazo y el motivo queda

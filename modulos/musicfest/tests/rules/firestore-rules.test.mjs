@@ -12,7 +12,7 @@ import {
   initializeTestEnvironment, assertSucceeds, assertFails
 } from '@firebase/rules-unit-testing';
 import {
-  doc, getDoc, setDoc, updateDoc, deleteDoc, collection, addDoc, getDocs
+  doc, getDoc, setDoc, updateDoc, deleteDoc, collection, addDoc, getDocs, writeBatch
 } from 'firebase/firestore';
 import { RULES_FILE } from '../helpers/paths.mjs';
 import { ITEM_IDS, VERSION_INSTRUMENTO } from '../../js/domain/encuesta.config.js';
@@ -214,6 +214,26 @@ test('con la actividad cerrada el borrador queda congelado', async () => {
 
 test('una entrega bien formada del propio equipo se acepta', async () => {
   await assertSucceeds(setDoc(doc(student(TEAM_A_UID), `${activityPath}/submissions/equipo-a__friday__r1`), validSubmission()));
+});
+
+test('borrador y entrega se confirman juntos en un solo lote', async () => {
+  const db=student(TEAM_A_UID),batch=writeBatch(db);
+  batch.set(doc(db,`${activityPath}/teams/equipo-a/drafts/1`),{selections:{friday:['a1','a2','a3']},statuses:{friday:'submitted'},revision:1});
+  batch.set(doc(db,`${activityPath}/submissions/equipo-a__friday__r1`),validSubmission());
+  await assertSucceeds(batch.commit());
+  assert.equal((await getDoc(doc(teacher(),`${activityPath}/submissions/equipo-a__friday__r1`))).exists(),true);
+});
+
+test('si Firestore rechaza la entrega, el lote no deja el borrador como enviado', async () => {
+  const draftPath=`${activityPath}/teams/equipo-a/drafts/1`;
+  await setDoc(doc(student(TEAM_A_UID),draftPath),{selections:{friday:['a1','a2','a3']},statuses:{friday:'editable'},revision:1});
+  await env.withSecurityRulesDisabled(async context=>{await updateDoc(doc(context.firestore(),activityPath),{activeDayIndex:1})});
+  const db=student(TEAM_A_UID),batch=writeBatch(db);
+  batch.set(doc(db,draftPath),{selections:{friday:['a1','a2','a3']},statuses:{friday:'submitted'},revision:1},{merge:true});
+  batch.set(doc(db,`${activityPath}/submissions/equipo-a__friday__r1`),validSubmission());
+  await assertFails(batch.commit());
+  const stored=(await getDoc(doc(teacher(),draftPath))).data();
+  assert.equal(stored.statuses.friday,'editable');
 });
 
 test('el servidor rechaza un lineup con la cantidad equivocada de artistas', async () => {
