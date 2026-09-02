@@ -268,6 +268,8 @@ td code{padding:2px 5px;background:#17171012;font-family:ui-monospace,SFMono-Reg
 .chip.ok{background:#17171014;color:#17171088}
 
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+tr.total td{border-top:3px solid var(--ink);background:#17171008}
 
 td.acciones{text-align:right;white-space:nowrap}
 tr.va-borrar{background:#ff4d221f;box-shadow:inset 4px 0 0 var(--orange)}
@@ -306,9 +308,76 @@ body.gate-open{overflow:hidden}
 .teacher-gate-msg{margin:0;min-height:18px;color:#f2efdf99;font-size:12px}
 .teacher-gate-msg.error{color:var(--orange);font-weight:700}
 
+/* ═══════════════ DIFERENCIAL SEMÁNTICO · UEQ-S ═════════════════════════
+   Par de adjetivos opuestos con siete casillas entre medio. El polo negativo
+   va a la izquierda en los ocho ítems, así que la asimetría visual es
+   deliberada y no hay nada que recodificar.
+   ══════════════════════════════════════════════════════════════════════ */
+
+.block-lead{padding:20px 26px;border-top:1px solid var(--line);background:#17171008}
+.block-lead p{max-width:70ch;font-size:13.5px;line-height:1.55}
+.stem{font:400 19px/1.25 "Archivo Black",Impact,sans-serif;margin-bottom:8px}
+.block-intro{opacity:.72}
+
+.item-dif .q-dif{margin-bottom:10px}
+.dif{display:grid;grid-template-columns:minmax(96px,1fr) auto minmax(96px,1fr);
+  gap:16px;align-items:center}
+.polo{font-size:12px;font-weight:900;letter-spacing:.02em;line-height:1.25;hyphens:none}
+.polo-izq{text-align:right}
+.polo-der{text-align:left}
+.item-dif .opts{gap:5px}
+.item-dif .opt span{min-width:46px;padding:12px 4px;font-size:16px}
+
+/* Tres anclas verbales: extremo, punto medio y extremo. El del medio importa
+   —sin él el alumno interpreta la escala como quiera. */
+.anchors-3{justify-content:space-between}
+.anchors-3 span{flex:1 1 0;max-width:15ch}
+.anchors-3 span:nth-child(2){text-align:center}
+.anchors-3 span:last-child{text-align:right}
+
+.aside .ver{display:block;margin-top:6px;font-size:7px;letter-spacing:.14em;opacity:.45}
+
+@media(max-width:640px){
+  /* A 375 px los polos no caben a los costados sin partir palabras: se apilan. */
+  .dif{grid-template-columns:1fr;gap:9px}
+  .polo-izq,.polo-der{text-align:left}
+  .polo-izq::before,.polo-der::before{display:inline-block;width:16px;font-weight:900;opacity:.45}
+  .polo-izq::before{content:"◀"}
+  .polo-der::before{content:"▶"}
+  .item-dif .opt span{min-width:0;padding:12px 2px;font-size:15px}
+  .block-lead{padding:16px 20px}
+  .stem{font-size:17px}
+  .anchors-3 span{font-size:7px}
+}
+
+/* ═══════════════ BARRA BIPOLAR · panel docente ═════════════════════════
+   El UEQ-S vive en −3…+3, así que una barra que crece desde la izquierda
+   mentiría: el cero tiene que estar en el centro y visible.
+   ══════════════════════════════════════════════════════════════════════ */
+
+.bipolar{position:relative;height:22px;min-width:150px;background:#1717100f;border:1px solid var(--line)}
+.bipolar::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--ink);opacity:.45}
+.bipolar i{position:absolute;top:3px;bottom:3px;background:var(--ink)}
+.bipolar.pos i{background:#2f7d32}
+.bipolar.neg i{background:var(--orange)}
+.bipolar b{position:absolute;top:50%;transform:translateY(-50%);right:6px;
+  font:400 11px "Archivo Black",Impact,sans-serif;font-variant-numeric:tabular-nums}
+.escala-bipolar{display:flex;justify-content:space-between;margin-top:4px;
+  font-size:7px;font-weight:900;letter-spacing:.1em;opacity:.4}
+
+/* Fiabilidad bajo la de la validación: no invalida nada, pero hay que mirarlo. */
+tr.alerta{background:#ff4d2212;box-shadow:inset 4px 0 0 var(--orange)}
+.alfa-ref{font-size:11px;opacity:.55}
+.badge-alerta{display:inline-block;margin-left:6px;padding:2px 6px;background:var(--orange);
+  color:#fff;font-size:8px;font-weight:900;letter-spacing:.08em}
+
 [hidden]{display:none!important}
 
 /* ═══════════════════════════ ADAPTACIÓN ═════════════════════════════════ */
+
+@media(max-width:1000px){
+  .grid3{grid-template-columns:1fr}
+}
 
 @media(max-width:900px){
   .grid2{grid-template-columns:1fr}

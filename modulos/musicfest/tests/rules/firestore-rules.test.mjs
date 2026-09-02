@@ -15,6 +15,7 @@ import {
   doc, getDoc, setDoc, updateDoc, deleteDoc, collection, addDoc, getDocs
 } from 'firebase/firestore';
 import { RULES_FILE } from '../helpers/paths.mjs';
+import { ITEM_IDS, VERSION_INSTRUMENTO } from '../../js/domain/encuesta.config.js';
 
 const PROJECT = 'musicfest-rules-test';
 const ACTIVITY = 'mf-demo-test01';
@@ -301,19 +302,13 @@ test('reabrir conserva la entrega anterior: la revisión vieja sigue existiendo'
    colección sería poder leer el correo y las respuestas de todo el curso.
    ══════════════════════════════════════════════════════════════════════════ */
 
-const ITEMS_ENCUESTA = [
-  'sus01','sus02','sus03','sus04','sus05','sus06','sus07','sus08','sus09','sus10',
-  'gx_dis1','gx_dis2','gx_dis3','gx_abs1','gx_abs2','gx_abs3',
-  'imi_int1','imi_int2','imi_int3','imi_com1','imi_com2','imi_com3','imi_val1','imi_val2','imi_val3',
-  'apre01','apre02'
-];
-
 const encuestaValida = (uid, extra = {}) => ({
   uid,
   email: 'alumno@udd.cl',
+  version: VERSION_INSTRUMENTO,
   enviadoEn: new Date().toISOString(),
   duracionSeg: 210,
-  respuestas: Object.fromEntries(ITEMS_ENCUESTA.map(i => [i, 4])),
+  respuestas: Object.fromEntries(ITEM_IDS.map(i => [i, 4])),
   abierta: 'El tiempo del domingo.',
   ...extra
 });
@@ -371,10 +366,14 @@ test('el docente del padrón lee y lista las encuestas', async () => {
   await assertSucceeds(getDocs(collection(teacher(), 'musicfestEncuestas')));
 });
 
-test('una encuesta enviada no se edita, ni por el docente', async () => {
+test('el autor puede reenviar sin cambiar correo ni versión; otro alumno y el docente no pueden editar', async () => {
   await sembrarEncuesta();
-  await assertFails(updateDoc(doc(student(TEAM_A_UID), 'musicfestEncuestas', 'enc-1'), { 'respuestas.sus01': 1 }));
-  await assertFails(updateDoc(doc(teacher(), 'musicfestEncuestas', 'enc-1'), { 'respuestas.sus01': 1 }));
+  const refAutor = doc(student(TEAM_A_UID), 'musicfestEncuestas', 'enc-1');
+  await assertSucceeds(updateDoc(refAutor, { 'respuestas.ueq1': 1 }));
+  await assertFails(updateDoc(refAutor, { email: 'otro@udd.cl' }));
+  await assertFails(updateDoc(refAutor, { version: 'otra-version' }));
+  await assertFails(updateDoc(doc(student(TEAM_B_UID), 'musicfestEncuestas', 'enc-1'), { 'respuestas.ueq1': 2 }));
+  await assertFails(updateDoc(doc(teacher(), 'musicfestEncuestas', 'enc-1'), { 'respuestas.ueq1': 3 }));
 });
 
 test('sólo el docente borra encuestas', async () => {

@@ -4,28 +4,45 @@
 // configuración de Firebase cae a localStorage y la encuesta funciona sola;
 // con configuración escribe en Firestore.
 //
-// Contrato de la colección musicfestEncuestas (ver firestore.rules):
-//   · el alumno CREA la suya con sesión anónima y no puede leer ninguna;
-//   · el docente del padrón lee, lista y elimina;
-//   · nadie edita una respuesta ya enviada.
+// FORMA DEL DOCUMENTO (ver firestore.rules)
+//   { email, version, uid, iniciadoEn, enviadoEn, duracionSeg, respuestas, abierta }
+// No se guardan subtotales ni medias: se derivan al leer con puntuar(). Así una
+// corrección de fórmula no obliga a migrar documentos.
 //
-// Se guardan todos los envíos, incluidos los repetidos: quien responde dos
-// veces deja dos documentos. Depurar duplicados es decisión de análisis, no
-// de la aplicación.
+// UN ENVÍO POR ALUMNO Y COHORTE
+// El id del documento se deriva de version + correo, así que reenviar
+// sobrescribe en vez de duplicar. La versión entra en el id a propósito: un
+// alumno que repita el curso el semestre siguiente deja un documento nuevo en
+// lugar de pisar el de la cohorte anterior.
+//
+// Consecuencia conocida: el id es adivinable. Las reglas cierran el hueco
+// exigiendo que solo el uid que creó el documento pueda actualizarlo.
 
 import { enabled, paths } from './firebase-config.js';
+import { VERSION_INSTRUMENTO } from '../domain/encuesta.config.js';
 
 export const usingFirebase = enabled;
 export const backend = enabled ? 'firebase' : 'local';
 
 const CLAVE = 'musicfest_encuestas';
 
-/** Clave de borrado. Los envíos nuevos traen `id`; para los guardados antes de
- *  que existiera, correo + instante de envío identifica igual de bien. */
-export const claveDe = d => d.id || (d.email + '|' + d.enviadoEn);
+/** El correo es la llave de enlace con las hojas de papel: minúsculas y sin espacios. */
+export const normalizarCorreo = valor => String(valor || '').trim().toLowerCase();
+
+/**
+ * Id de documento. Firestore prohíbe "/" y reserva los id con forma __x__;
+ * ninguno de los dos casos se puede dar aquí porque el id empieza por la
+ * versión, pero el correo se limpia igual por si trae algo raro.
+ */
+export function idDocumento(email, version = VERSION_INSTRUMENTO) {
+  const limpio = normalizarCorreo(email).replace(/[^a-z0-9@._-]+/g, '-');
+  return `${version}__${limpio}`;
+}
+
+export const claveDe = d => d.id || idDocumento(d.email, d.version);
 
 // ---------------------------------------------------------------------------
-// Implementación local (modo demo y respaldo de los datos de ejemplo)
+// Implementación local (modo demo y datos de ejemplo)
 // ---------------------------------------------------------------------------
 
 export const local = {
@@ -33,9 +50,10 @@ export const local = {
     try { return JSON.parse(localStorage.getItem(CLAVE) || '[]'); } catch { return []; }
   },
   guardar(doc) {
-    const prev = local.cargar();
-    prev.push(doc);
-    localStorage.setItem(CLAVE, JSON.stringify(prev));
+    const id = claveDe(doc);
+    const otros = local.cargar().filter(d => claveDe(d) !== id);
+    otros.push({ ...doc, id });
+    local.reemplazar(otros);
   },
   reemplazar(registros) {
     localStorage.setItem(CLAVE, JSON.stringify(registros));
@@ -46,26 +64,29 @@ export const local = {
   }
 };
 
-const nuevoId = () => {
-  try { return crypto.randomUUID(); } catch { return String(Date.now()) + Math.random().toString(16).slice(2); }
-};
-
 // ---------------------------------------------------------------------------
 // API pública
 // ---------------------------------------------------------------------------
 
-/** Guarda una respuesta. El alumno entra con sesión anónima, igual que al jugar. */
+/** Guarda o reemplaza la respuesta. El alumno entra con sesión anónima. */
 export async function guardar(doc) {
-  if (!enabled) { local.guardar({ id: nuevoId(), ...doc }); return; }
+  const email = normalizarCorreo(doc.email);
+  const version = doc.version || VERSION_INSTRUMENTO;
+  const id = idDocumento(email, version);
+
+  if (!enabled) { local.guardar({ ...doc, email, version, id }); return { id }; }
 
   const { sdk, signInStudent } = await import('./firebase.js');
   const user = await signInStudent();
   const { db, fsMod } = await sdk();
-  await fsMod.addDoc(fsMod.collection(db, paths.encuestas), {
+  await fsMod.setDoc(fsMod.doc(db, paths.encuestas, id), {
     ...doc,
+    email,
+    version,
     uid: user.uid,                       // exigido por las reglas
     creadoEn: fsMod.serverTimestamp()    // hora del servidor, no la del alumno
   });
+  return { id };
 }
 
 /** Lee todas las respuestas, de la más reciente a la más antigua. */
@@ -97,7 +118,5 @@ export async function eliminar(claves) {
   }
 }
 
-const ordenar = registros =>
+export const ordenar = registros =>
   [...registros].sort((a, b) => new Date(b.enviadoEn) - new Date(a.enviadoEn));
-
-export { ordenar };

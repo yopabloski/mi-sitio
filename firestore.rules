@@ -139,24 +139,34 @@ service cloud.firestore {
     //
     // Asimetría deliberada: el estudiante ESCRIBE y no lee nada. Poder listar
     // esta colección sería poder leer el correo y las respuestas de todo el
-    // curso. Tampoco se edita: una respuesta enviada queda como está, y si
-    // alguien responde dos veces quedan dos documentos —depurar duplicados es
-    // decisión de análisis, no de la aplicación.
+    // curso.
+    //
+    // El id del documento se deriva de version + correo para que reenviar
+    // actualice en vez de duplicar. Eso lo vuelve adivinable, así que la
+    // actualización se restringe a quien creó el documento: nadie puede pisar
+    // la respuesta de otro conociendo su correo.
     match /musicfestEncuestas/{docId} {
-      allow create: if signedIn()
-        && request.resource.data.uid == request.auth.uid
-        && request.resource.data.email is string
-        && request.resource.data.email.size() > 4
-        && request.resource.data.email.size() < 200
-        && request.resource.data.respuestas is map
-        && request.resource.data.respuestas.size() <= 60
-        && request.resource.data.enviadoEn is string
-        && (request.resource.data.abierta == null
-            || (request.resource.data.abierta is string
-                && request.resource.data.abierta.size() <= 1000));
+
+      function encuestaBienFormada(d) {
+        return d.uid == request.auth.uid
+          && d.email is string && d.email.size() > 4 && d.email.size() < 200
+          && d.version is string && d.version.size() > 0 && d.version.size() < 40
+          && d.respuestas is map && d.respuestas.size() <= 60
+          && d.enviadoEn is string
+          && (d.abierta == null || (d.abierta is string && d.abierta.size() <= 1000));
+      }
+
+      allow create: if signedIn() && encuestaBienFormada(request.resource.data);
+
+      // Reenviar sobrescribe, pero solo el autor original y sin cambiar de
+      // correo ni de cohorte: si no, el id dejaría de describir el documento.
+      allow update: if signedIn()
+        && resource.data.uid == request.auth.uid
+        && encuestaBienFormada(request.resource.data)
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.version == resource.data.version;
 
       allow get, list: if isMusicFestAdmin();
-      allow update: if false;
       allow delete: if isMusicFestAdmin();
     }
 

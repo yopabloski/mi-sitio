@@ -43,13 +43,13 @@
   <!-- ══════════════════ SIN DATOS ══════════════════ -->
   <section id="vacio" class="empty">
     <b>Todavía no hay respuestas</b>
-    <p>Cuando las parejas envíen desde <code>survey.html</code>, los puntajes aparecen aquí. Para ver cómo se comporta el panel antes de la clase, carga datos de ejemplo con el botón de arriba.</p>
+    <p>Cuando los alumnos envíen desde <code>survey.html</code>, los puntajes aparecen aquí. Para ver cómo se comporta el panel antes de la clase, carga datos de ejemplo con el botón de arriba.</p>
   </section>
 
   <!-- ══════════════════ AVISO DE DATOS DE EJEMPLO ══════════════════ -->
   <div class="note warn" id="aviso-ejemplo" hidden>
     <b>Estás mirando datos de ejemplo</b>
-    Son 43 respuestas inventadas que viven solo en esta pestaña: no se guardaron en Firestore y desaparecen al recargar. Aprieta «Recargar» para volver a las respuestas reales.
+    Son respuestas inventadas que viven solo en esta pestaña: no se guardaron en Firestore y desaparecen al recargar. Como son aleatorias, los alfas van a salir bajísimos — eso es esperable y no dice nada del instrumento. Aprieta «Recargar» para volver a las respuestas reales.
   </div>
 
   <!-- ══════════════════ FILTRO POR FECHA ══════════════════ -->
@@ -87,52 +87,98 @@
 
     <div class="kpi-board" id="kpis"></div>
 
+    <!-- ── UEQ-S ── -->
     <div class="section-head">
       <div>
-        <p class="kicker">AGREGADO POR CONSTRUCTO</p>
-        <h2>Puntajes por instrumento</h2>
+        <p class="kicker">EXPERIENCIA DE USUARIO</p>
+        <h2>UEQ-S</h2>
       </div>
-      <p class="hint">α de Cronbach para subescalas de tres o más ítems; Spearman-Brown para las de dos. Con dos ítems, α está mal aplicado y es inestable.</p>
+      <p class="hint">Escala −3 a +3, con el cero en el centro de la barra. Por sobre +0,8 la valoración es positiva; bajo −0,8, negativa; en medio, neutra.</p>
     </div>
     <div class="tablewrap">
       <table>
         <thead><tr>
-          <th>Instrumento / subescala</th><th class="n">Ítems</th><th class="n">Media</th>
-          <th class="n">DE</th><th style="width:160px">Nivel</th><th class="n">Fiabilidad</th>
+          <th>Dimensión</th><th class="n">Media</th><th class="n">DE</th>
+          <th style="width:190px">−3 · 0 · +3</th><th style="width:110px">Valoración</th>
         </tr></thead>
-        <tbody id="tbl-escalas"></tbody>
+        <tbody id="tbl-ueq"></tbody>
       </table>
     </div>
 
+    <!-- ── EMSI ── -->
+    <div class="section-head">
+      <div>
+        <p class="kicker">MOTIVACIÓN SITUACIONAL</p>
+        <h2>EMSI</h2>
+      </div>
+      <p class="hint">Alfa de Cronbach obtenido en tu muestra contra el de la validación española (n = 373). Se marca la fila si el tuyo cae más de .15 por debajo: no invalida nada, pero conviene mirar cómo se aplicó antes de interpretar.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>Subescala</th><th class="n">Media</th><th class="n">DE</th>
+          <th style="width:150px">1 — 7</th><th class="n" style="width:130px">α</th>
+        </tr></thead>
+        <tbody id="tbl-emsi"></tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:10px">Índice de autodeterminación: <strong id="sdi">—</strong> · rango −18 a +18, calculado como 2·MI + RI − RE − 2·AM. Reportar como secundario: el RAI tiene detractores.</p>
+
+    <!-- ── competencia y aprendizaje ── -->
+    <div class="section-head">
+      <div>
+        <p class="kicker">ADAPTACIONES PROPIAS</p>
+        <h2>Competencia y aprendizaje</h2>
+      </div>
+      <p class="hint">Sin validación en español. Declarar como limitación en el manuscrito y reportar la consistencia interna obtenida en la propia muestra.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>Dimensión</th><th class="n">Ítems</th><th class="n">Media</th>
+          <th class="n">DE</th><th style="width:150px">1 — 7</th><th class="n">α</th>
+        </tr></thead>
+        <tbody id="tbl-otras"></tbody>
+      </table>
+    </div>
+
+    <!-- ── ítem por ítem ── -->
     <div class="section-head">
       <div>
         <p class="kicker">DIAGNÓSTICO FINO</p>
         <h2>Ítem por ítem</h2>
       </div>
-      <p class="hint">La distribución revela ítems con techo, con piso o con respuesta en línea recta. Esos son los candidatos a reescribir antes del semestre siguiente.</p>
+      <p class="hint">La distribución revela ítems con techo, con piso o con respuesta en línea recta. Esos son los candidatos a revisar antes del semestre siguiente.</p>
     </div>
     <div class="tablewrap">
       <table>
         <thead><tr>
-          <th style="min-width:300px">Ítem</th><th class="n">Media</th><th class="n">DE</th>
-          <th style="width:130px">Distribución</th><th class="n">Sin responder</th>
+          <th style="min-width:320px">Ítem</th><th class="n">Media</th><th class="n">DE</th>
+          <th style="width:130px">1 … 7</th><th class="n">Sin responder</th>
         </tr></thead>
         <tbody id="tbl-items"></tbody>
       </table>
     </div>
 
+    <!-- ── control de calidad ── -->
     <div class="section-head">
       <div>
-        <p class="kicker">PRESUPUESTO Y VOZ</p>
-        <h2>Duración y respuesta abierta</h2>
+        <p class="kicker">CONTROL DE CALIDAD</p>
+        <h2>¿Se puede confiar en estos datos?</h2>
       </div>
     </div>
-    <div class="grid2">
+    <div class="grid3">
       <div class="sheet" style="margin:0">
         <p class="kicker dim">TIEMPO MEDIANO DE RESPUESTA</p>
-        <h2 id="dur" style="font-size:46px;margin:10px 0 4px">—</h2>
+        <h2 id="dur" style="font-size:42px;margin:10px 0 4px">—</h2>
         <p class="hint">Presupuestado: 4 minutos</p>
-        <p class="hint" id="dur-nota" style="margin-top:16px"></p>
+        <p class="hint" id="dur-nota" style="margin-top:14px"></p>
+      </div>
+      <div class="sheet" style="margin:0">
+        <p class="kicker dim">RESPUESTAS EN LÍNEA RECTA</p>
+        <h2 id="planas" style="font-size:42px;margin:10px 0 4px">—</h2>
+        <p class="hint">Dos valores distintos o menos en 28 ítems</p>
+        <p class="hint" id="planas-nota" style="margin-top:14px"></p>
       </div>
       <div class="sheet" style="margin:0">
         <p class="kicker dim">¿QUÉ FUE LO MÁS DIFÍCIL?</p>
@@ -140,7 +186,7 @@
       </div>
     </div>
 
-    <!-- ══════════════════ REGISTROS ══════════════════ -->
+    <!-- ── registros ── -->
     <div class="section-head">
       <div>
         <p class="kicker">RESPUESTAS INDIVIDUALES</p>
@@ -154,7 +200,7 @@
     <div class="tablewrap">
       <table>
         <thead><tr>
-          <th style="min-width:240px">Correo</th><th>Enviada</th><th class="n">Duración</th>
+          <th style="min-width:260px">Correo</th><th>Enviada</th><th class="n">Duración</th>
           <th class="n">Ítems</th><th style="width:90px"></th>
         </tr></thead>
         <tbody id="tbl-registros"></tbody>
