@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MusicFest · Encuesta de percepción</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="survey.css">
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header class="app-top">
+  <img class="app-mark" src="assets/brand/vector/musicfest-logo-b-festival-vector.svg" alt="MusicFest">
+  <div class="who">
+    <small>ENCUESTA DE PERCEPCIÓN</small>
+    <b id="who"></b>
+  </div>
+  <a href="index.html">Volver al juego ↗</a>
+</header>
+<div class="rail"><i id="bar"></i></div>
+
+<!-- ══════════════════ PANTALLA 1 · IDENTIFICACIÓN ══════════════════ -->
+<main id="pantalla-id" class="shell">
+  <section class="page-head">
+    <div>
+      <p class="kicker">CUATRO MINUTOS</p>
+      <h1>Tu experiencia<br>con MusicFest.</h1>
+    </div>
+    <div class="aside">
+      <small>ÍTEMS</small>
+      <b id="total-items">—</b>
+    </div>
+  </section>
+
+  <div class="sheet">
+    <p class="lead">No hay respuestas correctas y esto no se califica. Responde lo que realmente pensaste mientras armabas el lineup, no lo que crees que se espera.</p>
+
+    <label class="field">
+      <span class="lbl">Correo institucional</span>
+      <input type="email" id="email" placeholder="nombre.apellido@udd.cl" autocomplete="email" spellcheck="false" autocapitalize="off" maxlength="120">
+      <span class="err" id="err-email">Escribe un correo válido.</span>
+    </label>
+
+    <div class="note">
+      <b>Qué pasa con tus datos</b>
+      Tu correo se usa únicamente para enlazar esta encuesta con tus hojas de trabajo y con tu pareja. Se reemplaza por un identificador al momento de exportar los datos para el análisis.
+    </div>
+
+    <div class="actions">
+      <button class="btn-go" id="btn-empezar">Empezar <span aria-hidden="true">→</span></button>
+    </div>
+  </div>
+</main>
+
+<!-- ══════════════════ PANTALLA 2 · ENCUESTA ══════════════════ -->
+<main id="pantalla-encuesta" class="shell" hidden>
+  <section class="page-head">
+    <div>
+      <p class="kicker">RESPONDE TODOS LOS ÍTEMS</p>
+      <h1>Cómo te fue.</h1>
+    </div>
+    <div class="aside">
+      <small>AVANCE</small>
+      <b id="contador">0 / 0</b>
+    </div>
+  </section>
+
+  <div id="bloques"></div>
+
+  <div class="block">
+    <div class="block-band">
+      <p class="kicker">UNA FRASE, SI QUIERES</p>
+      <h2>Lo más difícil</h2>
+      <p class="src">Respuesta abierta · opcional</p>
+    </div>
+    <div class="item">
+      <p class="q" style="margin-bottom:12px">¿Qué fue lo más difícil de la actividad?</p>
+      <textarea id="abierta" placeholder="Escribe lo que se te venga a la cabeza" maxlength="600"></textarea>
+      <div class="err" id="err-faltan">Faltan respuestas. Están marcadas más arriba.</div>
+      <div class="actions">
+        <button class="btn-go" id="btn-enviar">Enviar respuestas <span aria-hidden="true">↗</span></button>
+        <span class="counter" id="contador2">0 <small>DE 0</small></span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ══════════════════ PANTALLA 3 · CIERRE ══════════════════ -->
+<main id="pantalla-fin" class="shell" hidden>
+  <section class="done">
+    <div class="tick" aria-hidden="true">✓</div>
+    <h2>Listo, gracias.</h2>
+    <p>Tus respuestas quedaron registradas. Ya puedes cerrar esta página.</p>
+  </section>
+</main>
+
+<script type="module" src="js/survey.js"></script>
+</body>
+</html>

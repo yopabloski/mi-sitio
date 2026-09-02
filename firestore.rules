@@ -133,6 +133,33 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Encuesta de percepción. Colección propia, no colgada de una partida:
+    // se aplica aunque no haya actividad abierta y el cruce con las hojas de
+    // trabajo es por correo del alumno.
+    //
+    // Asimetría deliberada: el estudiante ESCRIBE y no lee nada. Poder listar
+    // esta colección sería poder leer el correo y las respuestas de todo el
+    // curso. Tampoco se edita: una respuesta enviada queda como está, y si
+    // alguien responde dos veces quedan dos documentos —depurar duplicados es
+    // decisión de análisis, no de la aplicación.
+    match /musicfestEncuestas/{docId} {
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email is string
+        && request.resource.data.email.size() > 4
+        && request.resource.data.email.size() < 200
+        && request.resource.data.respuestas is map
+        && request.resource.data.respuestas.size() <= 60
+        && request.resource.data.enviadoEn is string
+        && (request.resource.data.abierta == null
+            || (request.resource.data.abierta is string
+                && request.resource.data.abierta.size() <= 1000));
+
+      allow get, list: if isMusicFestAdmin();
+      allow update: if false;
+      allow delete: if isMusicFestAdmin();
+    }
+
     // Índice público CÓDIGO -> actividad. Permite que el estudiante resuelva
     // el código de partida sin poder listar todas las actividades.
     match /musicfestCodes/{code} {

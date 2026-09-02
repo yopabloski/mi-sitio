@@ -293,3 +293,93 @@ test('reabrir conserva la entrega anterior: la revisión vieja sigue existiendo'
   assert.deepEqual(survivor.data().selections, ['a1', 'a2', 'a3']);
   await assertSucceeds(setDoc(doc(student(TEAM_A_UID), `${activityPath}/submissions/equipo-a__friday__r2`), validSubmission({ revision: 2 })));
 });
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Encuesta de percepción · musicfestEncuestas
+   ──────────────────────────────────────────────────────────────────────────
+   Asimetría deliberada: el estudiante escribe y no lee. Poder listar esta
+   colección sería poder leer el correo y las respuestas de todo el curso.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+const ITEMS_ENCUESTA = [
+  'sus01','sus02','sus03','sus04','sus05','sus06','sus07','sus08','sus09','sus10',
+  'gx_dis1','gx_dis2','gx_dis3','gx_abs1','gx_abs2','gx_abs3',
+  'imi_int1','imi_int2','imi_int3','imi_com1','imi_com2','imi_com3','imi_val1','imi_val2','imi_val3',
+  'apre01','apre02'
+];
+
+const encuestaValida = (uid, extra = {}) => ({
+  uid,
+  email: 'alumno@udd.cl',
+  enviadoEn: new Date().toISOString(),
+  duracionSeg: 210,
+  respuestas: Object.fromEntries(ITEMS_ENCUESTA.map(i => [i, 4])),
+  abierta: 'El tiempo del domingo.',
+  ...extra
+});
+
+const sembrarEncuesta = async (id = 'enc-1', uid = TEAM_A_UID) => {
+  await env.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(), 'musicfestEncuestas', id), encuestaValida(uid));
+  });
+};
+
+test('un estudiante autenticado puede enviar su encuesta', async () => {
+  await assertSucceeds(
+    addDoc(collection(student(TEAM_A_UID), 'musicfestEncuestas'), encuestaValida(TEAM_A_UID))
+  );
+});
+
+test('sin sesión no se puede enviar la encuesta', async () => {
+  await assertFails(
+    addDoc(collection(anon(), 'musicfestEncuestas'), encuestaValida(TEAM_A_UID))
+  );
+});
+
+test('un estudiante no puede enviar una encuesta a nombre de otro uid', async () => {
+  await assertFails(
+    addDoc(collection(student(TEAM_A_UID), 'musicfestEncuestas'), encuestaValida(TEAM_B_UID))
+  );
+});
+
+test('una encuesta sin respuestas o sin correo se rechaza', async () => {
+  const db = student(TEAM_A_UID);
+  const sinRespuestas = encuestaValida(TEAM_A_UID); delete sinRespuestas.respuestas;
+  await assertFails(addDoc(collection(db, 'musicfestEncuestas'), sinRespuestas));
+
+  await assertFails(addDoc(collection(db, 'musicfestEncuestas'), encuestaValida(TEAM_A_UID, { email: 'x' })));
+  await assertFails(addDoc(collection(db, 'musicfestEncuestas'), encuestaValida(TEAM_A_UID, { respuestas: 'no es un mapa' })));
+  await assertFails(addDoc(collection(db, 'musicfestEncuestas'), encuestaValida(TEAM_A_UID, { enviadoEn: 12345 })));
+});
+
+test('la respuesta abierta tiene tope y admite quedar vacía', async () => {
+  const db = student(TEAM_A_UID);
+  await assertSucceeds(addDoc(collection(db, 'musicfestEncuestas'), encuestaValida(TEAM_A_UID, { abierta: null })));
+  await assertFails(addDoc(collection(db, 'musicfestEncuestas'), encuestaValida(TEAM_A_UID, { abierta: 'a'.repeat(1001) })));
+});
+
+test('un estudiante no puede leer ninguna encuesta, ni la suya', async () => {
+  await sembrarEncuesta('enc-1', TEAM_A_UID);
+  await assertFails(getDoc(doc(student(TEAM_A_UID), 'musicfestEncuestas', 'enc-1')));
+  await assertFails(getDocs(collection(student(TEAM_A_UID), 'musicfestEncuestas')));
+  await assertFails(getDocs(collection(anon(), 'musicfestEncuestas')));
+});
+
+test('el docente del padrón lee y lista las encuestas', async () => {
+  await sembrarEncuesta();
+  await assertSucceeds(getDoc(doc(teacher(), 'musicfestEncuestas', 'enc-1')));
+  await assertSucceeds(getDocs(collection(teacher(), 'musicfestEncuestas')));
+});
+
+test('una encuesta enviada no se edita, ni por el docente', async () => {
+  await sembrarEncuesta();
+  await assertFails(updateDoc(doc(student(TEAM_A_UID), 'musicfestEncuestas', 'enc-1'), { 'respuestas.sus01': 1 }));
+  await assertFails(updateDoc(doc(teacher(), 'musicfestEncuestas', 'enc-1'), { 'respuestas.sus01': 1 }));
+});
+
+test('sólo el docente borra encuestas', async () => {
+  await sembrarEncuesta();
+  await assertFails(deleteDoc(doc(student(TEAM_A_UID), 'musicfestEncuestas', 'enc-1')));
+  await assertFails(deleteDoc(doc(anon(), 'musicfestEncuestas', 'enc-1')));
+  await assertSucceeds(deleteDoc(doc(teacher(), 'musicfestEncuestas', 'enc-1')));
+});

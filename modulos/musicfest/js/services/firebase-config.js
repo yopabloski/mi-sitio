@@ -44,7 +44,11 @@ export const emulatorPorts = { auth: 9099, firestore: 8080 };
 export const paths = {
   admins: 'musicfestAdmins',
   codes: 'musicfestCodes',
-  activities: 'musicfestActivities'
+  activities: 'musicfestActivities',
+  // Encuesta de percepción: colección propia, no colgada de una partida.
+  // La encuesta se aplica aunque no haya actividad abierta, y el cruce con
+  // las hojas de trabajo es por correo del alumno.
+  encuestas: 'musicfestEncuestas'
 };
 
 // Normalización de códigos de partida, igual que en La Odisea.

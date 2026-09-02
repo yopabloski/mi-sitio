@@ -10,7 +10,7 @@
     "emulators": "cd ../.. && firebase emulators:start --import=./.emulator-data --export-on-exit=./.emulator-data",
     "test": "npm run test:domain && npm run test:smoke",
     "test:domain": "node --test 'tests/domain/*.test.mjs'",
-    "test:smoke": "node --test 'tests/integration/local-boot.test.mjs'",
+    "test:smoke": "node --test 'tests/integration/local-boot.test.mjs' 'tests/integration/survey-boot.test.mjs'",
     "test:rules": "cd ../.. && firebase emulators:exec --only firestore \"node --test 'modulos/musicfest/tests/rules/*.test.mjs'\"",
     "test:integration": "cd ../.. && firebase emulators:exec --only firestore,auth \"node --test 'modulos/musicfest/tests/integration/activity-flow.test.mjs'\"",
     "import:activity": "node scripts/import-activity.mjs",

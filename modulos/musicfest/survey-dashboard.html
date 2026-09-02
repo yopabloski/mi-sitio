@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MusicFest · Panel docente · Encuesta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="survey.css">
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header class="app-top">
+  <img class="app-mark" src="assets/brand/vector/musicfest-logo-b-festival-vector.svg" alt="MusicFest">
+  <div class="who">
+    <small>LECTURA DE INSTRUMENTOS</small>
+    <b>Panel docente · Encuesta</b>
+  </div>
+  <a href="admin.html">Dirigir sesión ↗</a>
+</header>
+
+<main class="shell-wide">
+
+  <section class="page-head">
+    <div>
+      <p class="kicker">PERCEPCIÓN · APLICACIÓN POST-JUEGO</p>
+      <h1>Resultados de<br>la encuesta.</h1>
+      <p class="hint" id="resumen" style="margin-top:14px"></p>
+    </div>
+    <div class="aside">
+      <div class="live-badge"><i></i><span id="estado">Sin datos</span></div>
+      <div class="tools" style="margin-top:12px;justify-content:flex-end">
+        <button id="btn-demo">Datos de ejemplo</button>
+        <button id="btn-recargar">Recargar</button>
+        <button class="btn-dark" id="btn-csv">Exportar CSV</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ SIN DATOS ══════════════════ -->
+  <section id="vacio" class="empty">
+    <b>Todavía no hay respuestas</b>
+    <p>Cuando las parejas envíen desde <code>survey.html</code>, los puntajes aparecen aquí. Para ver cómo se comporta el panel antes de la clase, carga datos de ejemplo con el botón de arriba.</p>
+  </section>
+
+  <!-- ══════════════════ AVISO DE DATOS DE EJEMPLO ══════════════════ -->
+  <div class="note warn" id="aviso-ejemplo" hidden>
+    <b>Estás mirando datos de ejemplo</b>
+    Son 43 respuestas inventadas que viven solo en esta pestaña: no se guardaron en Firestore y desaparecen al recargar. Aprieta «Recargar» para volver a las respuestas reales.
+  </div>
+
+  <!-- ══════════════════ FILTRO POR FECHA ══════════════════ -->
+  <section class="filterbar" id="filtro" hidden>
+    <label class="f">
+      <span>Desde</span>
+      <input type="date" id="desde">
+    </label>
+    <label class="f">
+      <span>Hasta</span>
+      <input type="date" id="hasta">
+    </label>
+    <div class="f">
+      <span>Atajos</span>
+      <div class="quick">
+        <button class="mini" data-rango="hoy">Hoy</button>
+        <button class="mini" data-rango="7">Últimos 7 días</button>
+        <button class="mini" data-rango="todo">Todo</button>
+      </div>
+    </div>
+    <div class="tally">
+      <b id="tally-n">0</b>
+      <span id="tally-lbl">respuestas en el rango</span>
+    </div>
+  </section>
+
+  <!-- ══════════════════ RANGO VACÍO ══════════════════ -->
+  <section id="sin-rango" class="norange" hidden>
+    <b>Ninguna respuesta en este rango</b>
+    <p class="hint">Hay <span id="sin-rango-n"></span> respuestas guardadas fuera de las fechas elegidas. Amplía el rango o usa el atajo «Todo».</p>
+  </section>
+
+  <!-- ══════════════════ PANEL ══════════════════ -->
+  <div id="panel" hidden>
+
+    <div class="kpi-board" id="kpis"></div>
+
+    <div class="section-head">
+      <div>
+        <p class="kicker">AGREGADO POR CONSTRUCTO</p>
+        <h2>Puntajes por instrumento</h2>
+      </div>
+      <p class="hint">α de Cronbach para subescalas de tres o más ítems; Spearman-Brown para las de dos. Con dos ítems, α está mal aplicado y es inestable.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>Instrumento / subescala</th><th class="n">Ítems</th><th class="n">Media</th>
+          <th class="n">DE</th><th style="width:160px">Nivel</th><th class="n">Fiabilidad</th>
+        </tr></thead>
+        <tbody id="tbl-escalas"></tbody>
+      </table>
+    </div>
+
+    <div class="section-head">
+      <div>
+        <p class="kicker">DIAGNÓSTICO FINO</p>
+        <h2>Ítem por ítem</h2>
+      </div>
+      <p class="hint">La distribución revela ítems con techo, con piso o con respuesta en línea recta. Esos son los candidatos a reescribir antes del semestre siguiente.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th style="min-width:300px">Ítem</th><th class="n">Media</th><th class="n">DE</th>
+          <th style="width:130px">Distribución</th><th class="n">Sin responder</th>
+        </tr></thead>
+        <tbody id="tbl-items"></tbody>
+      </table>
+    </div>
+
+    <div class="section-head">
+      <div>
+        <p class="kicker">PRESUPUESTO Y VOZ</p>
+        <h2>Duración y respuesta abierta</h2>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="sheet" style="margin:0">
+        <p class="kicker dim">TIEMPO MEDIANO DE RESPUESTA</p>
+        <h2 id="dur" style="font-size:46px;margin:10px 0 4px">—</h2>
+        <p class="hint">Presupuestado: 4 minutos</p>
+        <p class="hint" id="dur-nota" style="margin-top:16px"></p>
+      </div>
+      <div class="sheet" style="margin:0">
+        <p class="kicker dim">¿QUÉ FUE LO MÁS DIFÍCIL?</p>
+        <div class="quotes" id="abiertas"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ REGISTROS ══════════════════ -->
+    <div class="section-head">
+      <div>
+        <p class="kicker">RESPUESTAS INDIVIDUALES</p>
+        <h2>Registros</h2>
+      </div>
+      <div class="tools">
+        <button class="btn-danger mini" id="btn-borrar-vista">Eliminar los del rango</button>
+        <button class="btn-danger mini" id="btn-borrar-todo">Eliminar todo</button>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th style="min-width:240px">Correo</th><th>Enviada</th><th class="n">Duración</th>
+          <th class="n">Ítems</th><th style="width:90px"></th>
+        </tr></thead>
+        <tbody id="tbl-registros"></tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:10px">Eliminar es irreversible y borra la respuesta del almacenamiento, no solo de esta vista. Exporta el CSV antes si quieres conservarla.</p>
+
+    <div class="h6" id="nota-h6"></div>
+  </div>
+
+</main>
+
+<!-- ══════════════════ CONFIRMACIÓN ══════════════════ -->
+<dialog id="dlg">
+  <div class="body">
+    <p class="kicker">ACCIÓN IRREVERSIBLE</p>
+    <h2 id="dlg-titulo">¿Eliminar?</h2>
+    <p id="dlg-texto"></p>
+    <div class="row">
+      <button id="dlg-cancelar">Cancelar</button>
+      <button class="btn-danger" id="dlg-confirmar">Eliminar</button>
+    </div>
+  </div>
+</dialog>
+
+<script type="module" src="js/survey-panel.js"></script>
+</body>
+</html>
